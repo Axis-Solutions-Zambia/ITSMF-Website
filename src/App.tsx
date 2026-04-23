@@ -1,0 +1,66 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Navbar, Footer } from '@/src/components/Layout';
+import Home from '@/src/pages/Home';
+import About from '@/src/pages/About';
+import Membership from '@/src/pages/Membership';
+import Events from '@/src/pages/Events';
+import Resources from '@/src/pages/Resources';
+import Partners from '@/src/pages/Partners';
+import Portal from '@/src/pages/Portal';
+import Services from '@/src/pages/Services';
+import Benchmarking from '@/src/pages/services/Benchmarking';
+
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      setTimeout(() => {
+        const id = hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          const offset = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 0);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+  return null;
+}
+
+export default function App() {
+  return (
+    <Router>
+      <ScrollToTop />
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/membership" element={<Membership />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/partners" element={<Partners />} />
+            <Route path="/portal" element={<Portal />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/services/benchmarking/*" element={<Benchmarking />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
+  );
+}
