@@ -15,6 +15,7 @@ import Partners from '@/src/pages/Partners';
 import Portal from '@/src/pages/Portal';
 import Services from '@/src/pages/Services';
 import Benchmarking from '@/src/pages/services/Benchmarking';
+import Admin from '@/src/pages/Admin';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -40,27 +41,37 @@ function ScrollToTop() {
   return null;
 }
 
+function LayoutWrapper() {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {!isAdmin && <Navbar />}
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/membership" element={<Membership />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/partners" element={<Partners />} />
+          <Route path="/portal" element={<Portal />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/services/benchmarking/*" element={<Benchmarking />} />
+          <Route path="/admin/*" element={<Admin />} />
+        </Routes>
+      </main>
+      {!isAdmin && <Footer />}
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/membership" element={<Membership />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/partners" element={<Partners />} />
-            <Route path="/portal" element={<Portal />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/services/benchmarking/*" element={<Benchmarking />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <LayoutWrapper />
     </Router>
   );
 }

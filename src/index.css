@@ -7,16 +7,32 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-serif: "Libre Baskerville", serif;
 
-  --color-brand-bg: #0F172A;
-  --color-brand-text: #F8FAFC;
-  --color-brand-accent: #C5A059;
-  --color-brand-muted: #94A3B8;
-  --color-brand-dark: #020617;
+  --color-brand-bg: var(--brand-bg);
+  --color-brand-text: var(--brand-text);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-muted: var(--brand-muted);
+  --color-brand-dark: var(--brand-dark);
 }
 
 @layer base {
+  :root {
+    --brand-bg: #F8FAFC;
+    --brand-text: #0F172A;
+    --brand-accent: #C5A059;
+    --brand-muted: #64748B;
+    --brand-dark: #FFFFFF;
+  }
+  
+  .dark {
+    --brand-bg: #0F172A;
+    --brand-text: #F8FAFC;
+    --brand-accent: #C5A059;
+    --brand-muted: #94A3B8;
+    --brand-dark: #020617;
+  }
+
   body {
-    @apply font-sans bg-brand-bg text-brand-text antialiased;
+    @apply font-sans bg-brand-bg text-brand-text antialiased transition-colors duration-300;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -25,11 +41,13 @@
 }
 
 .text-stroke {
-  -webkit-text-stroke: 1px white;
+  -webkit-text-stroke: 1px var(--brand-text);
 }
 
 .glass {
-  @apply bg-white/5 backdrop-blur-sm border border-white/10;
+  @apply backdrop-blur-sm border;
+  background-color: color-mix(in srgb, var(--brand-text) 5%, transparent);
+  border-color: color-mix(in srgb, var(--brand-text) 10%, transparent);
 }
 
 .nav-link {
@@ -38,4 +56,17 @@
 
 .accent-border {
   @apply border-l-2 border-brand-accent pl-4;
+}
+
+.logo-light {
+  display: block;
+}
+.logo-dark {
+  display: none;
+}
+.dark .logo-light {
+  display: none;
+}
+.dark .logo-dark {
+  display: block;
 }

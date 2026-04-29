@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, ChevronDown, Globe, LogIn } from 'lucide-react';
+import { Menu, X, ChevronDown, Globe, LogIn, Sun, Moon } from 'lucide-react';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/', category: 'teal' },
@@ -91,7 +91,32 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [isDark, setIsDark] = useState(true);
   const location = useLocation();
+
+  useEffect(() => {
+    const isDarkStored = localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && document.documentElement.classList.contains('dark'));
+    setIsDark(isDarkStored);
+    if (isDarkStored) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    setIsDark(prev => {
+      const next = !prev;
+      if (next) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      }
+      return next;
+    });
+  };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
@@ -132,17 +157,15 @@ export function Navbar() {
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled || hoveredLink ? 'bg-brand-dark/95 backdrop-blur-xl border-b border-white/10 py-4' : 'bg-transparent py-8'
+        scrolled || hoveredLink ? 'bg-brand-dark/95 backdrop-blur-xl border-b border-brand-text/10 py-4' : 'bg-transparent py-8'
       }`}
       onMouseLeave={() => setHoveredLink(null)}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="flex justify-between items-center">
-          <Link to="/" className="flex items-center space-x-3 active:scale-95 transition-transform">
-            <div className="w-8 h-8 bg-brand-accent rounded-sm shadow-[0_0_20px_rgba(255,185,0,0.3)]"></div>
-            <span className="text-xl font-black tracking-tighter uppercase whitespace-nowrap">
-              itSMF <span className="text-brand-accent">Zambia</span>
-            </span>
+          <Link to="/" className="flex items-center active:scale-95 transition-transform">
+            <img src="https://i.postimg.cc/639Tm3L7/itzambialogo.png" alt="itSMF Zambia Logo" className="h-12 w-auto logo-light" />
+            <img src="https://i.postimg.cc/kGSpknyY/itzambialogo-i.png" alt="itSMF Zambia Logo" className="h-12 w-auto logo-dark" />
           </Link>
 
           {/* Desktop Nav */}
@@ -163,20 +186,36 @@ export function Navbar() {
                 </Link>
               </div>
             ))}
-            <Link
-              to="/portal"
-              className={`px-6 py-2 border transition-all text-[10px] font-black uppercase tracking-tighter ${
-                location.pathname.startsWith('/portal') 
-                  ? 'bg-[#F87171] border-[#F87171] text-brand-dark' 
-                  : 'border-[#F87171] text-[#F87171] hover:bg-[#F87171] hover:text-brand-dark'
-              }`}
-            >
-              Member Portal
-            </Link>
+            <div className="flex items-center space-x-6">
+              <button
+                onClick={toggleTheme}
+                className="text-brand-text/60 hover:text-brand-accent transition-colors p-1"
+                aria-label="Toggle theme"
+              >
+                {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+              <Link
+                to="/portal"
+                className={`px-6 py-2 border transition-all text-[10px] font-black uppercase tracking-tighter ${
+                  location.pathname.startsWith('/portal') 
+                    ? 'bg-[#F87171] border-[#F87171] text-brand-dark' 
+                    : 'border-[#F87171] text-[#F87171] hover:bg-[#F87171] hover:text-brand-bg'
+                }`}
+              >
+                Member Portal
+              </Link>
+            </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <button
+              onClick={toggleTheme}
+              className="text-brand-text hover:text-brand-accent p-2"
+              aria-label="Toggle theme"
+            >
+              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-brand-text hover:text-brand-accent p-2"
@@ -195,7 +234,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="absolute top-full left-0 right-0 bg-brand-dark/95 backdrop-blur-2xl border-b border-white/10 pt-12 pb-20 shadow-2xl"
+            className="absolute top-full left-0 right-0 bg-brand-dark/95 backdrop-blur-2xl border-b border-brand-text/10 pt-12 pb-20 shadow-2xl"
           >
             <div className="max-w-7xl mx-auto px-6 lg:px-10">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -233,21 +272,21 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-brand-dark border-b border-white/10 overflow-hidden"
+            className="md:hidden bg-brand-dark border-b border-brand-text/10 overflow-hidden"
           >
             <div className="px-6 pt-2 pb-8 space-y-2">
               {NAV_LINKS.map((link) => (
                 <div key={link.name} className="flex flex-col">
                   <Link
                     to={link.href}
-                    className={`block py-4 text-xs font-black uppercase tracking-widest transition-colors border-b border-white/5 ${
+                    className={`block py-4 text-xs font-black uppercase tracking-widest transition-colors border-b border-brand-text/5 ${
                       link.category === 'teal' ? 'hover:text-teal-400' : 'hover:text-purple-400'
                     } ${location.pathname === link.href ? (link.category === 'teal' ? 'text-teal-400' : 'text-purple-400') : 'text-brand-text'}`}
                   >
                     {link.name}
                   </Link>
                   {link.children && (
-                    <div className="pl-4 border-l border-white/10 mt-2 space-y-3 pb-4">
+                    <div className="pl-4 border-l border-brand-text/10 mt-2 space-y-3 pb-4">
                       {link.children.map(child => (
                         <Link
                           key={child.name}
@@ -264,7 +303,7 @@ export function Navbar() {
               <div className="pt-4">
                 <Link
                   to="/portal"
-                  className="block text-center px-6 py-4 border border-[#F87171] text-[#F87171] text-xs font-black uppercase tracking-tighter hover:bg-[#F87171] hover:text-brand-dark transition-all"
+                  className="block text-center px-6 py-4 border border-[#F87171] text-[#F87171] text-xs font-black uppercase tracking-tighter hover:bg-[#F87171] hover:text-brand-bg transition-all"
                 >
                   Member Portal Login
                 </Link>
@@ -279,15 +318,13 @@ export function Navbar() {
 
 export function Footer() {
   return (
-    <footer className="bg-brand-dark border-t border-white/10 pt-20 pb-12 relative overflow-hidden">
+    <footer className="bg-brand-dark border-t border-brand-text/10 pt-20 pb-12 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20 relative z-10">
           <div className="col-span-1 md:col-span-2">
-            <Link to="/" className="flex items-center space-x-3 mb-8">
-              <div className="w-10 h-10 bg-brand-accent rounded-sm"></div>
-              <span className="text-2xl font-black tracking-tighter uppercase whitespace-nowrap">
-                itSMF <span className="text-brand-accent font-black">Zambia</span>
-              </span>
+            <Link to="/" className="flex items-center mb-8">
+              <img src="https://i.postimg.cc/639Tm3L7/itzambialogo.png" alt="itSMF Zambia Logo" className="h-16 w-auto logo-light" />
+              <img src="https://i.postimg.cc/kGSpknyY/itzambialogo-i.png" alt="itSMF Zambia Logo" className="h-16 w-auto logo-dark" />
             </Link>
             <p className="text-brand-muted max-w-sm text-sm uppercase tracking-wider font-bold leading-relaxed mb-8 opacity-80">
               Advancing IT Service Management and Digital Transformation across the Republic of Zambia.
@@ -324,7 +361,7 @@ export function Footer() {
           </div>
         </div>
         
-        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[9px] font-black uppercase tracking-[0.3em] text-brand-muted/40">
+        <div className="pt-12 border-t border-brand-text/5 flex flex-col md:flex-row justify-between items-center text-[9px] font-black uppercase tracking-[0.3em] text-brand-muted/40">
           <p>© {new Date().getFullYear()} itSMF Zambia. Standardizing Service.</p>
           <div className="flex space-x-8 mt-4 md:mt-0">
             <a href="#" className="hover:text-brand-text transition-colors">Ethics Code</a>
@@ -335,7 +372,7 @@ export function Footer() {
       </div>
       
       {/* Background decoration */}
-      <div className="absolute right-0 bottom-0 text-[10vw] font-black text-white/5 uppercase select-none pointer-events-none -mb-4 mr-4">
+      <div className="absolute right-0 bottom-0 text-[10vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mb-4 mr-4">
         Zambia
       </div>
     </footer>
