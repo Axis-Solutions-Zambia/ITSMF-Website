@@ -39,6 +39,15 @@ export const SECTION_SCHEMAS: Record<string, Record<string, SectionSchema>> = {
         { key: 'cta_primary_url', label: 'Primary CTA URL', type: 'text', placeholder: '/membership' },
         { key: 'cta_secondary_label', label: 'Secondary CTA Label', type: 'text', placeholder: 'View 2026 Summit' },
         { key: 'cta_secondary_url', label: 'Secondary CTA URL', type: 'text', placeholder: '/events' },
+        { 
+          key: 'stats', 
+          label: 'Statistics', 
+          type: 'list', 
+          itemFields: [
+            { key: 'value', label: 'Value', type: 'text', placeholder: '82%' },
+            { key: 'label', label: 'Label', type: 'text', placeholder: 'Certification Gap' }
+          ]
+        }
       ]
     },
     overview: {

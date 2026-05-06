@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, ChevronDown, Globe, LogIn, Sun, Moon } from 'lucide-react';
+import { Menu, X, ChevronDown, Globe, LogIn, Sun, Moon, Home, Info, Users, Calendar, Briefcase, Folder, Handshake, ChevronRight } from 'lucide-react';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/', category: 'teal' },
@@ -91,11 +91,11 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    const isDarkStored = localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && document.documentElement.classList.contains('dark'));
+    const isDarkStored = localStorage.getItem('theme') === 'dark';
     setIsDark(isDarkStored);
     if (isDarkStored) {
       document.documentElement.classList.add('dark');
@@ -226,90 +226,122 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mega Dropdown */}
+      {/* Compact Apple-style Dropdown */}
       <AnimatePresence>
         {hoveredLink && NAV_LINKS.find(l => l.name === hoveredLink)?.children && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="absolute top-full left-0 right-0 bg-brand-dark/95 backdrop-blur-2xl border-b border-brand-text/10 pt-12 pb-20 shadow-2xl"
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
+            className="absolute top-full left-0 right-0 bg-brand-dark/97 backdrop-blur-2xl border-b border-brand-text/10 shadow-2xl"
           >
-            <div className="max-w-7xl mx-auto px-6 lg:px-10">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-                <div className="col-span-1">
-                  <h3 className="text-brand-accent font-black text-[10px] uppercase tracking-[0.4em] mb-8 opacity-40">CHAPTER OVERVIEW</h3>
-                  <p className="text-brand-muted text-sm uppercase font-bold tracking-widest leading-loose">
-                    Discover our governance, international alignment, and the vision driving ICT service excellence in the Republic.
-                  </p>
-                </div>
-                <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-12">
-                  {NAV_LINKS.find(l => l.name === hoveredLink)?.children?.map((child) => (
-                    <Link
-                      key={child.name}
-                      to={child.href}
-                      className="group flex flex-col"
-                      onClick={() => setHoveredLink(null)}
-                    >
-                      <span className="text-brand-text text-lg font-bold uppercase tracking-tighter group-hover:text-brand-accent transition-colors">
-                        {child.name}
-                      </span>
-                      <div className="h-px w-0 group-hover:w-full bg-brand-accent transition-all duration-500 mt-1 opacity-20"></div>
-                    </Link>
-                  ))}
-                </div>
+            <div className="max-w-7xl mx-auto px-6 lg:px-10 py-6">
+              <div className="grid grid-cols-2 gap-x-12 gap-y-0 max-w-sm">
+                {NAV_LINKS.find(l => l.name === hoveredLink)?.children?.map((child) => (
+                  <Link
+                    key={child.name}
+                    to={child.href}
+                    className="group flex items-center gap-1 py-[7px] border-b border-brand-text/5 last:border-0"
+                    onClick={() => setHoveredLink(null)}
+                  >
+                    <span className="text-[11px] font-semibold text-brand-text/70 group-hover:text-brand-accent transition-colors duration-150 tracking-wide leading-none">
+                      {child.name}
+                    </span>
+                  </Link>
+                ))}
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Mobile menu */}
+      {/* Mobile Sidebar Menu (Google Contacts Style) */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-brand-dark border-b border-brand-text/10 overflow-hidden"
-          >
-            <div className="px-6 pt-2 pb-8 space-y-2">
-              {NAV_LINKS.map((link) => (
-                <div key={link.name} className="flex flex-col">
-                  <Link
-                    to={link.href}
-                    className={`block py-4 text-xs font-black uppercase tracking-widest transition-colors border-b border-brand-text/5 ${
-                      link.category === 'teal' ? 'hover:text-teal-400' : 'hover:text-purple-400'
-                    } ${location.pathname === link.href ? (link.category === 'teal' ? 'text-teal-400' : 'text-purple-400') : 'text-brand-text'}`}
-                  >
-                    {link.name}
-                  </Link>
-                  {link.children && (
-                    <div className="pl-4 border-l border-brand-text/10 mt-2 space-y-3 pb-4">
-                      {link.children.map(child => (
-                        <Link
-                          key={child.name}
-                          to={child.href}
-                          className="block text-[10px] font-bold text-brand-muted uppercase tracking-[0.2em] hover:text-brand-accent"
-                        >
-                          {child.name}
-                        </Link>
-                      ))}
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="md:hidden fixed inset-0 z-[60] bg-brand-dark/40 backdrop-blur-sm"
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="md:hidden fixed top-0 left-0 bottom-0 z-[70] w-[80vw] max-w-sm bg-brand-bg shadow-2xl flex flex-col"
+            >
+              <div className="flex items-center p-4 pl-6 border-b border-brand-text/5 shrink-0">
+                <span className="text-xl font-display font-black tracking-tight text-brand-text">itSMF Zambia</span>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+                {NAV_LINKS.map((link) => {
+                  const isActive = location.pathname === link.href || (link.href !== '/' && location.pathname.startsWith(link.href));
+                  
+                  const getIcon = (name: string) => {
+                    switch (name) {
+                      case 'Home': return <Home className="w-5 h-5 mr-4" />;
+                      case 'About': return <Info className="w-5 h-5 mr-4" />;
+                      case 'Membership': return <Users className="w-5 h-5 mr-4" />;
+                      case 'Events': return <Calendar className="w-5 h-5 mr-4" />;
+                      case 'Services': return <Briefcase className="w-5 h-5 mr-4" />;
+                      case 'Resources': return <Folder className="w-5 h-5 mr-4" />;
+                      case 'Partners': return <Handshake className="w-5 h-5 mr-4" />;
+                      default: return <ChevronRight className="w-5 h-5 mr-4" />;
+                    }
+                  };
+
+                  return (
+                    <div key={link.name} className="flex flex-col mb-2">
+                      <Link
+                        to={link.href}
+                        onClick={() => setIsOpen(false)}
+                        className={`flex items-center px-4 py-3 rounded-full transition-colors ${
+                          isActive 
+                            ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100 font-bold' 
+                            : 'text-brand-text hover:bg-brand-text/5 font-medium'
+                        }`}
+                      >
+                        {getIcon(link.name)}
+                        <span className="text-base">{link.name}</span>
+                      </Link>
+                      
+                      {link.children && isActive && (
+                        <div className="flex flex-col space-y-1 mt-1 pl-[3.25rem] pr-4 pb-2">
+                          {link.children.map(child => (
+                            <Link
+                              key={child.name}
+                              to={child.href}
+                              onClick={() => setIsOpen(false)}
+                              className="block py-2 text-sm text-brand-muted hover:text-brand-text font-medium transition-colors"
+                            >
+                              {child.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
-              <div className="pt-4">
+                  );
+                })}
+              </div>
+
+              <div className="p-4 shrink-0">
                 <Link
                   to="/portal"
-                  className="block text-center px-6 py-4 border border-[#F87171] text-[#F87171] text-xs font-black uppercase tracking-tighter hover:bg-[#F87171] hover:text-brand-bg transition-all"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center justify-center w-full py-3 bg-brand-accent text-brand-dark rounded-full text-sm font-bold shadow-sm hover:opacity-90 transition-opacity"
                 >
                   Member Portal Login
                 </Link>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>

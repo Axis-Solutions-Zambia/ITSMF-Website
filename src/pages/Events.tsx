@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Calendar, MapPin, Users, Ticket, Award, Filter, ArrowRight, ChevronRight } from 'lucide-react';
 import { usePageContent } from '@/src/hooks/usePageContent';
+import EditableSection from '@/src/components/EditableSection';
 
 // ─── Default content (Firestore fallback) ────────────────────────────────────
 const FLAGSHIP_DEFAULTS = {
@@ -91,30 +92,37 @@ export default function Events() {
   return (
     <div className="pt-20">
       {/* Flagship Header */}
-      <section className="bg-brand-dark min-h-[70vh] flex items-center relative overflow-hidden border-b border-brand-text/5">
+      <EditableSection pageId="events" sectionId="flagship">
+<section className="bg-brand-dark min-h-[70vh] flex items-center relative overflow-hidden border-b border-brand-text/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10 py-32">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             className="max-w-4xl"
           >
-            <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-8 block">{flagship.eyebrow}</span>
-            <h1 className="text-7xl md:text-[10vw] font-black leading-none mb-12 uppercase italic tracking-tighter">
-              {flagship.headline_line1} <br /><span className="text-transparent text-stroke">{flagship.headline_line2}</span> <br />{flagship.headline_line3}
-            </h1>
+            {flagship['_hide_eyebrow'] !== 'true' && <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-8 block">{flagship.eyebrow}</span>}
+            {(flagship['_hide_headline_line1'] !== 'true' || flagship['_hide_headline_line2'] !== 'true' || flagship['_hide_headline_line3'] !== 'true') && (
+              <h1 className="text-7xl md:text-[10vw] font-black leading-none mb-12 uppercase italic tracking-tighter">
+                {flagship['_hide_headline_line1'] !== 'true' && <>{flagship.headline_line1} <br /></>}
+                {flagship['_hide_headline_line2'] !== 'true' && <><span className="text-brand-text">{flagship.headline_line2}</span> <br /></>}
+                {flagship['_hide_headline_line3'] !== 'true' && flagship.headline_line3}
+              </h1>
+            )}
             <div className="flex flex-col md:flex-row gap-12 mb-12 items-start uppercase font-bold tracking-widest text-brand-muted text-sm border-t border-brand-text/5 pt-12">
               <div className="flex flex-col">
-                <span className="text-brand-accent mb-2">{flagship.duration_label}</span>
-                <span className="text-brand-text">{flagship.duration_value}</span>
+                {flagship['_hide_duration_label'] !== 'true' && <span className="text-brand-accent mb-2">{flagship.duration_label}</span>}
+                {flagship['_hide_duration_value'] !== 'true' && <span className="text-brand-text">{flagship.duration_value}</span>}
               </div>
               <div className="flex flex-col">
-                <span className="text-brand-accent mb-2">{flagship.venue_label}</span>
-                <span className="text-brand-text">{flagship.venue_value}</span>
+                {flagship['_hide_venue_label'] !== 'true' && <span className="text-brand-accent mb-2">{flagship.venue_label}</span>}
+                {flagship['_hide_venue_value'] !== 'true' && <span className="text-brand-text">{flagship.venue_value}</span>}
               </div>
             </div>
-            <button className="bg-brand-accent text-brand-dark px-12 py-5 font-black text-xs uppercase tracking-[0.2em] hover:bg-brand-text shadow-2xl transition-all">
-              {flagship.btn_label}
-            </button>
+            {flagship['_hide_btn_label'] !== 'true' && (
+              <button className="bg-brand-accent text-brand-dark px-12 py-5 font-black text-xs uppercase tracking-[0.2em] hover:bg-brand-text shadow-2xl transition-all">
+                {flagship.btn_label}
+              </button>
+            )}
           </motion.div>
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-30 grayscale pointer-events-none">
@@ -122,6 +130,7 @@ export default function Events() {
           <div className="absolute inset-0 bg-gradient-to-l from-transparent via-brand-dark/20 to-brand-dark" />
         </div>
       </section>
+      </EditableSection>
 
       {/* Local Sub-nav */}
       <section className="py-20 bg-brand-bg border-b border-brand-text/5">
@@ -137,10 +146,11 @@ export default function Events() {
       </section>
 
       {/* Filter & Listing */}
-      <section id="calendar" className="py-32 bg-brand-bg">
+      <EditableSection pageId="events" sectionId="calendar">
+<section id="calendar" className="py-32 bg-brand-bg">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
-            <h2 className="text-5xl font-black uppercase tracking-tighter italic font-serif">{calendar.headline}</h2>
+            {calendar['_hide_headline'] !== 'true' && <h2 className="text-5xl font-black uppercase tracking-tighter italic font-serif">{calendar.headline}</h2>}
             <div className="flex flex-wrap gap-4 font-black text-[10px] uppercase tracking-widest">
               <button className="px-6 py-3 bg-brand-accent text-brand-dark">All Events</button>
               <button className="px-6 py-3 border border-brand-text/10 text-brand-muted hover:border-brand-accent transition-all">Workshops</button>
@@ -190,24 +200,31 @@ export default function Events() {
           </div>
         </div>
       </section>
+      </EditableSection>
 
       {/* Sponsorship Grid */}
-      <section className="py-32 bg-brand-dark border-b border-brand-text/5" id="sponsor">
+      <EditableSection pageId="events" sectionId="sponsor">
+<section className="py-32 bg-brand-dark border-b border-brand-text/5" id="sponsor">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="mb-24 flex flex-col md:flex-row items-end justify-between gap-8">
-            <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter italic font-serif leading-none">
-              {sponsor.headline.split(' ').reduce<any[]>((acc, word, idx, arr) => {
-                 return [...acc, word, idx === arr.length - 3 ? <br key={idx}/> : idx === arr.length - 2 ? <span key={`span-${idx}`} className="text-transparent text-stroke italic font-sans font-black"> </span> : ' '];
-              }, [])}
-            </h2>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted max-w-sm text-right leading-loose">
-              {sponsor.desc}
-            </p>
+            {sponsor['_hide_headline'] !== 'true' && (
+              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter italic font-serif leading-none">
+                {sponsor.headline.split(' ').reduce<any[]>((acc, word, idx, arr) => {
+                   return [...acc, word, idx === arr.length - 3 ? <br key={idx}/> : idx === arr.length - 2 ? <span key={`span-${idx}`} className="text-brand-text font-sans font-black"> </span> : ' '];
+                }, [])}
+              </h2>
+            )}
+            {sponsor['_hide_desc'] !== 'true' && (
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted max-w-sm text-right leading-loose">
+                {sponsor.desc}
+              </p>
+            )}
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-brand-text/5 border border-brand-text/5">
-            {(sponsor.tiers as unknown as any[]).map((tier, i) => {
-              const benefitsList = (tier.benefits || '').split('\n').filter((f: string) => f.trim().length > 0);
+          {sponsor['_hide_tiers'] !== 'true' && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-brand-text/5 border border-brand-text/5">
+              {(sponsor.tiers as unknown as any[]).map((tier, i) => {
+                const benefitsList = (tier.benefits || '').split('\n').filter((f: string) => f.trim().length > 0);
               return (
                 <div key={i} className="bg-brand-dark p-12 lg:p-16 flex flex-col hover:bg-brand-text/10 transition-all duration-500">
                   <div className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-accent mb-8">{tier.name}</div>
@@ -227,49 +244,71 @@ export default function Events() {
               );
             })}
           </div>
+          )}
         </div>
       </section>
+      </EditableSection>
 
       {/* Call for Speakers */}
-      <section id="speakers" className="py-32 bg-brand-bg relative overflow-hidden">
+      <EditableSection pageId="events" sectionId="speakers">
+<section id="speakers" className="py-32 bg-brand-bg relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
            <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-              <div>
-                 <h2 className="text-4xl font-black mb-8 uppercase tracking-tighter italic font-serif leading-none">
-                   {speakers.headline_line1} <br />{speakers.headline_line2}
-                 </h2>
-                 <p className="text-xs text-brand-muted uppercase tracking-widest font-bold leading-loose mb-12">
-                   {speakers.desc}
-                 </p>
-                 <div className="space-y-6">
-                    <div className="p-6 bg-brand-dark border-l-4 border-brand-accent flex items-center justify-between">
-                       <span className="text-[10px] font-black uppercase tracking-[0.2em]">{speakers.form_text}</span>
-                       <ChevronRight className="w-4 h-4 text-brand-accent" />
-                    </div>
-                    <div className="p-6 bg-brand-dark border border-brand-text/5 flex items-center justify-between opacity-50">
-                       <span className="text-[10px] font-black uppercase tracking-[0.2em]">{speakers.policy_text}</span>
-                       <ChevronRight className="w-4 h-4" />
-                    </div>
+                <div>
+                  {(speakers['_hide_headline_line1'] !== 'true' || speakers['_hide_headline_line2'] !== 'true') && (
+                    <h2 className="text-4xl font-black mb-8 uppercase tracking-tighter italic font-serif leading-none">
+                      {speakers['_hide_headline_line1'] !== 'true' && <>{speakers.headline_line1} <br /></>}
+                      {speakers['_hide_headline_line2'] !== 'true' && speakers.headline_line2}
+                    </h2>
+                  )}
+                  {speakers['_hide_desc'] !== 'true' && (
+                    <p className="text-xs text-brand-muted uppercase tracking-widest font-bold leading-loose mb-12">
+                      {speakers.desc}
+                    </p>
+                  )}
+                  <div className="space-y-6">
+                     {speakers['_hide_form_text'] !== 'true' && (
+                       <div className="p-6 bg-brand-dark border-l-4 border-brand-accent flex items-center justify-between">
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em]">{speakers.form_text}</span>
+                          <ChevronRight className="w-4 h-4 text-brand-accent" />
+                       </div>
+                     )}
+                     {speakers['_hide_policy_text'] !== 'true' && (
+                       <div className="p-6 bg-brand-dark border border-brand-text/5 flex items-center justify-between opacity-50">
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em]">{speakers.policy_text}</span>
+                          <ChevronRight className="w-4 h-4" />
+                       </div>
+                     )}
+                  </div>
+               </div>
+               {(speakers['_hide_box_headline_line1'] !== 'true' || speakers['_hide_box_headline_line2'] !== 'true' || speakers['_hide_box_desc'] !== 'true' || speakers['_hide_btn_label'] !== 'true') && (
+                 <div className="bg-brand-accent p-12 text-brand-dark">
+                    <Award className="w-16 h-16 mb-8" />
+                    {(speakers['_hide_box_headline_line1'] !== 'true' || speakers['_hide_box_headline_line2'] !== 'true') && (
+                      <h4 className="text-2xl font-black uppercase tracking-tighter italic font-serif mb-6 leading-tight">
+                        {speakers['_hide_box_headline_line1'] !== 'true' && <>{speakers.box_headline_line1} <br /></>}
+                        {speakers['_hide_box_headline_line2'] !== 'true' && speakers.box_headline_line2}
+                      </h4>
+                    )}
+                    {speakers['_hide_box_desc'] !== 'true' && (
+                      <p className="text-xs font-bold uppercase tracking-widest leading-loose mb-10 opacity-80">
+                        {speakers.box_desc}
+                      </p>
+                    )}
+                    {speakers['_hide_btn_label'] !== 'true' && (
+                      <button className="w-full bg-brand-dark text-brand-text py-5 font-black uppercase tracking-widest hover:bg-brand-text hover:text-brand-bg transition-all">
+                        {speakers.btn_label}
+                      </button>
+                    )}
                  </div>
-              </div>
-              <div className="bg-brand-accent p-12 text-brand-dark">
-                 <Award className="w-16 h-16 mb-8" />
-                 <h4 className="text-2xl font-black uppercase tracking-tighter italic font-serif mb-6 leading-tight">
-                   {speakers.box_headline_line1} <br />{speakers.box_headline_line2}
-                 </h4>
-                 <p className="text-xs font-bold uppercase tracking-widest leading-loose mb-10 opacity-80">
-                   {speakers.box_desc}
-                 </p>
-                 <button className="w-full bg-brand-dark text-brand-text py-5 font-black uppercase tracking-widest hover:bg-brand-text hover:text-brand-bg transition-all">
-                   {speakers.btn_label}
-                 </button>
-              </div>
+               )}
            </div>
         </div>
         <div className="absolute left-0 bottom-0 text-[18vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mb-12 ml-4">
           SPEAKER
         </div>
       </section>
+      </EditableSection>
     </div>
   );
 }

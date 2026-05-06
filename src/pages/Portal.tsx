@@ -77,11 +77,14 @@ export default function Portal() {
         >
           <div className="absolute top-0 left-0 w-2 h-full bg-brand-accent"></div>
           <div className="mb-12">
-            <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-4 block">{auth.eyebrow}</span>
-            <h1 className="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter italic font-serif leading-none">
-              {auth.headline_line1} <br />{auth.headline_line2}
-            </h1>
-            <p className="text-xs text-brand-muted font-bold uppercase tracking-widest leading-loose">{auth.desc}</p>
+            {auth['_hide_eyebrow'] !== 'true' && <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-4 block">{auth.eyebrow}</span>}
+            {(auth['_hide_headline_line1'] !== 'true' || auth['_hide_headline_line2'] !== 'true') && (
+              <h1 className="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter italic font-serif leading-none">
+                {auth['_hide_headline_line1'] !== 'true' && <>{auth.headline_line1} <br /></>}
+                {auth['_hide_headline_line2'] !== 'true' && auth.headline_line2}
+              </h1>
+            )}
+            {auth['_hide_desc'] !== 'true' && <p className="text-xs text-brand-muted font-bold uppercase tracking-widest leading-loose">{auth.desc}</p>}
           </div>
 
           <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); setIsLoggedIn(true); }}>
@@ -144,18 +147,23 @@ export default function Portal() {
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-24 gap-12 border-b border-brand-text/5 pb-12">
           <div>
-            <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-4 block font-mono">{dashboard.status}</span>
-            <h1 className="text-4xl md:text-6xl font-black leading-none uppercase tracking-tighter italic">
-              {dashboard.welcome_line1} <br /><span className="text-transparent text-stroke italic">{dashboard.welcome_line2}</span>
-            </h1>
+            {dashboard['_hide_status'] !== 'true' && <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-4 block font-mono">{dashboard.status}</span>}
+            {(dashboard['_hide_welcome_line1'] !== 'true' || dashboard['_hide_welcome_line2'] !== 'true') && (
+              <h1 className="text-4xl md:text-6xl font-black leading-none uppercase tracking-tighter italic">
+                {dashboard['_hide_welcome_line1'] !== 'true' && <>{dashboard.welcome_line1} <br /></>}
+                {dashboard['_hide_welcome_line2'] !== 'true' && <span className="text-brand-text">{dashboard.welcome_line2}</span>}
+              </h1>
+            )}
             <p className="text-[11px] text-brand-muted uppercase tracking-[0.2em] font-black mt-4">Profile Reference: <span className="text-brand-text">ZM-2026-0422</span></p>
           </div>
-          <button 
-            onClick={() => setIsLoggedIn(false)}
-            className="border border-brand-text/10 px-8 py-4 font-black text-[10px] uppercase tracking-[0.3em] hover:border-brand-accent transition-all"
-          >
-            {dashboard.terminate_btn}
-          </button>
+          {dashboard['_hide_terminate_btn'] !== 'true' && (
+            <button 
+              onClick={() => setIsLoggedIn(false)}
+              className="border border-brand-text/10 px-8 py-4 font-black text-[10px] uppercase tracking-[0.3em] hover:border-brand-accent transition-all"
+            >
+              {dashboard.terminate_btn}
+            </button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-24">
@@ -163,41 +171,49 @@ export default function Portal() {
           {/* Main Dashboard Area */}
           <div className="lg:col-span-2 space-y-24">
             <div>
-              <h3 className="text-sm font-black mb-12 uppercase tracking-[0.4em] text-brand-accent flex items-center">
-                 {archives.headline}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-brand-text/5 border border-brand-text/5">
-                {(archives.documents as unknown as any[]).map((item, i) => (
-                  <div key={i} className="p-8 bg-brand-dark hover:bg-brand-text/5 transition-all cursor-pointer group relative">
-                    <div className="flex items-center space-x-6">
-                      <div className="w-12 h-12 bg-brand-bg border border-brand-text/5 flex items-center justify-center text-brand-accent transition-all group-hover:bg-brand-accent group-hover:text-brand-bg">
-                        <Download className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-black uppercase tracking-widest mb-1 leading-tight">{item.title}</div>
-                        <div className="text-[9px] text-brand-muted font-black uppercase tracking-widest font-mono">{item.type} // {item.size}</div>
+              {archives['_hide_headline'] !== 'true' && (
+                <h3 className="text-sm font-black mb-12 uppercase tracking-[0.4em] text-brand-accent flex items-center">
+                   {archives.headline}
+                </h3>
+              )}
+              {archives['_hide_documents'] !== 'true' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-brand-text/5 border border-brand-text/5">
+                  {(archives.documents as unknown as any[]).map((item, i) => (
+                    <div key={i} className="p-8 bg-brand-dark hover:bg-brand-text/5 transition-all cursor-pointer group relative">
+                      <div className="flex items-center space-x-6">
+                        <div className="w-12 h-12 bg-brand-bg border border-brand-text/5 flex items-center justify-center text-brand-accent transition-all group-hover:bg-brand-accent group-hover:text-brand-bg">
+                          <Download className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-black uppercase tracking-widest mb-1 leading-tight">{item.title}</div>
+                          <div className="text-[9px] text-brand-muted font-black uppercase tracking-widest font-mono">{item.type} // {item.size}</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div>
-              <h3 className="text-sm font-black mb-12 uppercase tracking-[0.4em] text-brand-accent">{briefing.headline}</h3>
+              {briefing['_hide_headline'] !== 'true' && <h3 className="text-sm font-black mb-12 uppercase tracking-[0.4em] text-brand-accent">{briefing.headline}</h3>}
               <div className="accent-border border-brand-text/5 p-px">
                 <div className="flex flex-col md:flex-row items-center gap-12 p-12 bg-brand-dark">
-                  <div className="w-24 h-24 bg-brand-bg border border-brand-accent flex flex-col items-center justify-center text-brand-accent">
-                    <span className="text-[10px] font-black uppercase font-mono mb-1 tracking-widest">{briefing.month}</span>
-                    <span className="text-4xl font-black leading-none">{briefing.day}</span>
-                  </div>
+                  {(briefing['_hide_month'] !== 'true' || briefing['_hide_day'] !== 'true') && (
+                    <div className="w-24 h-24 bg-brand-bg border border-brand-accent flex flex-col items-center justify-center text-brand-accent">
+                      {briefing['_hide_month'] !== 'true' && <span className="text-[10px] font-black uppercase font-mono mb-1 tracking-widest">{briefing.month}</span>}
+                      {briefing['_hide_day'] !== 'true' && <span className="text-4xl font-black leading-none">{briefing.day}</span>}
+                    </div>
+                  )}
                   <div className="flex-grow text-center md:text-left">
-                    <h4 className="text-xl font-black uppercase tracking-tighter italic font-serif mb-4 leading-none">{briefing.title}</h4>
-                    <p className="text-xs text-brand-muted font-bold uppercase tracking-widest leading-loose">{briefing.desc}</p>
+                    {briefing['_hide_title'] !== 'true' && <h4 className="text-xl font-black uppercase tracking-tighter italic font-serif mb-4 leading-none">{briefing.title}</h4>}
+                    {briefing['_hide_desc'] !== 'true' && <p className="text-xs text-brand-muted font-bold uppercase tracking-widest leading-loose">{briefing.desc}</p>}
                   </div>
-                  <button className="bg-brand-accent text-brand-dark px-8 py-4 font-black text-[10px] uppercase tracking-[0.3em] w-full md:w-auto hover:bg-brand-text transition-all shadow-xl">
-                    {briefing.btn_label}
-                  </button>
+                  {briefing['_hide_btn_label'] !== 'true' && (
+                    <button className="bg-brand-accent text-brand-dark px-8 py-4 font-black text-[10px] uppercase tracking-[0.3em] w-full md:w-auto hover:bg-brand-text transition-all shadow-xl">
+                      {briefing.btn_label}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -206,35 +222,39 @@ export default function Portal() {
           {/* Sidebar Area */}
           <div className="space-y-24">
             <div className="bg-brand-accent p-12 text-brand-dark relative overflow-hidden group">
-              <h3 className="text-[10px] font-black mb-12 uppercase tracking-[0.4em] opacity-60 flex items-center">
-                 {status.headline}
-              </h3>
+              {status['_hide_headline'] !== 'true' && (
+                <h3 className="text-[10px] font-black mb-12 uppercase tracking-[0.4em] opacity-60 flex items-center">
+                   {status.headline}
+                </h3>
+              )}
               <div className="relative z-10 flex flex-col items-center">
                 <div className="w-32 h-32 border-4 border-brand-dark flex items-center justify-center mb-8 grayscale group-hover:grayscale-0 transition-all duration-1000">
                   <User className="w-16 h-16" />
                 </div>
-                <div className="text-3xl font-black uppercase tracking-tighter italic font-serif leading-none mb-2">{status.type}</div>
-                <div className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-80 font-mono">{status.tier}</div>
+                {status['_hide_type'] !== 'true' && <div className="text-3xl font-black uppercase tracking-tighter italic font-serif leading-none mb-2">{status.type}</div>}
+                {status['_hide_tier'] !== 'true' && <div className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-80 font-mono">{status.tier}</div>}
               </div>
-              <div className="mt-12 pt-12 border-t border-brand-dark/10 space-y-4 font-black uppercase text-[10px] tracking-widest">
-                {(status.fields as unknown as any[]).map((field, i) => (
-                  <div key={i} className="flex justify-between">
-                    <span className="opacity-60">{field.label}</span>
-                    <span className={i > 0 ? "font-mono" : ""}>{field.value}</span>
-                  </div>
-                ))}
-              </div>
+              {status['_hide_fields'] !== 'true' && (
+                <div className="mt-12 pt-12 border-t border-brand-dark/10 space-y-4 font-black uppercase text-[10px] tracking-widest">
+                  {(status.fields as unknown as any[]).map((field, i) => (
+                    <div key={i} className="flex justify-between">
+                      <span className="opacity-60">{field.label}</span>
+                      <span className={i > 0 ? "font-mono" : ""}>{field.value}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div>
-              <h3 className="text-[10px] font-black mb-12 uppercase tracking-[0.4em] text-brand-muted">{itinerary.headline}</h3>
+              {itinerary['_hide_headline'] !== 'true' && <h3 className="text-[10px] font-black mb-12 uppercase tracking-[0.4em] text-brand-muted">{itinerary.headline}</h3>}
               <div className="space-y-4">
-                {(itinerary.events as unknown as any[]).map((evt, i) => (
+                {itinerary['_hide_events'] !== 'true' && (itinerary.events as unknown as any[]).map((evt, i) => (
                   <div key={i} className="p-6 bg-brand-dark border border-brand-text/5 text-[10px] font-black uppercase tracking-widest text-brand-accent leading-relaxed">
                     {evt.text}
                   </div>
                 ))}
-                <p className="text-brand-text/20 text-[9px] font-black uppercase tracking-[0.4em] text-center italic">{itinerary.footer_text}</p>
+                {itinerary['_hide_footer_text'] !== 'true' && <p className="text-brand-text/20 text-[9px] font-black uppercase tracking-[0.4em] text-center italic">{itinerary.footer_text}</p>}
               </div>
             </div>
           </div>

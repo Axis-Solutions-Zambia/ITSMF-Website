@@ -170,12 +170,12 @@ function DashboardOverview() {
 
 export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
     // Sync theme with global state for the admin view
-    const isDarkStored = localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && document.documentElement.classList.contains('dark'));
+    const isDarkStored = localStorage.getItem('theme') === 'dark';
     setIsDark(isDarkStored);
   }, []);
 

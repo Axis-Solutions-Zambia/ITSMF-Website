@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronRight, Save, CheckCircle, AlertCircle,
-  ArrowLeft, Eye, Loader2, RefreshCw, Plus, Trash2, GripVertical
+  ArrowLeft, Eye, EyeOff, Loader2, RefreshCw, Plus, Trash2, GripVertical
 } from 'lucide-react';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/src/lib/firebase';
@@ -33,8 +33,16 @@ function Toast({ type, message }: { type: ToastType; message: string }) {
   );
 }
 
-export default function SectionEditor() {
-  const { pageId, sectionId } = useParams<{ pageId: string; sectionId: string }>();
+interface SectionEditorProps {
+  pageId?: string;
+  sectionId?: string;
+  onClose?: () => void;
+}
+
+export default function SectionEditor({ pageId: propPageId, sectionId: propSectionId, onClose }: SectionEditorProps = {}) {
+  const params = useParams<{ pageId: string; sectionId: string }>();
+  const pageId = propPageId || params.pageId;
+  const sectionId = propSectionId || params.sectionId;
   const navigate = useNavigate();
 
   const schema = pageId && sectionId ? SECTION_SCHEMAS[pageId]?.[sectionId] : null;
@@ -174,19 +182,33 @@ export default function SectionEditor() {
     );
   };
 
+  const isPanel = !!onClose;
+
   return (
-    <div className="max-w-4xl">
-      {/* Breadcrumb */}
-      <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-brand-muted mb-8 flex-wrap gap-1">
-        <Link to="/admin/content" className="hover:text-brand-accent transition-colors">Content</Link>
-        <ChevronRight className="w-3 h-3" />
-        <Link to={`/admin/content/${pageId}`} className="hover:text-brand-accent transition-colors capitalize">{pageId}</Link>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-brand-text">{schema.name}</span>
-      </div>
+    <div className={isPanel ? "h-full flex flex-col" : "max-w-4xl"}>
+      {/* Breadcrumb / Close Button */}
+      {isPanel ? (
+        <div className="flex justify-between items-center mb-8 pb-4 border-b border-brand-text/10">
+          <span className="text-[10px] font-black uppercase tracking-widest text-brand-muted">Edit Section</span>
+          <button 
+            onClick={onClose}
+            className="text-[10px] font-black uppercase tracking-widest text-brand-accent hover:text-brand-text transition-colors"
+          >
+            Close Panel
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-brand-muted mb-8 flex-wrap gap-1">
+          <Link to="/admin/content" className="hover:text-brand-accent transition-colors">Content</Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to={`/admin/content/${pageId}`} className="hover:text-brand-accent transition-colors capitalize">{pageId}</Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-brand-text">{schema.name}</span>
+        </div>
+      )}
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+      <div className={`flex flex-col ${isPanel ? 'gap-4 mb-8' : 'md:flex-row justify-between items-start md:items-center gap-6 mb-10'}`}>
         <div>
           <h2 className="text-3xl font-black uppercase tracking-tighter italic font-serif leading-none mb-2">
             {schema.name}
@@ -196,18 +218,20 @@ export default function SectionEditor() {
           )}
         </div>
         <div className="flex space-x-3">
-          <a
-            href={`/${pageId === 'home' ? '' : pageId}`}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center px-5 py-3 border border-brand-text/10 text-[10px] font-black uppercase tracking-[0.3em] hover:border-brand-accent transition-all"
-          >
-            <Eye className="w-4 h-4 mr-2" /> Preview
-          </a>
+          {!isPanel && (
+            <a
+              href={`/${pageId === 'home' ? '' : pageId}`}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center px-5 py-3 border border-brand-text/10 text-[10px] font-black uppercase tracking-[0.3em] hover:border-brand-accent transition-all"
+            >
+              <Eye className="w-4 h-4 mr-2" /> Preview
+            </a>
+          )}
           <button
             onClick={handleSave}
             disabled={saving || loading}
-            className="flex items-center px-6 py-3 bg-brand-accent text-brand-dark text-[10px] font-black uppercase tracking-[0.3em] hover:bg-brand-text transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center px-6 py-3 bg-brand-accent text-brand-dark text-[10px] font-black uppercase tracking-[0.3em] hover:bg-brand-text transition-all disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto justify-center"
           >
             {saving
               ? <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -229,60 +253,91 @@ export default function SectionEditor() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-brand-dark border border-brand-text/5 divide-y divide-brand-text/5"
         >
-          {schema.fields.map((field) => (
-            <div key={field.key} className="p-6">
-              <label className="flex items-center text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted mb-3">
-                {field.label}
-                {field.hint && (
-                  <span className="ml-3 font-bold normal-case tracking-normal text-brand-muted/60">{field.hint}</span>
-                )}
-              </label>
+          {/* Section Visibility Toggle */}
+          <div className="p-6 bg-brand-bg/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div className="text-xs font-black uppercase tracking-[0.3em] text-brand-text mb-2">Section Visibility</div>
+              <div className="text-[10px] font-bold text-brand-muted uppercase tracking-widest leading-relaxed">
+                Turn this off to hide the section from the public website. You can still edit it here.
+              </div>
+            </div>
+            <button
+              onClick={() => setFormValues({ ...formValues, _hidden: formValues._hidden === 'true' ? 'false' : 'true' })}
+              className={`w-14 h-7 rounded-full transition-colors relative shrink-0 ${formValues._hidden === 'true' ? 'bg-red-500/20 border border-red-500/50' : 'bg-green-500'}`}
+            >
+              <div className={`w-5 h-5 rounded-full bg-brand-dark absolute top-[3px] transition-all ${formValues._hidden === 'true' ? 'left-[3px] bg-red-500' : 'left-[32px] bg-brand-dark'}`} />
+            </button>
+          </div>
 
-              {field.type === 'list' && field.itemFields ? (
-                <div className="space-y-4">
-                  <AnimatePresence>
-                    {(Array.isArray(formValues[field.key]) ? formValues[field.key] : []).map((item: any, index: number) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="bg-brand-bg border border-brand-text/10 p-4 relative group"
-                      >
-                        <div className="absolute top-4 right-4 flex items-center space-x-2">
-                          <span className="text-[9px] font-black text-brand-muted font-mono uppercase tracking-widest">Item {index + 1}</span>
-                          <button
-                            onClick={() => handleRemoveListItem(field.key, index)}
-                            className="p-1.5 text-brand-muted hover:text-red-500 hover:bg-red-500/10 transition-colors"
-                            title="Remove Item"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                        <div className="pr-16 space-y-4">
-                          {field.itemFields!.map(itemField => (
-                            <div key={itemField.key}>
-                              <label className="block text-[9px] font-black uppercase tracking-[0.2em] text-brand-muted mb-2">
-                                {itemField.label}
-                              </label>
-                              {renderFieldInput(itemField, item[itemField.key], (val) => handleListChange(field.key, index, itemField.key, val))}
-                            </div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                  
-                  <button
-                    onClick={() => handleAddListItem(field.key, field.itemFields!)}
-                    className="flex items-center px-4 py-3 border border-brand-text/10 text-[10px] font-black uppercase tracking-[0.3em] text-brand-text hover:border-brand-accent hover:text-brand-accent transition-all w-full justify-center border-dashed"
-                  >
-                    <Plus className="w-4 h-4 mr-2" /> Add {field.label} Item
-                  </button>
-                </div>
-              ) : (
-                renderFieldInput(field, formValues[field.key], (val) => handleChange(field.key, val))
-              )}
+          {schema.fields.map((field) => (
+            <div key={field.key} className="p-6 relative group transition-colors">
+              <div className="flex items-center justify-between mb-3">
+                <label className="flex items-center text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">
+                  {field.label}
+                  {field.hint && (
+                    <span className="ml-3 font-bold normal-case tracking-normal text-brand-muted/60">{field.hint}</span>
+                  )}
+                </label>
+                <button
+                  title={`Toggle visibility of ${field.label}`}
+                  onClick={() => setFormValues({ ...formValues, [`_hide_${field.key}`]: formValues[`_hide_${field.key}`] === 'true' ? 'false' : 'true' })}
+                  className={`flex items-center space-x-2 text-[9px] font-black uppercase tracking-widest transition-colors ${formValues[`_hide_${field.key}`] === 'true' ? 'text-red-500' : 'text-brand-accent hover:text-brand-text'}`}
+                >
+                  {formValues[`_hide_${field.key}`] === 'true' ? (
+                    <><EyeOff className="w-3 h-3" /> <span>Hidden</span></>
+                  ) : (
+                    <><Eye className="w-3 h-3" /> <span className="opacity-0 group-hover:opacity-100 transition-opacity">Visible</span></>
+                  )}
+                </button>
+              </div>
+
+              <div className={`${formValues[`_hide_${field.key}`] === 'true' ? 'opacity-40 grayscale pointer-events-none' : ''}`}>
+                {field.type === 'list' && field.itemFields ? (
+                  <div className="space-y-4">
+                    <AnimatePresence>
+                      {(Array.isArray(formValues[field.key]) ? formValues[field.key] : []).map((item: any, index: number) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="bg-brand-bg border border-brand-text/10 p-4 relative group"
+                        >
+                          <div className="absolute top-4 right-4 flex items-center space-x-2">
+                            <span className="text-[9px] font-black text-brand-muted font-mono uppercase tracking-widest">Item {index + 1}</span>
+                            <button
+                              onClick={() => handleRemoveListItem(field.key, index)}
+                              className="p-1.5 text-brand-muted hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                              title="Remove Item"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <div className="pr-16 space-y-4">
+                            {field.itemFields!.map(itemField => (
+                              <div key={itemField.key}>
+                                <label className="block text-[9px] font-black uppercase tracking-[0.2em] text-brand-muted mb-2">
+                                  {itemField.label}
+                                </label>
+                                {renderFieldInput(itemField, item[itemField.key], (val) => handleListChange(field.key, index, itemField.key, val))}
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                    
+                    <button
+                      onClick={() => handleAddListItem(field.key, field.itemFields!)}
+                      className="flex items-center px-4 py-3 border border-brand-text/10 text-[10px] font-black uppercase tracking-[0.3em] text-brand-text hover:border-brand-accent hover:text-brand-accent transition-all w-full justify-center border-dashed"
+                    >
+                      <Plus className="w-4 h-4 mr-2" /> Add {field.label} Item
+                    </button>
+                  </div>
+                ) : (
+                  renderFieldInput(field, formValues[field.key], (val) => setFormValues({ ...formValues, [field.key]: val }))
+                )}
+              </div>
             </div>
           ))}
 

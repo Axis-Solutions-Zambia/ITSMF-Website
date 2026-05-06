@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { usePageContent } from '@/src/hooks/usePageContent';
+import EditableSection from '@/src/components/EditableSection';
 
 // ─── Default content (Firestore fallback) ────────────────────────────────────
 const HERO_DEFAULTS = {
@@ -78,142 +79,181 @@ export default function Membership() {
   return (
     <div id="top" className="pt-20">
       {/* Hero */}
-      <section id="why-join" className="bg-brand-dark py-32 border-b border-brand-text/5 relative overflow-hidden">
+      <EditableSection pageId="membership" sectionId="hero">
+<section id="why-join" className="bg-brand-dark py-32 border-b border-brand-text/5 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h1 className="text-6xl md:text-[8vw] font-black leading-[0.8] mb-10 uppercase tracking-tighter italic">
-              {hero.headline_line1} <br /><span className="text-transparent text-stroke italic">{hero.headline_line2}</span>.
-            </h1>
-            <p className="text-xl text-brand-muted max-w-2xl leading-relaxed uppercase tracking-wider font-bold opacity-80 decoration-brand-accent underline underline-offset-8">
-              {hero.body}
-            </p>
+            {(hero['_hide_headline_line1'] !== 'true' || hero['_hide_headline_line2'] !== 'true') && (
+              <h1 className="text-6xl md:text-[8vw] font-black leading-[0.8] mb-10 uppercase tracking-tighter italic">
+                {hero['_hide_headline_line1'] !== 'true' && <>{hero.headline_line1} <br /></>}
+                {hero['_hide_headline_line2'] !== 'true' && <span className="text-brand-text">{hero.headline_line2}</span>}
+                {(hero['_hide_headline_line1'] !== 'true' || hero['_hide_headline_line2'] !== 'true') && '.'}
+              </h1>
+            )}
+            {hero['_hide_body'] !== 'true' && (
+              <p className="text-xl text-brand-muted max-w-2xl leading-relaxed uppercase tracking-wider font-bold opacity-80 decoration-brand-accent underline underline-offset-8">
+                {hero.body}
+              </p>
+            )}
           </motion.div>
         </div>
         <div className="absolute right-0 top-0 text-[10vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mt-10 mr-10 leading-none">
           NETWORK
         </div>
       </section>
+      </EditableSection>
 
       {/* Member Benefits */}
-      <section id="benefits" className="py-32 bg-brand-bg text-brand-text border-b border-brand-text/5">
+      <EditableSection pageId="membership" sectionId="benefits">
+<section id="benefits" className="py-32 bg-brand-bg text-brand-text border-b border-brand-text/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <div>
-              <h2 className="text-4xl font-black mb-12 uppercase tracking-tighter italic font-serif leading-none">
-                {benefits.headline.split(' ').reduce<any[]>((acc, word, idx, arr) => {
-                   return [...acc, word, idx === arr.length - 2 ? <br key={idx}/> : ' '];
-                }, [])}
-              </h2>
-              <div className="space-y-12">
-                {(benefits.benefits as unknown as any[]).map((benefit, i) => (
-                  <div key={i} className="group relative">
-                    <div className="absolute -left-6 top-0 w-1 h-full bg-brand-accent opacity-20 group-hover:opacity-100 transition-opacity"></div>
-                    <h4 className="text-brand-accent font-black text-xs uppercase tracking-widest mb-4 italic leading-none">{benefit.title}</h4>
-                    <p className="text-xs text-brand-muted uppercase font-bold leading-loose tracking-widest leading-relaxed pr-8">{benefit.desc}</p>
-                  </div>
-                ))}
-              </div>
+              {benefits['_hide_headline'] !== 'true' && (
+                <h2 className="text-4xl font-black mb-12 uppercase tracking-tighter italic font-serif leading-none">
+                  {benefits.headline.split(' ').reduce<any[]>((acc, word, idx, arr) => {
+                     return [...acc, word, idx === arr.length - 2 ? <br key={idx}/> : ' '];
+                  }, [])}
+                </h2>
+              )}
+              {benefits['_hide_benefits'] !== 'true' && (
+                <div className="space-y-12">
+                  {(benefits.benefits as unknown as any[]).map((benefit, i) => (
+                    <div key={i} className="group relative">
+                      <div className="absolute -left-6 top-0 w-1 h-full bg-brand-accent opacity-20 group-hover:opacity-100 transition-opacity"></div>
+                      <h4 className="text-brand-accent font-black text-xs uppercase tracking-widest mb-4 italic leading-none">{benefit.title}</h4>
+                      <p className="text-xs text-brand-muted uppercase font-bold leading-loose tracking-widest leading-relaxed pr-8">{benefit.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="relative">
-              <div className="aspect-[4/3] bg-brand-dark border border-brand-text/5 p-12 lg:p-20 flex flex-col justify-center">
-                <blockquote className="text-2xl font-black uppercase tracking-tighter italic font-serif leading-tight text-brand-text mb-8">
-                  {benefits.quote}
-                </blockquote>
-                <cite className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-accent">{benefits.cite}</cite>
+            {(benefits['_hide_quote'] !== 'true' || benefits['_hide_cite'] !== 'true') && (
+              <div className="relative">
+                <div className="aspect-[4/3] bg-brand-dark border border-brand-text/5 p-12 lg:p-20 flex flex-col justify-center">
+                  {benefits['_hide_quote'] !== 'true' && (
+                    <blockquote className="text-2xl font-black uppercase tracking-tighter italic font-serif leading-tight text-brand-text mb-8">
+                      {benefits.quote}
+                    </blockquote>
+                  )}
+                  {benefits['_hide_cite'] !== 'true' && <cite className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-accent">{benefits.cite}</cite>}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
+      </EditableSection>
 
       {/* Categories & Fees (Tiers) */}
-      <section id="tiers" className="py-32 bg-brand-dark">
+      <EditableSection pageId="membership" sectionId="tiers">
+<section id="tiers" className="py-32 bg-brand-dark">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-none">{tiers.headline}</h2>
-            <p className="text-brand-accent font-black text-[10px] uppercase tracking-[0.4em] mt-4">{tiers.subtitle}</p>
+            {tiers['_hide_headline'] !== 'true' && <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-none">{tiers.headline}</h2>}
+            {tiers['_hide_subtitle'] !== 'true' && <p className="text-brand-accent font-black text-[10px] uppercase tracking-[0.4em] mt-4">{tiers.subtitle}</p>}
           </div>
-          <div id="apply" className="grid grid-cols-1 md:grid-cols-3 gap-px bg-brand-text/5 border border-brand-text/5">
-            {(tiers.tiers as unknown as any[]).map((tier, i) => {
-              const featuresList = (tier.features || '').split('\n').filter((f: string) => f.trim().length > 0);
-              const highlight = tier.tier.toLowerCase() === 'corporate';
-              return (
-                <div key={i} className={`bg-brand-dark p-12 lg:p-16 flex flex-col ${highlight ? 'border-t-4 lg:border-t-0 lg:border-l-4 border-brand-accent' : ''}`}>
-                  <div className="mb-12">
-                     <h3 className="text-xs font-black uppercase tracking-[0.4em] text-brand-accent mb-6 font-mono">{tier.tier} Tier</h3>
-                     <div className="text-5xl font-black italic font-serif mb-8 leading-none tracking-tighter">{tier.price}<span className="text-xs font-black not-italic tracking-widest opacity-40 ml-2">/YR</span></div>
-                     <p className="text-xs text-brand-muted uppercase tracking-widest font-bold leading-loose mb-12 min-h-[60px]">{tier.desc}</p>
+          {tiers['_hide_tiers'] !== 'true' && (
+            <div id="apply" className="grid grid-cols-1 md:grid-cols-3 gap-px bg-brand-text/5 border border-brand-text/5">
+              {(tiers.tiers as unknown as any[]).map((tier, i) => {
+                const featuresList = (tier.features || '').split('\n').filter((f: string) => f.trim().length > 0);
+                const highlight = tier.tier.toLowerCase() === 'corporate';
+                return (
+                  <div key={i} className={`bg-brand-dark p-12 lg:p-16 flex flex-col ${highlight ? 'border-t-4 lg:border-t-0 lg:border-l-4 border-brand-accent' : ''}`}>
+                    <div className="mb-12">
+                       <h3 className="text-xs font-black uppercase tracking-[0.4em] text-brand-accent mb-6 font-mono">{tier.tier} Tier</h3>
+                       <div className="text-5xl font-black italic font-serif mb-8 leading-none tracking-tighter">{tier.price}<span className="text-xs font-black not-italic tracking-widest opacity-40 ml-2">/YR</span></div>
+                       <p className="text-xs text-brand-muted uppercase tracking-widest font-bold leading-loose mb-12 min-h-[60px]">{tier.desc}</p>
+                    </div>
+                    <ul className="space-y-6 mb-16 text-[10px] font-black uppercase tracking-widest leading-relaxed flex-grow">
+                      {featuresList.map((f: string, j: number) => (
+                        <li key={j} className="flex items-center space-x-3 text-brand-text opacity-70">
+                          <div className="w-1.5 h-1.5 bg-brand-accent rounded-full shrink-0"></div>
+                          <span>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <button className={`w-full py-5 font-black text-xs uppercase tracking-[0.4em] transition-all shadow-xl ${
+                      highlight ? 'bg-brand-accent text-brand-dark hover:bg-brand-text' : 'border border-brand-text/10 text-brand-text hover:border-brand-accent hover:text-brand-accent'
+                    }`}>
+                      JOIN NOW
+                    </button>
                   </div>
-                  <ul className="space-y-6 mb-16 text-[10px] font-black uppercase tracking-widest leading-relaxed flex-grow">
-                    {featuresList.map((f: string, j: number) => (
-                      <li key={j} className="flex items-center space-x-3 text-brand-text opacity-70">
-                        <div className="w-1.5 h-1.5 bg-brand-accent rounded-full shrink-0"></div>
-                        <span>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <button className={`w-full py-5 font-black text-xs uppercase tracking-[0.4em] transition-all shadow-xl ${
-                    highlight ? 'bg-brand-accent text-brand-dark hover:bg-brand-text' : 'border border-brand-text/10 text-brand-text hover:border-brand-accent hover:text-brand-accent'
-                  }`}>
-                    JOIN NOW
-                  </button>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
+      </EditableSection>
 
       {/* Corporate Enquiry */}
-      <section id="corporate" className="py-32 bg-brand-bg overflow-hidden relative border-y border-brand-text/5">
+      <EditableSection pageId="membership" sectionId="corporate">
+<section id="corporate" className="py-32 bg-brand-bg overflow-hidden relative border-y border-brand-text/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
             <div>
-              <h2 className="text-4xl md:text-6xl font-black mb-12 italic text-transparent text-stroke uppercase">
-                {corporate.headline_line1} <br/>{corporate.headline_line2}
-              </h2>
-              <div className="space-y-12">
-                {(corporate.value_props as unknown as any[]).map((item, i) => (
-                  <div key={i} className="accent-border p-1 group">
-                    <div className="bg-brand-bg p-6 border border-brand-text/5 group-hover:border-brand-accent transition-all">
-                      <h4 className="text-brand-accent font-black text-xs uppercase tracking-widest mb-2 italic">{item.title}</h4>
-                      <p className="text-[11px] text-brand-muted uppercase tracking-widest font-bold leading-relaxed">{item.desc}</p>
+              {(corporate['_hide_headline_line1'] !== 'true' || corporate['_hide_headline_line2'] !== 'true') && (
+                <h2 className="text-4xl md:text-6xl font-black mb-12 italic text-brand-text uppercase">
+                  {corporate['_hide_headline_line1'] !== 'true' && <>{corporate.headline_line1} <br/></>}
+                  {corporate['_hide_headline_line2'] !== 'true' && corporate.headline_line2}
+                </h2>
+              )}
+              {corporate['_hide_value_props'] !== 'true' && (
+                <div className="space-y-12">
+                  {(corporate.value_props as unknown as any[]).map((item, i) => (
+                    <div key={i} className="accent-border p-1 group">
+                      <div className="bg-brand-bg p-6 border border-brand-text/5 group-hover:border-brand-accent transition-all">
+                        <h4 className="text-brand-accent font-black text-xs uppercase tracking-widest mb-2 italic">{item.title}</h4>
+                        <p className="text-[11px] text-brand-muted uppercase tracking-widest font-bold leading-relaxed">{item.desc}</p>
+                      </div>
                     </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {(corporate['_hide_box_headline'] !== 'true' || corporate['_hide_box_desc'] !== 'true' || corporate['_hide_email'] !== 'true') && (
+              <div className="bg-brand-dark p-12 border border-brand-text/10 relative">
+                <div className="absolute top-0 left-0 w-2 h-full bg-brand-accent"></div>
+                {corporate['_hide_box_headline'] !== 'true' && <h3 className="text-2xl font-black mb-8 uppercase tracking-tighter italic font-serif">{corporate.box_headline}</h3>}
+                {corporate['_hide_box_desc'] !== 'true' && (
+                  <p className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-12 leading-loose">
+                    {corporate.box_desc}
+                  </p>
+                )}
+                {corporate['_hide_email'] !== 'true' && (
+                  <div className="text-xl font-black text-brand-accent border-b-2 border-brand-accent inline-block pb-1 cursor-pointer hover:text-brand-text hover:border-brand-text transition-all">
+                    {corporate.email}
                   </div>
-                ))}
+                )}
               </div>
-            </div>
-            <div className="bg-brand-dark p-12 border border-brand-text/10 relative">
-              <div className="absolute top-0 left-0 w-2 h-full bg-brand-accent"></div>
-              <h3 className="text-2xl font-black mb-8 uppercase tracking-tighter italic font-serif">{corporate.box_headline}</h3>
-              <p className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-12 leading-loose">
-                {corporate.box_desc}
-              </p>
-              <div className="text-xl font-black text-brand-accent border-b-2 border-brand-accent inline-block pb-1 cursor-pointer hover:text-brand-text hover:border-brand-text transition-all">
-                {corporate.email}
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
+      </EditableSection>
 
       {/* FAQ */}
-      <section id="faq" className="py-32 bg-brand-dark">
+      <EditableSection pageId="membership" sectionId="faq">
+<section id="faq" className="py-32 bg-brand-dark">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
-          <h2 className="text-4xl font-black mb-16 uppercase tracking-tighter italic font-serif">{faq.headline}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-brand-text/5 border border-brand-text/5">
-            {(faq.faqs as unknown as any[]).map((f, i) => (
-              <div key={i} className="bg-brand-dark p-12 border border-brand-text/5">
-                <h4 className="text-[11px] font-black uppercase tracking-widest text-brand-accent mb-4 italic leading-tight">{f.q}</h4>
-                <p className="text-[10px] text-brand-muted font-bold uppercase tracking-widest leading-loose">{f.a}</p>
-              </div>
-            ))}
-          </div>
+          {faq['_hide_headline'] !== 'true' && <h2 className="text-4xl font-black mb-16 uppercase tracking-tighter italic font-serif">{faq.headline}</h2>}
+          {faq['_hide_faqs'] !== 'true' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-brand-text/5 border border-brand-text/5">
+              {(faq.faqs as unknown as any[]).map((f, i) => (
+                <div key={i} className="bg-brand-dark p-12 border border-brand-text/5">
+                  <h4 className="text-[11px] font-black uppercase tracking-widest text-brand-accent mb-4 italic leading-tight">{f.q}</h4>
+                  <p className="text-[10px] text-brand-muted font-bold uppercase tracking-widest leading-loose">{f.a}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
+      </EditableSection>
     </div>
   );
 }

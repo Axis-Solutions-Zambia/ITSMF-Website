@@ -14,6 +14,7 @@ import { db } from '@/src/lib/firebase';
 import { seedFirestore } from '@/src/lib/seedFirestore';
 import { SECTION_SCHEMAS } from '@/src/lib/sectionSchemas';
 import SectionEditor from './SectionEditor';
+import LiveEditor from './LiveEditor';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -189,7 +190,7 @@ function PagesGrid() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              onClick={() => navigate(`/admin/content/${page.id}`)}
+              onClick={() => navigate(`/admin/content/${page.id}/live`)}
               className="bg-brand-dark border border-brand-text/5 hover:border-brand-accent transition-all cursor-pointer group flex flex-col h-full"
             >
               <div className="p-6 border-b border-brand-text/5 flex justify-between items-start">
@@ -344,6 +345,7 @@ export default function ContentManager() {
     <Routes>
       <Route path="/" element={<PagesGrid />} />
       <Route path="/:pageId" element={<PageDetails />} />
+      <Route path="/:pageId/live" element={<LiveEditor />} />
       <Route path="/:pageId/sections/:sectionId" element={<SectionEditor />} />
     </Routes>
   );
