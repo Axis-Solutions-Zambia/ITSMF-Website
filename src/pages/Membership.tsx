@@ -2,6 +2,181 @@ import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
+import { useState, useEffect, useRef } from 'react';
+
+function GravityCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let particles: any[] = [];
+    let mouse = { x: -1000, y: -1000, radius: 150 };
+    let animationFrameId: number;
+
+    const resize = () => {
+      const parent = canvas.parentElement;
+      if (parent) {
+        canvas.width = parent.clientWidth;
+        canvas.height = parent.clientHeight;
+        initParticles();
+      }
+    };
+
+    class Particle {
+      x: number;
+      y: number;
+      baseX: number;
+      baseY: number;
+      size: number;
+      density: number;
+
+      constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+        this.baseX = x;
+        this.baseY = y;
+        this.size = Math.random() * 1.5 + 0.5;
+        this.density = (Math.random() * 30) + 1;
+      }
+
+      draw() {
+        if (!ctx) return;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      update() {
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let forceDirectionX = dx / distance;
+        let forceDirectionY = dy / distance;
+        let maxDistance = mouse.radius;
+        let force = (maxDistance - distance) / maxDistance;
+        let directionX = forceDirectionX * force * this.density;
+        let directionY = forceDirectionY * force * this.density;
+
+        if (distance < mouse.radius) {
+          this.x += directionX;
+          this.y += directionY;
+        } else {
+          if (this.x !== this.baseX) {
+            let dx = this.x - this.baseX;
+            this.x -= dx / 10;
+          }
+          if (this.y !== this.baseY) {
+            let dy = this.y - this.baseY;
+            this.y -= dy / 10;
+          }
+        }
+      }
+    }
+
+    const initParticles = () => {
+      particles = [];
+      if (!canvas) return;
+      const numberOfParticles = (canvas.width * canvas.height) / 6000;
+      for (let i = 0; i < numberOfParticles; i++) {
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * canvas.height;
+        particles.push(new Particle(x, y));
+      }
+    };
+
+    const animate = () => {
+      if (!canvas || !ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].draw();
+        particles[i].update();
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    const parent = canvas.parentElement;
+    const handleMouseMove = (e: MouseEvent) => {
+      if (parent) {
+        const rect = parent.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      }
+    };
+    const handleMouseLeave = () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    };
+    
+    if (parent) {
+      parent.addEventListener('mousemove', handleMouseMove);
+      parent.addEventListener('mouseleave', handleMouseLeave);
+      resize();
+    }
+    
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (parent) {
+        parent.removeEventListener('mousemove', handleMouseMove);
+        parent.removeEventListener('mouseleave', handleMouseLeave);
+      }
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return (
+    <canvas 
+      ref={canvasRef} 
+      className="absolute inset-0 pointer-events-none z-0 mix-blend-screen"
+    />
+  );
+}
+
+function TypewriterText({ line1, line2 }: { line1: string, line2: string }) {
+  const [displayedLine1, setDisplayedLine1] = useState('');
+  const [displayedLine2, setDisplayedLine2] = useState('');
+  const [isLine1Done, setIsLine1Done] = useState(false);
+
+  useEffect(() => {
+    setDisplayedLine1('');
+    setDisplayedLine2('');
+    setIsLine1Done(false);
+  }, [line1, line2]);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (displayedLine1.length < line1.length) {
+      timeout = setTimeout(() => {
+        setDisplayedLine1(line1.slice(0, displayedLine1.length + 1));
+      }, 70);
+    } else {
+      setIsLine1Done(true);
+      if (displayedLine2.length < line2.length) {
+        timeout = setTimeout(() => {
+          setDisplayedLine2(line2.slice(0, displayedLine2.length + 1));
+        }, 70);
+      }
+    }
+    return () => clearTimeout(timeout);
+  }, [displayedLine1, displayedLine2, line1, line2]);
+
+  return (
+    <>
+      <span>{displayedLine1}</span>
+      {!isLine1Done && <span className="animate-pulse border-r-4 border-brand-accent inline-block h-[0.9em] ml-2 translate-y-1"></span>}
+      {isLine1Done && <br />}
+      <span className="text-brand-text">{displayedLine2}</span>
+      {isLine1Done && <span className="animate-pulse border-r-4 border-brand-accent inline-block h-[0.9em] ml-2 translate-y-1"></span>}
+    </>
+  );
+}
 
 // ─── Default content (Firestore fallback) ────────────────────────────────────
 const HERO_DEFAULTS = {
@@ -80,23 +255,20 @@ export default function Membership() {
     <div id="top" className="pt-20">
       {/* Hero */}
       <EditableSection pageId="membership" sectionId="hero">
-<section id="why-join" className="bg-brand-dark py-32 border-b border-brand-text/5 relative overflow-hidden">
+<section id="why-join" className="bg-brand-dark py-32 border-b border-brand-text/5 relative overflow-hidden group">
+        <GravityCanvas />
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             {(hero['_hide_headline_line1'] !== 'true' || hero['_hide_headline_line2'] !== 'true') && (
-              <h1 className="text-6xl md:text-[8vw] font-black leading-[0.8] mb-10 uppercase tracking-tighter italic">
-                {hero['_hide_headline_line1'] !== 'true' && <>{hero.headline_line1} <br /></>}
-                {hero['_hide_headline_line2'] !== 'true' && <span className="text-brand-text">{hero.headline_line2}</span>}
-                {(hero['_hide_headline_line1'] !== 'true' || hero['_hide_headline_line2'] !== 'true') && '.'}
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-[0.9] mb-10 uppercase tracking-tighter italic">
+                <TypewriterText 
+                  line1={hero['_hide_headline_line1'] !== 'true' ? hero.headline_line1 : ''} 
+                  line2={hero['_hide_headline_line2'] !== 'true' ? hero.headline_line2 + '.' : ''} 
+                />
               </h1>
-            )}
-            {hero['_hide_body'] !== 'true' && (
-              <p className="text-xl text-brand-muted max-w-2xl leading-relaxed uppercase tracking-wider font-bold opacity-80 decoration-brand-accent underline underline-offset-8">
-                {hero.body}
-              </p>
             )}
           </motion.div>
         </div>
