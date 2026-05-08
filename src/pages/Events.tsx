@@ -94,7 +94,7 @@ export default function Events() {
       {/* Flagship Header */}
       <EditableSection pageId="events" sectionId="flagship">
 <section className="bg-brand-dark min-h-[70vh] flex items-center relative overflow-hidden border-b border-brand-text/5">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10 py-32">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10 py-16 md:py-32">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -102,7 +102,7 @@ export default function Events() {
           >
             {flagship['_hide_eyebrow'] !== 'true' && <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-8 block">{flagship.eyebrow}</span>}
             {(flagship['_hide_headline_line1'] !== 'true' || flagship['_hide_headline_line2'] !== 'true' || flagship['_hide_headline_line3'] !== 'true') && (
-              <h1 className="text-7xl md:text-[10vw] font-black leading-none mb-12 uppercase italic tracking-tighter">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] mb-12 uppercase italic tracking-tighter">
                 {flagship['_hide_headline_line1'] !== 'true' && <>{flagship.headline_line1} <br /></>}
                 {flagship['_hide_headline_line2'] !== 'true' && <><span className="text-brand-text">{flagship.headline_line2}</span> <br /></>}
                 {flagship['_hide_headline_line3'] !== 'true' && flagship.headline_line3}
@@ -132,22 +132,11 @@ export default function Events() {
       </section>
       </EditableSection>
 
-      {/* Local Sub-nav */}
-      <section className="py-20 bg-brand-bg border-b border-brand-text/5">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 font-black text-[10px] uppercase tracking-[0.3em] text-brand-muted">
-          <div className="flex flex-wrap gap-8">
-             <a href="#flagship" className="hover:text-brand-accent transition-colors">Flagship Summit</a>
-             <a href="#calendar" className="hover:text-brand-accent transition-colors underline decoration-brand-accent">Calendar</a>
-             <a href="#webinars" className="hover:text-brand-accent transition-colors">Webinars</a>
-             <a href="#sponsor" className="hover:text-brand-accent transition-colors">Sponsorships</a>
-             <a href="#speakers" className="hover:text-brand-accent transition-colors text-brand-accent">Call for Speakers</a>
-          </div>
-        </div>
-      </section>
+
 
       {/* Filter & Listing */}
       <EditableSection pageId="events" sectionId="calendar">
-<section id="calendar" className="py-32 bg-brand-bg">
+<section id="calendar" className="py-16 md:py-32 bg-brand-bg">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
             {calendar['_hide_headline'] !== 'true' && <h2 className="text-5xl font-black uppercase tracking-tighter italic font-serif">{calendar.headline}</h2>}
@@ -204,11 +193,11 @@ export default function Events() {
 
       {/* Sponsorship Grid */}
       <EditableSection pageId="events" sectionId="sponsor">
-<section className="py-32 bg-brand-dark border-b border-brand-text/5" id="sponsor">
+<section className="py-16 md:py-32 bg-brand-dark border-b border-brand-text/5" id="sponsor">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="mb-24 flex flex-col md:flex-row items-end justify-between gap-8">
             {sponsor['_hide_headline'] !== 'true' && (
-              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter italic font-serif leading-none">
+              <h2 className="text-3xl md:text-6xl font-black uppercase tracking-tighter italic font-serif leading-none">
                 {sponsor.headline.split(' ').reduce<any[]>((acc, word, idx, arr) => {
                    return [...acc, word, idx === arr.length - 3 ? <br key={idx}/> : idx === arr.length - 2 ? <span key={`span-${idx}`} className="text-brand-text font-sans font-black"> </span> : ' '];
                 }, [])}
@@ -251,7 +240,7 @@ export default function Events() {
 
       {/* Call for Speakers */}
       <EditableSection pageId="events" sectionId="speakers">
-<section id="speakers" className="py-32 bg-brand-bg relative overflow-hidden">
+<section id="speakers" className="py-16 md:py-32 bg-brand-bg relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
            <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
                 <div>

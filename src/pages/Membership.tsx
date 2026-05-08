@@ -255,7 +255,7 @@ export default function Membership() {
     <div id="top" className="pt-20">
       {/* Hero */}
       <EditableSection pageId="membership" sectionId="hero">
-<section id="why-join" className="bg-brand-dark py-32 border-b border-brand-text/5 relative overflow-hidden group">
+<section id="why-join" className="bg-brand-dark py-16 md:py-32 border-b border-brand-text/5 relative overflow-hidden group">
         <GravityCanvas />
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
           <motion.div
@@ -263,7 +263,7 @@ export default function Membership() {
             animate={{ opacity: 1, y: 0 }}
           >
             {(hero['_hide_headline_line1'] !== 'true' || hero['_hide_headline_line2'] !== 'true') && (
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-[0.9] mb-10 uppercase tracking-tighter italic">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] mb-10 uppercase tracking-tighter italic">
                 <TypewriterText 
                   line1={hero['_hide_headline_line1'] !== 'true' ? hero.headline_line1 : ''} 
                   line2={hero['_hide_headline_line2'] !== 'true' ? hero.headline_line2 + '.' : ''} 
@@ -280,7 +280,7 @@ export default function Membership() {
 
       {/* Member Benefits */}
       <EditableSection pageId="membership" sectionId="benefits">
-<section id="benefits" className="py-32 bg-brand-bg text-brand-text border-b border-brand-text/5">
+<section id="benefits" className="py-16 md:py-32 bg-brand-bg text-brand-text border-b border-brand-text/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <div>
@@ -322,10 +322,10 @@ export default function Membership() {
 
       {/* Categories & Fees (Tiers) */}
       <EditableSection pageId="membership" sectionId="tiers">
-<section id="tiers" className="py-32 bg-brand-dark">
+<section id="tiers" className="py-16 md:py-32 bg-brand-dark">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="text-center mb-20">
-            {tiers['_hide_headline'] !== 'true' && <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-none">{tiers.headline}</h2>}
+            {tiers['_hide_headline'] !== 'true' && <h2 className="text-3xl md:text-6xl font-black uppercase tracking-tighter italic leading-none">{tiers.headline}</h2>}
             {tiers['_hide_subtitle'] !== 'true' && <p className="text-brand-accent font-black text-[10px] uppercase tracking-[0.4em] mt-4">{tiers.subtitle}</p>}
           </div>
           {tiers['_hide_tiers'] !== 'true' && (
@@ -364,12 +364,12 @@ export default function Membership() {
 
       {/* Corporate Enquiry */}
       <EditableSection pageId="membership" sectionId="corporate">
-<section id="corporate" className="py-32 bg-brand-bg overflow-hidden relative border-y border-brand-text/5">
+<section id="corporate" className="py-16 md:py-32 bg-brand-bg overflow-hidden relative border-y border-brand-text/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
             <div>
               {(corporate['_hide_headline_line1'] !== 'true' || corporate['_hide_headline_line2'] !== 'true') && (
-                <h2 className="text-4xl md:text-6xl font-black mb-12 italic text-brand-text uppercase">
+                <h2 className="text-3xl md:text-5xl font-black mb-12 italic text-brand-text uppercase">
                   {corporate['_hide_headline_line1'] !== 'true' && <>{corporate.headline_line1} <br/></>}
                   {corporate['_hide_headline_line2'] !== 'true' && corporate.headline_line2}
                 </h2>
@@ -410,7 +410,7 @@ export default function Membership() {
 
       {/* FAQ */}
       <EditableSection pageId="membership" sectionId="faq">
-<section id="faq" className="py-32 bg-brand-dark">
+<section id="faq" className="py-16 md:py-32 bg-brand-dark">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           {faq['_hide_headline'] !== 'true' && <h2 className="text-4xl font-black mb-16 uppercase tracking-tighter italic font-serif">{faq.headline}</h2>}
           {faq['_hide_faqs'] !== 'true' && (

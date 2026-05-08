@@ -64,14 +64,14 @@ export default function Partners() {
   return (
     <div className="pt-20">
       <EditableSection pageId="partners" sectionId="hero">
-<section className="bg-brand-dark py-32 relative overflow-hidden border-b border-brand-text/5">
+<section className="bg-brand-dark py-16 md:py-32 relative overflow-hidden border-b border-brand-text/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             {(hero['_hide_headline_line1'] !== 'true' || hero['_hide_headline_line2'] !== 'true') && (
-              <h1 className="text-6xl md:text-[8vw] font-black leading-[0.8] mb-10 uppercase tracking-tighter italic">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] mb-10 uppercase tracking-tighter italic">
                 {hero['_hide_headline_line1'] !== 'true' && <>{hero.headline_line1} <br /></>}
                 {hero['_hide_headline_line2'] !== 'true' && <span className="text-brand-text">{hero.headline_line2}</span>}
               </h1>
@@ -104,7 +104,7 @@ export default function Partners() {
 
       {/* Partners Grid */}
       <EditableSection pageId="partners" sectionId="categories">
-<section id="overview" className="py-32 bg-brand-bg">
+<section id="overview" className="py-16 md:py-32 bg-brand-bg">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 space-y-32">
           {categories['_hide_categories_list'] !== 'true' && (categories.categories_list as unknown as any[]).map((cat, i) => {
             const partnerList = (cat.partners || '').split('\n').filter((p: string) => p.trim().length > 0);
@@ -149,7 +149,7 @@ export default function Partners() {
 
       {/* International Relationship */}
       <EditableSection pageId="partners" sectionId="international">
-<section className="py-32 bg-brand-dark">
+<section className="py-16 md:py-32 bg-brand-dark">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-col md:flex-row items-center gap-24">
             <div className="md:w-1/2">
@@ -198,7 +198,7 @@ export default function Partners() {
 
       {/* Question CTA */}
       <EditableSection pageId="partners" sectionId="become">
-<section id="become" className="py-32 bg-brand-bg text-center">
+<section id="become" className="py-16 md:py-32 bg-brand-bg text-center">
         <div className="max-w-3xl mx-auto px-6">
           <HelpCircle className="w-16 h-16 text-brand-text/5 mx-auto mb-12" />
           {(become['_hide_headline_line1'] !== 'true' || become['_hide_headline_line2'] !== 'true') && (

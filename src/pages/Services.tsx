@@ -83,14 +83,14 @@ export default function Services() {
     <div className="pt-20">
       {/* Hero */}
       <EditableSection pageId="services" sectionId="hero">
-<section className="bg-brand-dark py-32 border-b border-brand-text/5 relative overflow-hidden">
+<section className="bg-brand-dark py-16 md:py-32 border-b border-brand-text/5 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             {(hero['_hide_headline_line1'] !== 'true' || hero['_hide_headline_line2'] !== 'true') && (
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-[0.9] mb-10 uppercase tracking-tighter italic">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] mb-10 uppercase tracking-tighter italic">
                 {hero['_hide_headline_line1'] !== 'true' && <>{hero.headline_line1} <br /></>}
                 {hero['_hide_headline_line2'] !== 'true' && <span className="text-brand-text">{hero.headline_line2}</span>}
               </h1>
@@ -105,14 +105,14 @@ export default function Services() {
 
       {/* Benchmarking Feature (The "Amber Highlighted" section) */}
       <EditableSection pageId="services" sectionId="benchmarking">
-<section className="py-32 bg-brand-bg relative overflow-hidden">
+<section className="py-16 md:py-32 bg-brand-bg relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="bg-brand-accent p-12 lg:p-20 text-brand-dark relative group">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
                 {benchmarking['_hide_eyebrow'] !== 'true' && <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60 mb-6 block">{benchmarking.eyebrow}</span>}
                 {(benchmarking['_hide_headline_line1'] !== 'true' || benchmarking['_hide_headline_line2'] !== 'true') && (
-                  <h2 className="text-4xl md:text-6xl font-black mb-8 uppercase tracking-tighter leading-none italic font-serif">
+                  <h2 className="text-3xl md:text-5xl font-black mb-8 uppercase tracking-tighter leading-none italic font-serif">
                     {benchmarking['_hide_headline_line1'] !== 'true' && <>{benchmarking.headline_line1} <br/></>}
                     {benchmarking['_hide_headline_line2'] !== 'true' && benchmarking.headline_line2}
                   </h2>
@@ -152,7 +152,7 @@ export default function Services() {
 
       {/* Services Grid */}
       <EditableSection pageId="services" sectionId="directory">
-<section id="directory" className="py-32 bg-brand-dark overflow-hidden">
+<section id="directory" className="py-16 md:py-32 bg-brand-dark overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           {directory['_hide_services_list'] !== 'true' && (
             <div className="relative group/carousel -mx-6 px-6 sm:-mx-10 sm:px-10 md:mx-0 md:px-0">
@@ -208,7 +208,7 @@ export default function Services() {
 
       {/* Partners Link CTA */}
       <EditableSection pageId="services" sectionId="become">
-<section className="py-32 bg-brand-bg text-center">
+<section className="py-16 md:py-32 bg-brand-bg text-center">
         <div className="max-w-3xl mx-auto px-6">
           {become['_hide_headline'] !== 'true' && <h2 className="text-4xl font-black mb-8 uppercase tracking-tighter italic font-serif">{become.headline}</h2>}
           {become['_hide_desc'] !== 'true' && (

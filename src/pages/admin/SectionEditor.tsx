@@ -144,7 +144,7 @@ export default function SectionEditor({ pageId: propPageId, sectionId: propSecti
 
   if (!schema) {
     return (
-      <div className="flex flex-col items-center justify-center h-full py-32 text-center">
+      <div className="flex flex-col items-center justify-center h-full py-16 md:py-32 text-center">
         <AlertCircle className="w-10 h-10 text-brand-muted mb-6" />
         <p className="text-xs font-black uppercase tracking-widest text-brand-muted">
           Section schema not found for <span className="text-brand-accent">{pageId} / {sectionId}</span>

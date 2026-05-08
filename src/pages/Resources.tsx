@@ -112,7 +112,7 @@ export default function Resources() {
   return (
     <div className="pt-20">
       <EditableSection pageId="resources" sectionId="hero">
-<section className="bg-brand-bg py-32 border-b border-brand-text/5 relative overflow-hidden">
+<section className="bg-brand-bg py-16 md:py-32 border-b border-brand-text/5 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -120,7 +120,7 @@ export default function Resources() {
           >
             {hero['_hide_eyebrow'] !== 'true' && <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-8 block">{hero.eyebrow}</span>}
             {(hero['_hide_headline_line1'] !== 'true' || hero['_hide_headline_line2'] !== 'true') && (
-              <h1 className="text-6xl md:text-[8vw] font-black mb-12 uppercase tracking-tighter italic leading-[0.8]">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-12 uppercase tracking-tighter italic leading-[0.9]">
                 {hero['_hide_headline_line1'] !== 'true' && <>{hero.headline_line1} <br /></>}
                 {hero['_hide_headline_line2'] !== 'true' && <span className="text-brand-text">{hero.headline_line2}</span>}
                 {(hero['_hide_headline_line1'] !== 'true' || hero['_hide_headline_line2'] !== 'true') && '.'}
@@ -141,10 +141,10 @@ export default function Resources() {
 
       {/* Certification Guides */}
       <EditableSection pageId="resources" sectionId="pathways">
-<section id="certification-guides" className="py-32 bg-brand-dark">
+<section id="certification-guides" className="py-16 md:py-32 bg-brand-dark">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8">
-            {pathways['_hide_headline'] !== 'true' && <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic font-serif">{pathways.headline}</h2>}
+            {pathways['_hide_headline'] !== 'true' && <h2 className="text-3xl md:text-6xl font-black uppercase tracking-tighter italic font-serif">{pathways.headline}</h2>}
             <div className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-accent flex items-center hover:text-brand-text cursor-pointer transition-colors group">
               View Global Guide <ArrowUpRight className="ml-2 w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </div>
@@ -169,7 +169,7 @@ export default function Resources() {
 
       {/* Main Grid: Blog + Case Studies */}
       <EditableSection pageId="resources" sectionId="blog">
-<section id="case-studies" className="py-32 bg-brand-bg">
+<section id="case-studies" className="py-16 md:py-32 bg-brand-bg">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-24">
             
@@ -282,7 +282,7 @@ export default function Resources() {
       </EditableSection>
       {/* Knowledge Vault */}
       <EditableSection pageId="resources" sectionId="vault">
-<section className="py-32 bg-brand-dark border-t border-brand-text/5">
+<section className="py-16 md:py-32 bg-brand-dark border-t border-brand-text/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div id="glossary">
@@ -319,7 +319,7 @@ export default function Resources() {
 
       {/* Governance & Archive */}
       <EditableSection pageId="resources" sectionId="governance">
-<section id="governance" className="py-32 bg-brand-bg border-t border-brand-text/5">
+<section id="governance" className="py-16 md:py-32 bg-brand-bg border-t border-brand-text/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
             <div id="reports">

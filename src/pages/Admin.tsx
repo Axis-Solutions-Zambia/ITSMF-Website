@@ -4,10 +4,11 @@ import { Link, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { 
   ShieldCheck, Users, Calendar, FileText, Settings, 
   LogOut, LayoutDashboard, ChevronRight, Search, 
-  Bell, Sun, Moon, Plus, ArrowUpRight, Download
+  Bell, Sun, Moon, Plus, ArrowUpRight, Download, MessageSquare
 } from 'lucide-react';
 
 import ContentManager from './admin/ContentManager';
+import Messages from './admin/Messages';
 
 // Mock Data
 const METRICS = [
@@ -199,6 +200,7 @@ export default function Admin() {
 
   const NAV_ITEMS = [
     { icon: LayoutDashboard, label: 'Overview', path: '/admin' },
+    { icon: MessageSquare, label: 'Messages', path: '/admin/messages' },
     { icon: Calendar, label: 'Events', path: '/admin/events' },
     { icon: Users, label: 'Members', path: '/admin/members' },
     { icon: FileText, label: 'Content', path: '/admin/content' },
@@ -299,6 +301,7 @@ export default function Admin() {
             >
               <Routes>
                 <Route path="/" element={<DashboardOverview />} />
+                <Route path="/messages" element={<Messages />} />
                 <Route path="/events" element={<div className="p-8 border border-brand-text/10 border-dashed text-center text-brand-muted font-black uppercase tracking-[0.3em] text-xs">Events Management Module (Placeholder)</div>} />
                 <Route path="/members" element={<div className="p-8 border border-brand-text/10 border-dashed text-center text-brand-muted font-black uppercase tracking-[0.3em] text-xs">Member Directory Module (Placeholder)</div>} />
                 <Route path="/content/*" element={<ContentManager />} />

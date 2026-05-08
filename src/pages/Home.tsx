@@ -117,14 +117,14 @@ export default function Home() {
           </div>
 
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10 w-full">
-          <div className="flex flex-col lg:flex-row justify-between items-end mb-16 gap-12">
+          <div className="flex flex-col lg:flex-row justify-between items-end mb-10 md:mb-16 gap-8 md:gap-12">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="lg:w-2/3"
             >
-              <h1 className="text-[8vw] sm:text-[6vw] lg:text-[5vw] font-black leading-[0.85] tracking-tighter uppercase mb-2">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] tracking-tighter uppercase mb-4">
                 {hero['_hide_headline_line1'] !== 'true' && <>{hero.headline_line1} <br /></>}
                 {hero['_hide_headline_line2'] !== 'true' && <>{hero.headline_line2} <br /></>}
                 {hero['_hide_headline_line3'] !== 'true' && hero.headline_line3}
@@ -136,7 +136,7 @@ export default function Home() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
-                className="lg:w-1/3 lg:pl-12 pb-6"
+                className="hidden md:block lg:w-1/3 lg:pl-12 pb-6"
               >
                 {hero['_hide_mission_label'] !== 'true' && (
                   <p className="text-xs text-brand-muted uppercase tracking-[0.3em] font-bold mb-6">{hero.mission_label}</p>
@@ -149,11 +149,11 @@ export default function Home() {
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-wrap gap-6 mb-20">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 mb-16 md:mb-20">
             {hero['_hide_cta_primary_label'] !== 'true' && (
               <Link
                 to={hero.cta_primary_url || '/membership'}
-                className="bg-brand-accent text-brand-dark px-10 py-5 font-black text-xs uppercase tracking-widest hover:bg-brand-text transition-all shadow-xl"
+                className="bg-brand-accent text-brand-dark px-10 py-5 font-black text-xs uppercase tracking-widest hover:bg-brand-text transition-all shadow-xl w-full sm:w-auto text-center"
               >
                 {hero.cta_primary_label}
               </Link>
@@ -161,7 +161,7 @@ export default function Home() {
             {hero['_hide_cta_secondary_label'] !== 'true' && (
               <Link
                 to={hero.cta_secondary_url || '/events'}
-                className="bg-transparent border border-brand-text/20 text-brand-text px-10 py-5 font-black text-xs uppercase tracking-widest hover:border-brand-accent hover:text-brand-accent transition-all"
+                className="bg-transparent border border-brand-text/20 text-brand-text px-10 py-5 font-black text-xs uppercase tracking-widest hover:border-brand-accent hover:text-brand-accent transition-all w-full sm:w-auto text-center"
               >
                 {hero.cta_secondary_label}
               </Link>
@@ -170,7 +170,7 @@ export default function Home() {
 
           {/* Statistics Grid */}
           {hero['_hide_stats'] !== 'true' && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 sm:gap-8">
               {((hero as any).stats || HERO_DEFAULTS.stats).map((stat: any, i: number) => (
                 <motion.div
                   key={i}
@@ -197,13 +197,13 @@ export default function Home() {
       <EditableSection pageId="home" sectionId="overview">
       <section className="py-16 lg:py-20 bg-brand-dark border-y border-brand-text/5 relative">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
             <div>
               {overview['_hide_eyebrow'] !== 'true' && (
                 <span className="text-brand-accent font-black tracking-[0.3em] uppercase text-xs mb-6 block">{overview.eyebrow}</span>
               )}
               {overview['_hide_headline'] !== 'true' && (
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-8 leading-[1.1]">
+                <h2 className="text-3xl md:text-5xl lg:text-6xl font-black mb-8 leading-[1.1]">
                   {overview.headline}
                 </h2>
               )}
@@ -240,7 +240,7 @@ export default function Home() {
                 </div>
               )}
               {(overview['_hide_card_title'] !== 'true' || overview['_hide_card_body'] !== 'true') && (
-                <div className="absolute -bottom-10 -right-10 bg-brand-accent p-12 text-brand-dark max-w-[280px]">
+                <div className="md:absolute md:-bottom-10 md:-right-10 bg-brand-accent p-8 md:p-12 text-brand-dark md:max-w-[280px] w-11/12 md:w-auto -mt-12 ml-auto relative z-10 shadow-2xl">
                   <div className="text-4xl font-black font-mono mb-4 italic">01.</div>
                   {overview['_hide_card_title'] !== 'true' && <h3 className="text-xl font-black uppercase tracking-tighter leading-none mb-4">{overview.card_title}</h3>}
                   {overview['_hide_card_body'] !== 'true' && <p className="text-xs font-bold uppercase tracking-widest leading-loose">{overview.card_body}</p>}
@@ -254,7 +254,7 @@ export default function Home() {
 
       {/* ─── Call to Events ───────────────────────────────────────────────── */}
       <EditableSection pageId="home" sectionId="events">
-      <section className="py-24 bg-brand-bg relative overflow-hidden">
+      <section className="py-16 md:py-24 bg-brand-bg relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-medium text-brand-text mb-3">What's happening?</h2>
           <p className="text-brand-muted text-sm md:text-base">Join us at our upcoming chapter events and summits</p>
@@ -277,7 +277,7 @@ export default function Home() {
                     <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center p-4">
-                    <h3 className="text-5xl lg:text-6xl font-black text-white uppercase tracking-tight drop-shadow-xl text-center w-full break-words">
+                    <h3 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tight drop-shadow-xl text-center w-full break-words">
                       {ev.type}
                     </h3>
                   </div>
@@ -324,7 +324,7 @@ export default function Home() {
                             <div className="absolute inset-0 bg-black/30" />
                           </div>
                           <div className="absolute inset-0 flex items-center justify-center p-4">
-                            <h3 className="text-5xl font-black text-white uppercase tracking-tight drop-shadow-2xl text-center w-full break-words">
+                            <h3 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tight drop-shadow-2xl text-center w-full break-words">
                               {ev.type}
                             </h3>
                           </div>
@@ -355,7 +355,7 @@ export default function Home() {
                   onClick={() => setActiveEventIndex(i)}
                   className={`rounded-full transition-all duration-300 ${
                     i === activeEventIndex 
-                      ? 'w-2.5 h-2.5 bg-blue-600 dark:bg-blue-500' 
+                      ? 'w-2.5 h-2.5 bg-brand-accent' 
                       : 'w-2 h-2 bg-brand-text/20 hover:bg-brand-text/40'
                   }`}
                   aria-label={`Go to slide ${i + 1}`}

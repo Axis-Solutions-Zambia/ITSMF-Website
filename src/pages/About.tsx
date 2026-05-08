@@ -1,8 +1,10 @@
 import { motion } from 'motion/react';
-import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useRef } from 'react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, Send, CheckCircle, Loader2 } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
+import { db } from '@/src/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 // ─── Default content (Firestore fallback) ────────────────────────────────────
 const TOP_DEFAULTS = {
@@ -100,18 +102,46 @@ export default function About() {
     }
   };
 
+  // Contact form state
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
+  const [formSending, setFormSending] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formError, setFormError] = useState('');
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormSending(true);
+    setFormError('');
+    try {
+      await addDoc(collection(db, 'contact_messages'), {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || '',
+        message: formData.message,
+        read: false,
+        createdAt: serverTimestamp(),
+      });
+      setFormSubmitted(true);
+    } catch (err: any) {
+      setFormError('Failed to send message. Please try again.');
+      console.error('Contact form error:', err);
+    } finally {
+      setFormSending(false);
+    }
+  };
+
   return (
     <div id="top" className="pt-20">
       {/* Hero */}
       <EditableSection pageId="about" sectionId="top">
-<section id="story" className="bg-brand-dark py-32 border-b border-brand-text/5 relative overflow-hidden">
+<section id="story" className="bg-brand-dark py-16 md:py-32 border-b border-brand-text/5 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             {(top['_hide_headline_line1'] !== 'true' || top['_hide_headline_line2'] !== 'true') && (
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-[0.9] mb-8 uppercase tracking-tighter italic">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] mb-8 uppercase tracking-tighter italic">
                 {top['_hide_headline_line1'] !== 'true' && <>{top.headline_line1} <br /></>}
                 {top['_hide_headline_line2'] !== 'true' && <><span className="text-brand-text">{top.headline_line2}</span>.</>}
               </h1>
@@ -131,7 +161,7 @@ export default function About() {
 
       {/* Vision, Mission, Values */}
       <EditableSection pageId="about" sectionId="vision">
-<section id="vision" className="py-32 bg-brand-bg">
+<section id="vision" className="py-16 md:py-32 bg-brand-bg">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div>
             {vision['_hide_headline'] !== 'true' && (
@@ -143,23 +173,13 @@ export default function About() {
             )}
             
             {vision['_hide_values'] !== 'true' && (
-              <div className="relative overflow-hidden w-screen left-1/2 -translate-x-1/2 py-8 mt-12 bg-brand-text/5">
-                {/* Fade edges for better visual effect */}
-                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-brand-bg to-transparent z-10 pointer-events-none"></div>
-                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-brand-bg to-transparent z-10 pointer-events-none"></div>
-
-                <div className="flex w-max animate-marquee-lr">
-                  {[...Array(2)].map((_, groupIdx) => (
-                    <div key={groupIdx} className="flex gap-8 pr-8">
-                      {([...(vision.values as any[]), ...(vision.values as any[]), ...(vision.values as any[])]).map((val, idx) => (
-                        <div key={idx} className="w-[280px] md:w-[400px] shrink-0 p-8 border border-brand-text/10 bg-brand-dark flex items-center space-x-6 hover:border-brand-accent transition-colors">
-                          <div className="w-2 h-2 bg-brand-accent shadow-[0_0_10px_var(--color-brand-accent)]"></div>
-                          <span className="text-sm font-black uppercase tracking-[0.3em]">{val.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+                {(vision.values as any[]).map((val, idx) => (
+                  <div key={idx} className="p-8 border border-brand-text/10 bg-brand-dark flex items-center space-x-6 hover:border-brand-accent transition-colors group">
+                    <div className="w-2 h-2 bg-brand-accent shadow-[0_0_10px_var(--color-brand-accent)] group-hover:scale-150 transition-transform"></div>
+                    <span className="text-sm font-black uppercase tracking-[0.3em]">{val.value}</span>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -169,7 +189,7 @@ export default function About() {
 
       {/* Board of Directors */}
       <EditableSection pageId="about" sectionId="board">
-<section id="board" className="py-32 bg-brand-dark overflow-hidden">
+<section id="board" className="py-16 md:py-32 bg-brand-dark overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           {board['_hide_headline'] !== 'true' && (
             <div className="mb-16 md:mb-24 border-l-4 border-brand-accent pl-6 sm:pl-10">
@@ -215,7 +235,7 @@ export default function About() {
 
       {/* Advisory & Governance */}
       <EditableSection pageId="about" sectionId="advisory">
-<section id="advisory" className="py-32 bg-brand-bg">
+<section id="advisory" className="py-16 md:py-32 bg-brand-bg">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
             <div>
@@ -257,11 +277,11 @@ export default function About() {
 
       {/* International & Contact */}
       <EditableSection pageId="about" sectionId="intl">
-<section id="intl" className="py-32 bg-brand-dark border-y border-brand-text/5">
+<section id="intl" className="py-16 md:py-32 bg-brand-dark border-y border-brand-text/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 text-center">
           {intl['_hide_eyebrow'] !== 'true' && <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-8 block">{intl.eyebrow}</span>}
           {(intl['_hide_headline_line1'] !== 'true' || intl['_hide_headline_line2'] !== 'true') && (
-            <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter italic font-serif leading-none mb-12">
+            <h2 className="text-3xl md:text-6xl font-black uppercase tracking-tighter italic font-serif leading-none mb-12">
               {intl['_hide_headline_line1'] !== 'true' && <>{intl.headline_line1} <br /></>}
               {intl['_hide_headline_line2'] !== 'true' && <span className="text-brand-text">{intl.headline_line2}</span>}
               {(intl['_hide_headline_line1'] !== 'true' || intl['_hide_headline_line2'] !== 'true') && '.'}
@@ -290,27 +310,120 @@ export default function About() {
 
 
       <EditableSection pageId="about" sectionId="contact">
-<section id="contact" className="py-32 bg-brand-bg relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-12">
-          <div>
-             {contact['_hide_headline'] !== 'true' && <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter italic font-serif mb-8 md:mb-0">{contact.headline}</h2>}
+<section id="contact" className="py-16 md:py-32 bg-brand-bg relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="flex flex-col md:flex-row items-start justify-between gap-12 mb-16">
+            <div>
+               {contact['_hide_headline'] !== 'true' && <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic font-serif mb-8 md:mb-0">{contact.headline}</h2>}
+            </div>
+            
+            <div className="w-full flex-1 md:max-w-3xl bg-brand-accent p-8 md:p-12 text-brand-dark">
+               <div className="flex flex-col sm:flex-row gap-10 justify-between items-start sm:items-center">
+                 {contact['_hide_email'] !== 'true' && (
+                   <div>
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-70">Email Address</h4>
+                     <div className="text-lg md:text-2xl font-black uppercase tracking-tighter border-b-2 border-brand-dark/20 pb-1 inline-block">{contact.email}</div>
+                   </div>
+                 )}
+                 {contact['_hide_phone'] !== 'true' && (
+                   <div>
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-70">Phone Number</h4>
+                     <div className="text-lg md:text-2xl font-black uppercase tracking-tighter border-b-2 border-brand-dark/20 pb-1 inline-block">{contact.phone}</div>
+                   </div>
+                 )}
+               </div>
+            </div>
           </div>
-          
-          <div className="w-full flex-1 md:max-w-3xl bg-brand-accent p-12 text-brand-dark">
-             <div className="flex flex-col sm:flex-row gap-10 justify-between items-start sm:items-center">
-               {contact['_hide_email'] !== 'true' && (
-                 <div>
-                   <h4 className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-70">Email Address</h4>
-                   <div className="text-xl md:text-2xl font-black uppercase tracking-tighter border-b-2 border-brand-dark/20 pb-1 inline-block">{contact.email}</div>
-                 </div>
-               )}
-               {contact['_hide_phone'] !== 'true' && (
-                 <div>
-                   <h4 className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-70">Phone Number</h4>
-                   <div className="text-xl md:text-2xl font-black uppercase tracking-tighter border-b-2 border-brand-dark/20 pb-1 inline-block">{contact.phone}</div>
-                 </div>
-               )}
-             </div>
+
+          {/* Contact Form */}
+          <div className="bg-brand-dark border border-brand-text/10 p-8 md:p-12">
+            <div className="flex flex-col md:flex-row gap-12 md:gap-16">
+              <div className="md:w-1/3">
+                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter italic font-serif leading-none mb-4">SEND US<br />A MESSAGE.</h3>
+                <p className="text-xs text-brand-muted uppercase tracking-widest font-bold leading-loose">For secretariat inquiries, sponsorship proposals, or governance clarifications.</p>
+              </div>
+              <div className="md:w-2/3">
+                {formSubmitted ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex flex-col items-center justify-center py-16 text-center"
+                  >
+                    <CheckCircle className="w-12 h-12 text-green-500 mb-6" />
+                    <h4 className="text-xl font-black uppercase tracking-tighter mb-2">Message Sent</h4>
+                    <p className="text-xs text-brand-muted uppercase tracking-widest font-bold mb-8">We'll get back to you as soon as possible.</p>
+                    <button
+                      onClick={() => { setFormSubmitted(false); setFormData({ name: '', email: '', phone: '', message: '' }); }}
+                      className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-accent hover:text-brand-text transition-colors"
+                    >
+                      Send Another Message
+                    </button>
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleContactSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Full Name *</label>
+                        <input
+                          type="text"
+                          value={formData.name}
+                          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                          required
+                          placeholder="John Doe"
+                          className="w-full px-4 py-4 bg-brand-bg border border-brand-text/10 text-sm font-bold focus:border-brand-accent outline-none transition-all text-brand-text placeholder:text-brand-muted/40"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Email Address *</label>
+                        <input
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                          required
+                          placeholder="john@example.com"
+                          className="w-full px-4 py-4 bg-brand-bg border border-brand-text/10 text-sm font-bold focus:border-brand-accent outline-none transition-all text-brand-text placeholder:text-brand-muted/40"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Phone Number</label>
+                      <input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                        placeholder="+260 97X XXX XXX"
+                        className="w-full px-4 py-4 bg-brand-bg border border-brand-text/10 text-sm font-bold focus:border-brand-accent outline-none transition-all text-brand-text placeholder:text-brand-muted/40"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Message *</label>
+                      <textarea
+                        value={formData.message}
+                        onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
+                        required
+                        rows={5}
+                        placeholder="How can we help you?"
+                        className="w-full px-4 py-4 bg-brand-bg border border-brand-text/10 text-sm font-bold focus:border-brand-accent outline-none transition-all resize-none text-brand-text placeholder:text-brand-muted/40"
+                      />
+                    </div>
+                    {formError && (
+                      <p className="text-[10px] font-black uppercase tracking-widest text-[#F87171]">{formError}</p>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={formSending}
+                      className="bg-brand-accent text-brand-dark px-10 py-5 font-black text-xs uppercase tracking-[0.2em] hover:bg-brand-text transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                    >
+                      {formSending ? (
+                        <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending...</>
+                      ) : (
+                        <><Send className="w-4 h-4 mr-2" /> Send Message</>
+                      )}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
           </div>
         </div>
         <div className="absolute left-0 bottom-0 text-[15vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mb-10 ml-4">

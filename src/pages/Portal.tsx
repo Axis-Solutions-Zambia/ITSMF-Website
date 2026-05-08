@@ -79,7 +79,7 @@ export default function Portal() {
           <div className="mb-12">
             {auth['_hide_eyebrow'] !== 'true' && <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-4 block">{auth.eyebrow}</span>}
             {(auth['_hide_headline_line1'] !== 'true' || auth['_hide_headline_line2'] !== 'true') && (
-              <h1 className="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter italic font-serif leading-none">
+              <h1 className="text-3xl md:text-5xl font-black mb-4 uppercase tracking-tighter italic font-serif leading-none">
                 {auth['_hide_headline_line1'] !== 'true' && <>{auth.headline_line1} <br /></>}
                 {auth['_hide_headline_line2'] !== 'true' && auth.headline_line2}
               </h1>
@@ -149,7 +149,7 @@ export default function Portal() {
           <div>
             {dashboard['_hide_status'] !== 'true' && <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-4 block font-mono">{dashboard.status}</span>}
             {(dashboard['_hide_welcome_line1'] !== 'true' || dashboard['_hide_welcome_line2'] !== 'true') && (
-              <h1 className="text-4xl md:text-6xl font-black leading-none uppercase tracking-tighter italic">
+              <h1 className="text-3xl md:text-5xl font-black leading-none uppercase tracking-tighter italic">
                 {dashboard['_hide_welcome_line1'] !== 'true' && <>{dashboard.welcome_line1} <br /></>}
                 {dashboard['_hide_welcome_line2'] !== 'true' && <span className="text-brand-text">{dashboard.welcome_line2}</span>}
               </h1>

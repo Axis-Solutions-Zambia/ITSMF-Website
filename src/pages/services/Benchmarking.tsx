@@ -24,7 +24,7 @@ export default function Benchmarking() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <div>
               <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-4 block font-mono">DASHED SUB-TREE // LEVEL 4 DEPTH</span>
-              <h1 className="text-4xl md:text-5xl font-black leading-none uppercase tracking-tighter italic font-serif">ITIL PERFORMANCE <br/>BENCHMARKING MODEL.</h1>
+              <h1 className="text-3xl md:text-5xl font-black leading-none uppercase tracking-tighter italic font-serif">ITIL PERFORMANCE <br/>BENCHMARKING MODEL.</h1>
             </div>
             <div className="flex space-x-4">
               <div className="w-px h-12 bg-brand-text/10 hidden md:block"></div>

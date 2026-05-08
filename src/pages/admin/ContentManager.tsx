@@ -178,7 +178,7 @@ function PagesGrid() {
       {!seeded && <SeedBanner />}
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-32">
+        <div className="flex flex-col items-center justify-center py-16 md:py-32">
           <Loader2 className="w-8 h-8 animate-spin text-brand-accent mb-4" />
           <p className="text-[10px] font-black uppercase tracking-widest text-brand-muted">Connecting to Firestore…</p>
         </div>
@@ -234,7 +234,7 @@ function PageDetails() {
 
   if (!pageSchema || !pageId) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 text-center">
+      <div className="flex flex-col items-center justify-center py-16 md:py-32 text-center">
         <AlertCircle className="w-10 h-10 text-brand-muted mb-4" />
         <p className="text-xs font-black uppercase tracking-widest text-brand-muted">Page not found.</p>
         <Link to="/admin/content" className="mt-6 text-[10px] font-black uppercase tracking-[0.3em] text-brand-accent hover:underline">
