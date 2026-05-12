@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown, Globe, LogIn, Sun, Moon, Home, Info, Users, Calendar, Briefcase, Folder, Handshake, ChevronRight } from 'lucide-react';
+import logo from '../assests/itsmf-logo-zm.png';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/', category: 'teal' },
@@ -164,8 +165,8 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center active:scale-95 transition-transform">
-            <img src="https://i.postimg.cc/639Tm3L7/itzambialogo.png" alt="itSMF Zambia Logo" className="h-12 w-auto logo-light" />
-            <img src="https://i.postimg.cc/kGSpknyY/itzambialogo-i.png" alt="itSMF Zambia Logo" className="h-12 w-auto logo-dark" />
+            <img src={logo} alt="itSMF Zambia Logo" className="h-12 w-auto logo-light" />
+            <img src={logo} alt="itSMF Zambia Logo" className="h-12 w-auto logo-dark" />
           </Link>
 
           {/* Desktop Nav */}
@@ -355,8 +356,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20 relative z-10">
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center mb-8">
-              <img src="https://i.postimg.cc/639Tm3L7/itzambialogo.png" alt="itSMF Zambia Logo" className="h-16 w-auto logo-light" />
-              <img src="https://i.postimg.cc/kGSpknyY/itzambialogo-i.png" alt="itSMF Zambia Logo" className="h-16 w-auto logo-dark" />
+              <img src={logo} alt="itSMF Zambia Logo" className="h-16 w-auto logo-light" />
+              <img src={logo} alt="itSMF Zambia Logo" className="h-16 w-auto logo-dark" />
             </Link>
             <p className="text-brand-muted max-w-sm text-sm uppercase tracking-wider font-bold leading-relaxed mb-8 opacity-80">
               Advancing IT Service Management and Digital Transformation across the Republic of Zambia.
