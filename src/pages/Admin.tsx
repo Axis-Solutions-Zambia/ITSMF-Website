@@ -100,7 +100,7 @@ function DashboardOverview() {
           <div key={i} className="bg-brand-dark p-8 border border-brand-text/5 hover:border-brand-accent/50 transition-all group">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-muted mb-6">{metric.label}</div>
             <div className="text-4xl font-black tracking-tighter mb-2">{metric.value}</div>
-            <div className={`text-[10px] font-black uppercase tracking-[0.2em] ${metric.isPositive ? 'text-green-500' : 'text-[#F87171]'}`}>
+            <div className={`text-[10px] font-black uppercase tracking-[0.2em] ${metric.isPositive ? 'text-green-500' : 'text-red-500'}`}>
               {metric.change} vs Last Month
             </div>
           </div>
@@ -245,7 +245,7 @@ export default function Admin() {
         <div className="p-6 border-t border-brand-text/5">
           <button 
             onClick={() => setIsLoggedIn(false)}
-            className="flex items-center w-full px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-[#F87171] hover:bg-[#F87171]/10 transition-all"
+            className="flex items-center w-full px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-red-500 hover:bg-red-500/10 transition-all"
           >
             <LogOut className="w-4 h-4 mr-4" /> Logout
           </button>
@@ -268,7 +268,7 @@ export default function Admin() {
           <div className="flex items-center space-x-6">
             <button className="relative text-brand-muted hover:text-brand-accent transition-colors">
               <Bell className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#F87171] rounded-full"></span>
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
             <button
               onClick={toggleTheme}

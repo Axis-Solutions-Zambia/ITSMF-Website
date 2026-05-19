@@ -18,7 +18,7 @@
   :root {
     --brand-bg: #F8FAFC;
     --brand-text: #0F172A;
-    --brand-accent: #C5A059;
+    --brand-accent: #97102F;
     --brand-muted: #64748B;
     --brand-dark: #FFFFFF;
   }
@@ -26,7 +26,7 @@
   .dark {
     --brand-bg: #0F172A;
     --brand-text: #F8FAFC;
-    --brand-accent: #C5A059;
+    --brand-accent: #97102F;
     --brand-muted: #94A3B8;
     --brand-dark: #020617;
   }

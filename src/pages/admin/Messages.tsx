@@ -164,7 +164,7 @@ export default function Messages() {
                       <button
                         onClick={() => handleDelete(selectedMessage.id)}
                         disabled={deletingId === selectedMessage.id}
-                        className="p-2 text-brand-muted hover:text-[#F87171] hover:bg-[#F87171]/10 transition-all disabled:opacity-50"
+                        className="p-2 text-brand-muted hover:text-red-500 hover:bg-red-500/10 transition-all disabled:opacity-50"
                         title="Delete message"
                       >
                         {deletingId === selectedMessage.id ? (

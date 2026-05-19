@@ -84,7 +84,7 @@ export default function Home() {
     <div className="flex flex-col">
       {/* ─── Hero Section ─────────────────────────────────────────────────── */}
       <EditableSection pageId="home" sectionId="hero">
-        <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-brand-bg">
+        <section className="relative min-h-fit md:min-h-screen flex items-center pt-32 pb-12 md:pt-20 md:pb-0 overflow-hidden bg-brand-bg">
           {/* Marquee Background */}
           <div className="absolute inset-0 z-0 overflow-hidden flex flex-col justify-center gap-6 py-12 pointer-events-none opacity-40 dark:opacity-20">
             {/* Top Row - moving left to right */}

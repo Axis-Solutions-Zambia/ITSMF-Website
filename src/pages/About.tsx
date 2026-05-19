@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { ArrowUpRight, ChevronLeft, ChevronRight, Send, CheckCircle, Loader2 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
 import { db } from '@/src/lib/firebase';
@@ -174,7 +174,7 @@ export default function About() {
             
             {vision['_hide_values'] !== 'true' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-                {(vision.values as any[]).map((val, idx) => (
+                {(vision.values as unknown as any[]).map((val, idx) => (
                   <div key={idx} className="p-8 border border-brand-text/10 bg-brand-dark flex items-center space-x-6 hover:border-brand-accent transition-colors group">
                     <div className="w-2 h-2 bg-brand-accent shadow-[0_0_10px_var(--color-brand-accent)] group-hover:scale-150 transition-transform"></div>
                     <span className="text-sm font-black uppercase tracking-[0.3em]">{val.value}</span>
@@ -407,7 +407,7 @@ export default function About() {
                       />
                     </div>
                     {formError && (
-                      <p className="text-[10px] font-black uppercase tracking-widest text-[#F87171]">{formError}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-red-500">{formError}</p>
                     )}
                     <button
                       type="submit"

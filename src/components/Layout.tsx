@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown, Globe, LogIn, Sun, Moon, Home, Info, Users, Calendar, Briefcase, Folder, Handshake, ChevronRight } from 'lucide-react';
 import logo from '../assests/itsmf-logo-zm.png';
+import logoDark from '../assests/itsmf-logo-zm_1.png';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/', category: 'teal' },
@@ -119,25 +120,15 @@ export function Navbar() {
     });
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'teal': return 'hover:text-teal-400 active-teal';
-      case 'purple': return 'hover:text-purple-400 active-purple';
-      case 'coral': return 'hover:text-coral-400 active-coral';
-      default: return '';
-    }
+  const getCategoryColor = () => {
+    return 'hover:text-brand-accent';
   };
 
-  const getActiveBorder = (href: string, category: string) => {
+  const getActiveBorder = (href: string) => {
     const path = location.pathname;
     const baseHref = href.split('#')[0];
     if (path === baseHref || (baseHref !== '/' && path.startsWith(baseHref))) {
-      switch (category) {
-        case 'teal': return 'border-b-2 border-teal-400';
-        case 'purple': return 'border-b-2 border-purple-400';
-        case 'coral': return 'border-b-2 border-[#F87171]';
-        default: return 'border-b-2 border-brand-accent';
-      }
+      return 'border-b-2 border-brand-accent';
     }
     return 'border-b-2 border-transparent';
   };
@@ -156,6 +147,7 @@ export function Navbar() {
   }, [location]);
 
   return (
+    <>
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled || hoveredLink ? 'bg-brand-dark/95 backdrop-blur-xl border-b border-brand-text/10 py-4' : 'bg-transparent py-8'
@@ -166,7 +158,7 @@ export function Navbar() {
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center active:scale-95 transition-transform">
             <img src={logo} alt="itSMF Zambia Logo" className="h-12 w-auto logo-light" />
-            <img src={logo} alt="itSMF Zambia Logo" className="h-12 w-auto logo-dark" />
+            <img src={logoDark} alt="itSMF Zambia Logo" className="h-12 w-auto logo-dark" />
           </Link>
 
           {/* Desktop Nav */}
@@ -179,7 +171,7 @@ export function Navbar() {
               >
                 <Link
                   to={link.href}
-                  className={`nav-link pb-1 transition-all text-[11px] font-black uppercase tracking-widest ${getCategoryColor(link.category)} ${getActiveBorder(link.href, link.category)} ${
+                  className={`nav-link pb-1 transition-all text-[11px] font-black uppercase tracking-widest ${getCategoryColor()} ${getActiveBorder(link.href)} ${
                     location.pathname === link.href ? 'text-brand-text' : 'text-brand-text/60'
                   }`}
                 >
@@ -199,8 +191,8 @@ export function Navbar() {
                 to="/portal"
                 className={`px-6 py-2 border transition-all text-[10px] font-black uppercase tracking-tighter ${
                   location.pathname.startsWith('/portal') 
-                    ? 'bg-[#F87171] border-[#F87171] text-brand-dark' 
-                    : 'border-[#F87171] text-[#F87171] hover:bg-[#F87171] hover:text-brand-bg'
+                    ? 'bg-brand-accent border-brand-accent text-brand-dark' 
+                    : 'border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg'
                 }`}
               >
                 Member Portal
@@ -256,6 +248,7 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+    </nav>
 
       {/* Mobile Sidebar Menu (Google Contacts Style) */}
       <AnimatePresence>
@@ -345,7 +338,7 @@ export function Navbar() {
           </>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 }
 
@@ -357,7 +350,7 @@ export function Footer() {
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center mb-8">
               <img src={logo} alt="itSMF Zambia Logo" className="h-16 w-auto logo-light" />
-              <img src={logo} alt="itSMF Zambia Logo" className="h-16 w-auto logo-dark" />
+              <img src={logoDark} alt="itSMF Zambia Logo" className="h-16 w-auto logo-dark" />
             </Link>
             <p className="text-brand-muted max-w-sm text-sm uppercase tracking-wider font-bold leading-relaxed mb-8 opacity-80">
               Advancing IT Service Management and Digital Transformation across the Republic of Zambia.
