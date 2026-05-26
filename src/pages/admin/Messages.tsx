@@ -75,7 +75,7 @@ export default function Messages() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
           <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic font-serif leading-none mb-2">
-            CONTACT<br />MESSAGES.
+            CONTACT MESSAGES.
           </h2>
           <p className="text-xs text-brand-muted font-bold uppercase tracking-widest">
             {messages.length} total · {unreadCount} unread

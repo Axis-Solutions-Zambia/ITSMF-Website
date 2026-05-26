@@ -1,7 +1,8 @@
 import { motion } from 'motion/react';
-import { Calendar, MapPin, Users, Ticket, Award, Filter, ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight, Download, Calendar as CalendarIcon, MapPin, Users, Globe, Ticket, Award, Filter } from 'lucide-react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
+import { PageSkeleton } from '@/src/components/PageSkeleton';
 
 // ─── Default content (Firestore fallback) ────────────────────────────────────
 const FLAGSHIP_DEFAULTS = {
@@ -84,10 +85,16 @@ const SPEAKERS_DEFAULTS = {
 };
 
 export default function Events() {
-  const { content: flagship } = usePageContent('events', 'flagship', FLAGSHIP_DEFAULTS);
-  const { content: calendar } = usePageContent('events', 'calendar', CALENDAR_DEFAULTS as any);
-  const { content: sponsor } = usePageContent('events', 'sponsor', SPONSOR_DEFAULTS as any);
-  const { content: speakers } = usePageContent('events', 'speakers', SPEAKERS_DEFAULTS);
+  const { content: flagship, loading: flagshipLoading } = usePageContent('events', 'flagship', FLAGSHIP_DEFAULTS);
+  const { content: calendar, loading: calendarLoading } = usePageContent('events', 'calendar', CALENDAR_DEFAULTS as any);
+  const { content: sponsor, loading: sponsorLoading } = usePageContent('events', 'sponsor', SPONSOR_DEFAULTS as any);
+  const { content: speakers, loading: speakersLoading } = usePageContent('events', 'speakers', SPEAKERS_DEFAULTS);
+
+  const isLoading = flagshipLoading || calendarLoading || sponsorLoading || speakersLoading;
+
+  if (isLoading) {
+    return <PageSkeleton />;
+  }
 
   return (
     <div className="pt-20">

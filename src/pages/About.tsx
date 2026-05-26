@@ -3,6 +3,7 @@ import { ArrowUpRight, ChevronLeft, ChevronRight, Send, CheckCircle, Loader2 } f
 import React, { useRef, useState } from 'react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
+import { PageSkeleton } from '@/src/components/PageSkeleton';
 import { db } from '@/src/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
@@ -86,13 +87,15 @@ const CONTACT_DEFAULTS = {
 };
 
 export default function About() {
-  const { content: top } = usePageContent('about', 'top', TOP_DEFAULTS);
-  const { content: vision } = usePageContent('about', 'vision', VISION_DEFAULTS as any);
-  const { content: board } = usePageContent('about', 'board', BOARD_DEFAULTS as any);
-  const { content: advisory } = usePageContent('about', 'advisory', ADVISORY_DEFAULTS as any);
-  const { content: intl } = usePageContent('about', 'intl', INTL_DEFAULTS as any);
-  const { content: reports } = usePageContent('about', 'reports', REPORTS_DEFAULTS as any);
-  const { content: contact } = usePageContent('about', 'contact', CONTACT_DEFAULTS);
+  const { content: top, loading: topLoading } = usePageContent('about', 'top', TOP_DEFAULTS);
+  const { content: vision, loading: visionLoading } = usePageContent('about', 'vision', VISION_DEFAULTS as any);
+  const { content: board, loading: boardLoading } = usePageContent('about', 'board', BOARD_DEFAULTS as any);
+  const { content: advisory, loading: advisoryLoading } = usePageContent('about', 'advisory', ADVISORY_DEFAULTS as any);
+  const { content: intl, loading: intlLoading } = usePageContent('about', 'intl', INTL_DEFAULTS as any);
+  const { content: reports, loading: reportsLoading } = usePageContent('about', 'reports', REPORTS_DEFAULTS as any);
+  const { content: contact, loading: contactLoading } = usePageContent('about', 'contact', CONTACT_DEFAULTS);
+
+  const isLoading = topLoading || visionLoading || boardLoading || advisoryLoading || intlLoading || reportsLoading || contactLoading;
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const scroll = (direction: 'left' | 'right') => {
@@ -101,6 +104,7 @@ export default function About() {
       scrollRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
     }
   };
+
 
   // Contact form state
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
@@ -129,6 +133,10 @@ export default function About() {
       setFormSending(false);
     }
   };
+
+  if (isLoading) {
+    return <PageSkeleton />;
+  }
 
   return (
     <div id="top" className="pt-20">

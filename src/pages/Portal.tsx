@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { LogIn, User, Lock, Mail, ChevronRight, FileText, Download, Award, Calendar } from 'lucide-react';
 import { usePageContent } from '@/src/hooks/usePageContent';
+import EditableSection from '@/src/components/EditableSection';
+import { PageSkeleton } from '@/src/components/PageSkeleton';
 
 // ─── Default content (Firestore fallback) ────────────────────────────────────
 const AUTH_DEFAULTS = {
@@ -60,12 +62,18 @@ const ITINERARY_DEFAULTS = {
 
 export default function Portal() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { content: auth } = usePageContent('portal', 'auth', AUTH_DEFAULTS);
-  const { content: dashboard } = usePageContent('portal', 'dashboard', DASHBOARD_DEFAULTS);
-  const { content: archives } = usePageContent('portal', 'archives', ARCHIVES_DEFAULTS as any);
-  const { content: briefing } = usePageContent('portal', 'briefing', BRIEFING_DEFAULTS);
-  const { content: status } = usePageContent('portal', 'status', STATUS_DEFAULTS as any);
-  const { content: itinerary } = usePageContent('portal', 'itinerary', ITINERARY_DEFAULTS as any);
+  const { content: auth, loading: authLoading } = usePageContent('portal', 'auth', AUTH_DEFAULTS);
+  const { content: dashboard, loading: dashboardLoading } = usePageContent('portal', 'dashboard', DASHBOARD_DEFAULTS);
+  const { content: archives, loading: archivesLoading } = usePageContent('portal', 'archives', ARCHIVES_DEFAULTS as any);
+  const { content: briefing, loading: briefingLoading } = usePageContent('portal', 'briefing', BRIEFING_DEFAULTS);
+  const { content: status, loading: statusLoading } = usePageContent('portal', 'status', STATUS_DEFAULTS as any);
+  const { content: itinerary, loading: itineraryLoading } = usePageContent('portal', 'itinerary', ITINERARY_DEFAULTS as any);
+
+  const isLoading = authLoading || dashboardLoading || archivesLoading || briefingLoading || statusLoading || itineraryLoading;
+
+  if (isLoading) {
+    return <PageSkeleton />;
+  }
 
   if (!isLoggedIn) {
     return (

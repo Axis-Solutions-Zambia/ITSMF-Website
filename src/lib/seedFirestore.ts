@@ -24,23 +24,54 @@ const SEED_DATA: Record<string, { title: string; path: string; status: string; s
         cta_secondary_url: '/events',
       },
       overview: {
-        eyebrow: 'Foundations',
-        headline: 'ACCELERATING SERVICE MATURITY.',
-        body: 'As the authorized voice of ITSM in the Republic, we work at the intersection of international best practice and Zambian economic reality.',
-        card_title: 'MEMBER DRIVEN',
-        card_body: 'Governance is provided by a board elected directly by our corporate and individual members.',
-        image_url: 'https://picsum.photos/seed/zambia-main/800/1000',
+        headline: 'Chapter Overview.',
+        accordion_items: [
+          {
+            title: 'Governance',
+            content: 'Standardizing frameworks for Zambian enterprise. Governance is provided by a board elected directly by our corporate and individual members.',
+            image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80'
+          },
+          {
+            title: 'Growth',
+            content: 'Increasing the density of certified professionals across the Republic through structured mentorship and exams.',
+            image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=80'
+          },
+          {
+            title: 'Advocacy',
+            content: 'Bridging the policy gap with MICT and ZNB. As the authorized voice of ITSM in the Republic, we work at the intersection of international best practice and Zambian economic reality.',
+            image: 'https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800&q=80'
+          },
+          {
+            title: 'Network',
+            content: 'Connecting the minds that power our systems through networking events, summits, and local chapters.',
+            image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80'
+          }
+        ]
       },
       events: {
-        event1_type: 'Summit',
-        event1_title: 'National Conference Livingstone',
-        event1_date: 'NOV 2026',
-        event2_type: 'Workshop',
-        event2_title: 'ITIL 4 Masterclass Lusaka',
-        event2_date: 'JUNE 2026',
-        event3_type: 'Webinar',
-        event3_title: 'Future of ZNB Infrastructure',
-        event3_date: 'MAY 2026',
+        event_list: [
+          {
+            eyebrow: 'Summit',
+            title: 'National Conference Livingstone',
+            desc: 'Join industry leaders to discuss the future of ITSM and upcoming frameworks for 2026.',
+            image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
+            link: '/events'
+          },
+          {
+            eyebrow: 'Workshop',
+            title: 'ITIL 4 Masterclass Lusaka',
+            desc: 'A comprehensive deep-dive into ITIL 4 Foundation and advanced practices.',
+            image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80',
+            link: '/events'
+          },
+          {
+            eyebrow: 'Webinar',
+            title: 'Future of ZNB Infrastructure',
+            desc: 'Online session exploring the digital transformation journey of the national bank.',
+            image: 'https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800&q=80',
+            link: '/events'
+          }
+        ]
       }
     }
   },

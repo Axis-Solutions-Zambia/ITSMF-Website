@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import { BookOpen, FileText, Download, Play, MessageSquare, Lightbulb, UserPlus, ArrowUpRight } from 'lucide-react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
+import { PageSkeleton } from '@/src/components/PageSkeleton';
 
 // ─── Default content (Firestore fallback) ────────────────────────────────────
 const HERO_DEFAULTS = {
@@ -100,14 +101,20 @@ const GOVERNANCE_DEFAULTS = {
 };
 
 export default function Resources() {
-  const { content: hero } = usePageContent('resources', 'hero', HERO_DEFAULTS);
-  const { content: pathways } = usePageContent('resources', 'pathways', PATHWAYS_DEFAULTS as any);
-  const { content: blog } = usePageContent('resources', 'blog', BLOG_DEFAULTS as any);
-  const { content: thoughtLeadership } = usePageContent('resources', 'thought-leadership', THOUGHT_LEADERSHIP_DEFAULTS as any);
-  const { content: resourcesList } = usePageContent('resources', 'resources_list', RESOURCES_LIST_DEFAULTS as any);
-  const { content: fellowship } = usePageContent('resources', 'fellowship', FELLOWSHIP_DEFAULTS);
-  const { content: vault } = usePageContent('resources', 'vault', VAULT_DEFAULTS);
-  const { content: governance } = usePageContent('resources', 'governance', GOVERNANCE_DEFAULTS as any);
+  const { content: hero, loading: heroLoading } = usePageContent('resources', 'hero', HERO_DEFAULTS);
+  const { content: pathways, loading: pathwaysLoading } = usePageContent('resources', 'pathways', PATHWAYS_DEFAULTS as any);
+  const { content: blog, loading: blogLoading } = usePageContent('resources', 'blog', BLOG_DEFAULTS as any);
+  const { content: thoughtLeadership, loading: thoughtLeadershipLoading } = usePageContent('resources', 'thought-leadership', THOUGHT_LEADERSHIP_DEFAULTS as any);
+  const { content: resourcesList, loading: resourcesListLoading } = usePageContent('resources', 'resources_list', RESOURCES_LIST_DEFAULTS as any);
+  const { content: fellowship, loading: fellowshipLoading } = usePageContent('resources', 'fellowship', FELLOWSHIP_DEFAULTS);
+  const { content: vault, loading: vaultLoading } = usePageContent('resources', 'vault', VAULT_DEFAULTS);
+  const { content: governance, loading: governanceLoading } = usePageContent('resources', 'governance', GOVERNANCE_DEFAULTS as any);
+
+  const isLoading = heroLoading || pathwaysLoading || blogLoading || thoughtLeadershipLoading || resourcesListLoading || fellowshipLoading || vaultLoading || governanceLoading;
+
+  if (isLoading) {
+    return <PageSkeleton />;
+  }
 
   return (
     <div className="pt-20">

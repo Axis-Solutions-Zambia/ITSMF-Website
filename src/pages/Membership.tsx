@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
+import { PageSkeleton } from '@/src/components/PageSkeleton';
 import { useState, useEffect, useRef } from 'react';
 
 function GravityCanvas() {
@@ -245,11 +246,17 @@ const FAQ_DEFAULTS = {
 };
 
 export default function Membership() {
-  const { content: hero } = usePageContent('membership', 'hero', HERO_DEFAULTS);
-  const { content: benefits } = usePageContent('membership', 'benefits', BENEFITS_DEFAULTS as any);
-  const { content: tiers } = usePageContent('membership', 'tiers', TIERS_DEFAULTS as any);
-  const { content: corporate } = usePageContent('membership', 'corporate', CORPORATE_DEFAULTS as any);
-  const { content: faq } = usePageContent('membership', 'faq', FAQ_DEFAULTS as any);
+  const { content: hero, loading: heroLoading } = usePageContent('membership', 'hero', HERO_DEFAULTS);
+  const { content: benefits, loading: benefitsLoading } = usePageContent('membership', 'benefits', BENEFITS_DEFAULTS as any);
+  const { content: tiers, loading: tiersLoading } = usePageContent('membership', 'tiers', TIERS_DEFAULTS as any);
+  const { content: corporate, loading: corporateLoading } = usePageContent('membership', 'corporate', CORPORATE_DEFAULTS as any);
+  const { content: faq, loading: faqLoading } = usePageContent('membership', 'faq', FAQ_DEFAULTS as any);
+
+  const isLoading = heroLoading || benefitsLoading || tiersLoading || corporateLoading || faqLoading;
+
+  if (isLoading) {
+    return <PageSkeleton />;
+  }
 
   return (
     <div id="top" className="pt-20">

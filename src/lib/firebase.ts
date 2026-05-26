@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCpODlHlm-J7TZYsP3_kCY129waP9ymKcw",
@@ -14,4 +14,14 @@ const firebaseConfig = {
 // Prevent duplicate app initialisation in dev with HMR
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
-export const db = getFirestore(app);
+let firestoreDb;
+try {
+  firestoreDb = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+  });
+} catch (e) {
+  // Fallback to getFirestore if already initialized (e.g. during Hot Module Replacement)
+  firestoreDb = getFirestore(app);
+}
+
+export const db = firestoreDb;

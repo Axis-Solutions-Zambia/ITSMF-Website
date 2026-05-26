@@ -5,6 +5,8 @@
 
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { db } from '@/src/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { Navbar, Footer } from '@/src/components/Layout';
 import Home from '@/src/pages/Home';
 import About from '@/src/pages/About';
@@ -67,9 +69,46 @@ function LayoutWrapper() {
   );
 }
 
+function VisitTracker() {
+  useEffect(() => {
+    const sessionLogged = sessionStorage.getItem('visit_logged');
+    if (sessionLogged) return;
+
+    const trackVisit = async () => {
+      try {
+        const storedDeviceId = localStorage.getItem('device_id');
+        const isReturnVisit = !!storedDeviceId;
+        const deviceId = storedDeviceId || crypto.randomUUID();
+
+        if (!storedDeviceId) {
+          localStorage.setItem('device_id', deviceId);
+        }
+
+        await addDoc(collection(db, 'visits'), {
+          deviceId,
+          isReturnVisit,
+          timestamp: serverTimestamp(),
+          userAgent: navigator.userAgent,
+          path: window.location.pathname
+        });
+
+        sessionStorage.setItem('visit_logged', 'true');
+      } catch (err) {
+        console.error("Failed to log visit:", err);
+      }
+    };
+
+    // Give the app a moment to render before tracking
+    setTimeout(trackVisit, 1000);
+  }, []);
+
+  return null;
+}
+
 export default function App() {
   return (
     <Router>
+      <VisitTracker />
       <ScrollToTop />
       <LayoutWrapper />
     </Router>

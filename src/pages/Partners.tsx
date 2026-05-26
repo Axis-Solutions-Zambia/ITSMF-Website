@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import { ShieldCheck, Globe, Building2, Briefcase, ExternalLink, HelpCircle } from 'lucide-react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
+import { PageSkeleton } from '@/src/components/PageSkeleton';
 
 // ─── Default content (Firestore fallback) ────────────────────────────────────
 const HERO_DEFAULTS = {
@@ -56,10 +57,16 @@ const BECOME_DEFAULTS = {
 };
 
 export default function Partners() {
-  const { content: hero } = usePageContent('partners', 'hero', HERO_DEFAULTS);
-  const { content: categories } = usePageContent('partners', 'categories', CATEGORIES_DEFAULTS as any);
-  const { content: international } = usePageContent('partners', 'international', INTERNATIONAL_DEFAULTS as any);
-  const { content: become } = usePageContent('partners', 'become', BECOME_DEFAULTS);
+  const { content: hero, loading: heroLoading } = usePageContent('partners', 'hero', HERO_DEFAULTS);
+  const { content: categories, loading: categoriesLoading } = usePageContent('partners', 'categories', CATEGORIES_DEFAULTS as any);
+  const { content: international, loading: internationalLoading } = usePageContent('partners', 'international', INTERNATIONAL_DEFAULTS as any);
+  const { content: become, loading: becomeLoading } = usePageContent('partners', 'become', BECOME_DEFAULTS);
+
+  const isLoading = heroLoading || categoriesLoading || internationalLoading || becomeLoading;
+
+  if (isLoading) {
+    return <PageSkeleton />;
+  }
 
   return (
     <div className="pt-20">

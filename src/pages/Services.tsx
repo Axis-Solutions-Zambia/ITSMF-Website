@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useRef } from 'react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
+import { PageSkeleton } from '@/src/components/PageSkeleton';
 
 const ICONS: Record<string, any> = {
   BookOpen, Users, Zap, Briefcase, Filter, Target, Server, Network
@@ -66,10 +67,13 @@ const BECOME_DEFAULTS = {
 const FALLBACK_ICONS = [BookOpen, Users, Briefcase, Zap, Filter, Target];
 
 export default function Services() {
-  const { content: hero } = usePageContent('services', 'hero', HERO_DEFAULTS);
-  const { content: benchmarking } = usePageContent('services', 'benchmarking', BENCHMARKING_DEFAULTS);
-  const { content: directory } = usePageContent('services', 'directory', DIRECTORY_DEFAULTS as any);
-  const { content: become } = usePageContent('services', 'become', BECOME_DEFAULTS);
+  const { content: hero, loading: heroLoading } = usePageContent('services', 'hero', HERO_DEFAULTS);
+  const { content: benchmarking, loading: benchmarkingLoading } = usePageContent('services', 'benchmarking', BENCHMARKING_DEFAULTS);
+  const { content: directory, loading: directoryLoading } = usePageContent('services', 'directory', DIRECTORY_DEFAULTS as any);
+  const { content: become, loading: becomeLoading } = usePageContent('services', 'become', BECOME_DEFAULTS);
+
+  const isLoading = heroLoading || benchmarkingLoading || directoryLoading || becomeLoading;
+
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const scroll = (direction: 'left' | 'right') => {
@@ -78,6 +82,10 @@ export default function Services() {
       scrollRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
     }
   };
+
+  if (isLoading) {
+    return <PageSkeleton />;
+  }
 
   return (
     <div className="pt-20">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -8,6 +8,8 @@ import {
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/src/lib/firebase';
 import { SECTION_SCHEMAS, FieldDef } from '@/src/lib/sectionSchemas';
+import { uploadToCloudinary } from '@/src/lib/cloudinary';
+import { UploadCloud, ImageIcon } from 'lucide-react';
 
 type ToastType = 'success' | 'error' | null;
 
@@ -30,6 +32,79 @@ function Toast({ type, message }: { type: ToastType; message: string }) {
         : <AlertCircle className="w-4 h-4 mr-3 shrink-0" />}
       {message}
     </motion.div>
+  );
+}
+
+function ImageUploadField({ value, onChange, placeholder }: { value: string; onChange: (val: string) => void; placeholder?: string }) {
+  const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setError(null);
+    try {
+      const url = await uploadToCloudinary(file);
+      onChange(url);
+    } catch (err: any) {
+      setError(err.message || 'Failed to upload image.');
+      console.error(err);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-3">
+      {value ? (
+        <div className="relative w-full max-w-sm rounded-lg overflow-hidden border border-brand-text/10 group bg-brand-bg">
+          <img src={value} alt="Preview" className="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute inset-0 bg-brand-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4">
+             <label className="cursor-pointer px-4 py-2 bg-brand-accent text-brand-dark font-black text-[10px] uppercase tracking-[0.2em] shadow-lg hover:bg-brand-text transition-colors">
+               Change Image
+               <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} disabled={isUploading} />
+             </label>
+             <button type="button" onClick={() => onChange('')} className="mt-3 text-[10px] font-black uppercase tracking-widest text-brand-text hover:text-red-500 transition-colors">
+               Remove
+             </button>
+          </div>
+          {isUploading && (
+            <div className="absolute inset-0 bg-brand-dark/80 flex items-center justify-center">
+              <Loader2 className="w-6 h-6 animate-spin text-brand-accent" />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="w-full max-w-sm relative">
+          <label className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-brand-text/20 rounded-lg bg-brand-bg/50 hover:bg-brand-bg hover:border-brand-accent transition-all cursor-pointer ${isUploading ? 'pointer-events-none opacity-50' : ''}`}>
+            <UploadCloud className="w-6 h-6 text-brand-muted mb-2" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-muted">Upload Image</span>
+            <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} disabled={isUploading} />
+          </label>
+          {isUploading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader2 className="w-6 h-6 animate-spin text-brand-accent" />
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Fallback manual URL input */}
+      <div className="flex items-center mt-2 space-x-2 w-full max-w-sm">
+        <ImageIcon className="w-4 h-4 text-brand-muted shrink-0" />
+        <input
+          type="url"
+          value={value ?? ''}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder || 'Or paste an image URL directly...'}
+          className="flex-1 bg-transparent border-b border-brand-text/10 text-[11px] font-medium text-brand-muted outline-none focus:border-brand-accent focus:text-brand-text transition-colors py-1"
+        />
+      </div>
+
+      {error && <div className="text-[10px] font-black uppercase tracking-widest text-red-500">{error}</div>}
+    </div>
   );
 }
 
@@ -170,6 +245,9 @@ export default function SectionEditor({ pageId: propPageId, sectionId: propSecti
           className="w-full px-4 py-3 bg-brand-bg border border-brand-text/10 text-sm font-medium text-brand-text placeholder-brand-muted/40 outline-none focus:border-brand-accent transition-colors resize-y leading-relaxed"
         />
       );
+    }
+    if (field.type === 'image') {
+      return <ImageUploadField value={value ?? ''} onChange={onChange} placeholder={field.placeholder} />;
     }
     return (
       <input

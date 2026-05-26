@@ -4,7 +4,7 @@
  * Each field has: key (used as Firestore field name), label, type, and optional placeholder.
  */
 
-export type FieldType = 'text' | 'textarea' | 'url' | 'email' | 'tel' | 'list';
+export type FieldType = 'text' | 'textarea' | 'url' | 'email' | 'tel' | 'list' | 'image';
 
 export interface FieldDef {
   key: string;
@@ -50,31 +50,51 @@ export const SECTION_SCHEMAS: Record<string, Record<string, SectionSchema>> = {
         }
       ]
     },
+    hero_media: {
+      name: 'Hero Marquee Images',
+      description: 'Images that scroll in the background of the hero section.',
+      fields: [
+        { key: 'top_images', label: 'Top Row Images', type: 'list', itemFields: [
+          { key: 'image', label: 'Image', type: 'image' }
+        ] },
+        { key: 'bottom_images', label: 'Bottom Row Images', type: 'list', itemFields: [
+          { key: 'image', label: 'Image', type: 'image' }
+        ] }
+      ]
+    },
     overview: {
       name: 'Chapter Overview',
       description: 'The two-column feature section beneath the hero.',
       fields: [
-        { key: 'eyebrow', label: 'Eyebrow Text', type: 'text', placeholder: 'Foundations' },
-        { key: 'headline', label: 'Headline', type: 'text', placeholder: 'ACCELERATING SERVICE MATURITY.' },
-        { key: 'body', label: 'Body Paragraph', type: 'textarea', placeholder: 'As the authorized voice of ITSM in the Republic…' },
-        { key: 'card_title', label: 'Image Card Title', type: 'text', placeholder: 'MEMBER DRIVEN' },
-        { key: 'card_body', label: 'Image Card Body', type: 'textarea', placeholder: 'Governance is provided by a board…' },
-        { key: 'image_url', label: 'Section Image URL', type: 'url', placeholder: 'https://…' },
+        { key: 'headline', label: 'Section Headline', type: 'text', placeholder: 'Significant others.' },
+        { 
+          key: 'accordion_items', 
+          label: 'Accordion Items', 
+          type: 'list', 
+          itemFields: [
+            { key: 'title', label: 'Title', type: 'text', placeholder: 'iPhone and Mac' },
+            { key: 'content', label: 'Content', type: 'textarea', placeholder: 'With iPhone Mirroring, you can view...' },
+            { key: 'image', label: 'Image', type: 'image' }
+          ]
+        }
       ]
     },
     events: {
       name: 'Call to Events',
-      description: 'The three-column upcoming events teaser.',
+      description: 'The horizontal scrolling events carousel.',
       fields: [
-        { key: 'event1_type', label: 'Event 1 Type', type: 'text', placeholder: 'Summit' },
-        { key: 'event1_title', label: 'Event 1 Title', type: 'text', placeholder: 'National Conference Livingstone' },
-        { key: 'event1_date', label: 'Event 1 Date', type: 'text', placeholder: 'NOV 2026' },
-        { key: 'event2_type', label: 'Event 2 Type', type: 'text', placeholder: 'Workshop' },
-        { key: 'event2_title', label: 'Event 2 Title', type: 'text', placeholder: 'ITIL 4 Masterclass Lusaka' },
-        { key: 'event2_date', label: 'Event 2 Date', type: 'text', placeholder: 'JUNE 2026' },
-        { key: 'event3_type', label: 'Event 3 Type', type: 'text', placeholder: 'Webinar' },
-        { key: 'event3_title', label: 'Event 3 Title', type: 'text', placeholder: 'Future of ZNB Infrastructure' },
-        { key: 'event3_date', label: 'Event 3 Date', type: 'text', placeholder: 'MAY 2026' },
+        { 
+          key: 'event_list', 
+          label: 'Events List', 
+          type: 'list', 
+          itemFields: [
+            { key: 'eyebrow', label: 'Eyebrow / Category', type: 'text', placeholder: 'Summit' },
+            { key: 'title', label: 'Title', type: 'text', placeholder: 'National Conference' },
+            { key: 'desc', label: 'Description', type: 'textarea', placeholder: 'Join us in Livingstone...' },
+            { key: 'image', label: 'Image', type: 'image' },
+            { key: 'link', label: 'Link URL', type: 'text', placeholder: '/events' }
+          ]
+        }
       ]
     }
   },
@@ -252,7 +272,7 @@ export const SECTION_SCHEMAS: Record<string, Record<string, SectionSchema>> = {
           { key: 'location', label: 'Location', type: 'text' },
           { key: 'type', label: 'Event Type', type: 'text' },
           { key: 'desc', label: 'Description', type: 'textarea' },
-          { key: 'img', label: 'Image URL', type: 'url' }
+          { key: 'img', label: 'Event Image', type: 'image' }
         ] }
       ]
     },

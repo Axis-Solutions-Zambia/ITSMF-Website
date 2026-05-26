@@ -160,7 +160,7 @@ function PagesGrid() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8 border-b border-brand-text/5 pb-8">
         <div>
-          <h2 className="text-4xl font-black uppercase tracking-tighter italic font-serif leading-none mb-2">CONTENT <br />MANAGEMENT.</h2>
+          <h2 className="text-4xl font-black uppercase tracking-tighter italic font-serif leading-none mb-2">CONTENT MANAGEMENT.</h2>
           <p className="text-xs text-brand-muted font-bold uppercase tracking-widest">Select a page to edit its sections.</p>
         </div>
         <div className="flex items-center bg-brand-dark border border-brand-text/10 px-4 py-3 focus-within:border-brand-accent transition-colors">
