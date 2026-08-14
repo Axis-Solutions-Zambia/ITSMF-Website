@@ -1,22 +1,25 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { 
   ShieldCheck, Users, Calendar, FileText, Settings, 
-  LogOut, LayoutDashboard, ChevronRight, Search, 
-  Bell, Sun, Moon, Plus, ArrowUpRight, Download, MessageSquare, Image as ImageIcon
+  LogOut, LayoutDashboard, ChevronRight,
+  Bell, Sun, Moon, MessageSquare, Image as ImageIcon,
+  Loader2, KeyRound, Eye, EyeOff, Download
 } from 'lucide-react';
 
 import ContentManager from './admin/ContentManager';
 import Messages from './admin/Messages';
 import MediaLibrary from './admin/MediaLibrary';
+import AdminSettings, { hashPassword, ADMIN_SETTINGS_REF } from './admin/AdminSettings';
 
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  BarChart, Bar, Legend, Cell
+  BarChart, Bar, Cell, Legend
 } from 'recharts';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from '@/src/lib/firebase';
+import { collection, query, orderBy, onSnapshot, getDoc, setDoc } from 'firebase/firestore';
+import { signInWithPopup, signOut, onAuthStateChanged, type User } from 'firebase/auth';
+import { db, auth, googleProvider } from '@/src/lib/firebase';
 
 // Mock Data
 const METRICS = [
@@ -47,21 +50,46 @@ const RECENT_ACTIVITY = [
   { user: 'David Chanda', action: 'registered for Livingstone Summit', time: 'Yesterday' },
 ];
 
-function AdminLogin({ onLogin }: { onLogin: () => void }) {
+// ─── Google Sign-In Screen ────────────────────────────────────────────────────
+
+function AdminLogin() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleGoogle() {
+    setError('');
+    setLoading(true);
+    try {
+      await signInWithPopup(auth, googleProvider);
+      // onAuthStateChanged in Admin will pick this up automatically
+    } catch (err: any) {
+      const code = err?.code ?? '';
+      if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+        // User closed the popup — not an error
+      } else if (code === 'auth/unauthorized-domain') {
+        setError('This domain is not authorised. Add it in Firebase Console → Auth → Settings.');
+      } else {
+        setError('Sign-in failed. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-dark px-6 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-accent/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-accent/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-brand-bg p-12 shadow-2xl border border-brand-text/10 w-full max-w-md relative z-10"
+        transition={{ duration: 0.5 }}
+        className="bg-brand-bg p-12 shadow-2xl border border-brand-text/10 w-full max-w-sm relative z-10"
       >
-        <div className="flex flex-col items-center mb-12">
+        <div className="flex flex-col items-center mb-10">
           <div className="w-16 h-16 bg-brand-dark border-2 border-brand-accent flex items-center justify-center mb-6">
             <ShieldCheck className="w-8 h-8 text-brand-accent" />
           </div>
@@ -69,34 +97,181 @@ function AdminLogin({ onLogin }: { onLogin: () => void }) {
           <h1 className="text-3xl font-black uppercase tracking-tighter italic font-serif text-center">COMMAND CENTER.</h1>
         </div>
 
-        <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); onLogin(); }}>
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Admin ID</label>
-            <input 
-              type="text" 
-              placeholder="SYS-ADMIN-01" 
-              className="w-full px-4 py-4 bg-brand-dark border border-brand-text/10 text-xs font-black uppercase tracking-widest focus:border-brand-accent outline-none transition-all"
-              required
-            />
+        <button
+          onClick={handleGoogle}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white text-gray-800 font-black text-xs uppercase tracking-[0.2em] hover:bg-gray-100 transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {loading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            /* Google SVG icon */
+            <svg className="w-5 h-5 shrink-0" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+              <path fill="none" d="M0 0h48v48H0z"/>
+            </svg>
+          )}
+          {loading ? 'Signing in…' : 'Continue with Google'}
+        </button>
+
+        {error && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-6 text-[10px] font-black uppercase tracking-widest text-red-500 text-center"
+          >
+            {error}
+          </motion.p>
+        )}
+
+        <p className="mt-8 text-center text-[9px] font-bold uppercase tracking-widest text-brand-muted/60">
+          Access restricted to authorised administrators only.
+        </p>
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Master Password Challenge ─────────────────────────────────────────────────
+
+function MasterPasswordChallenge({ user, onVerified }: { user: User; onVerified: () => void }) {
+  const [password, setPassword] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [isFirstTime, setIsFirstTime] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Check if a master password has been set yet
+    getDoc(ADMIN_SETTINGS_REF()).then((snap) => {
+      if (!snap.exists() || !snap.data()?.masterPasswordHash) {
+        setIsFirstTime(true);
+      }
+    });
+    setTimeout(() => inputRef.current?.focus(), 300);
+  }, []);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const snap = await getDoc(ADMIN_SETTINGS_REF());
+      const storedHash = snap.exists() ? snap.data()?.masterPasswordHash : null;
+      const defaultHash = await hashPassword('ITSMF@2026');
+      const expectedHash = storedHash ?? defaultHash;
+      const enteredHash = await hashPassword(password);
+
+      if (enteredHash === expectedHash) {
+        // If no password was ever saved, seed it now
+        if (!storedHash) {
+          await setDoc(ADMIN_SETTINGS_REF(), { masterPasswordHash: defaultHash }, { merge: true });
+        }
+        onVerified();
+      } else {
+        setError('Incorrect master password. Try again.');
+        setPassword('');
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(`Verification failed: ${err?.message || 'Check your connection.'}`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-brand-dark px-6 relative overflow-hidden">
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-accent/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-brand-bg p-12 shadow-2xl border border-brand-text/10 w-full max-w-sm relative z-10"
+      >
+        {/* User avatar */}
+        <div className="flex flex-col items-center mb-10">
+          {user.photoURL ? (
+            <img src={user.photoURL} alt={user.displayName ?? 'Admin'} className="w-16 h-16 rounded-full border-2 border-brand-accent mb-4 object-cover" />
+          ) : (
+            <div className="w-16 h-16 bg-brand-accent text-brand-dark flex items-center justify-center font-black text-xl mb-4">
+              {user.email?.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div className="text-xs font-black uppercase tracking-widest text-brand-text mb-1">{user.displayName ?? user.email}</div>
+          <div className="text-[9px] font-bold text-brand-muted uppercase tracking-wider">{user.email}</div>
+        </div>
+
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-10 h-10 bg-brand-dark border border-brand-accent/40 flex items-center justify-center mb-4">
+            <KeyRound className="w-5 h-5 text-brand-accent" />
           </div>
-          
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Master Key</label>
-            <input 
-              type="password" 
-              placeholder="••••••••" 
-              className="w-full px-4 py-4 bg-brand-dark border border-brand-text/10 text-xs font-black uppercase tracking-widest focus:border-brand-accent outline-none transition-all"
+          <h2 className="text-xl font-black uppercase tracking-tighter italic font-serif text-center mb-1">Master Password</h2>
+          {isFirstTime && (
+            <p className="text-[9px] font-bold text-brand-accent uppercase tracking-widest text-center mt-1">
+              First time? Default is ITSMF@2026
+            </p>
+          )}
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="relative">
+            <input
+              ref={inputRef}
+              type={visible ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter master password"
+              className="w-full px-4 py-4 pr-12 bg-brand-dark border border-brand-text/10 text-sm font-medium text-brand-text placeholder-brand-muted/40 outline-none focus:border-brand-accent transition-colors"
               required
+              autoComplete="current-password"
             />
+            <button
+              type="button"
+              onClick={() => setVisible((v) => !v)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-accent transition-colors"
+              tabIndex={-1}
+            >
+              {visible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
           </div>
 
-          <button 
+          {error && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-[10px] font-black uppercase tracking-widest text-red-500 text-center"
+            >
+              {error}
+            </motion.p>
+          )}
+
+          <button
             type="submit"
-            className="w-full mt-8 bg-brand-accent text-brand-dark py-5 font-black text-xs uppercase tracking-[0.3em] hover:bg-brand-text hover:text-brand-bg transition-all flex items-center justify-center"
+            disabled={loading || !password}
+            className="w-full flex items-center justify-center py-4 bg-brand-accent text-brand-dark font-black text-xs uppercase tracking-[0.3em] hover:bg-brand-text transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            INITIALIZE <ChevronRight className="ml-2 w-4 h-4" />
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><KeyRound className="w-4 h-4 mr-2" /> Unlock</>}
           </button>
         </form>
+
+        <div className="mt-8 pt-6 border-t border-brand-text/5 flex justify-center">
+          <button
+            onClick={() => signOut(auth)}
+            className="text-[9px] font-black uppercase tracking-widest text-brand-muted hover:text-red-500 transition-colors"
+          >
+            Sign out
+          </button>
+        </div>
       </motion.div>
     </div>
   );
@@ -329,12 +504,25 @@ function DashboardOverview() {
 }
 
 export default function Admin() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // null = still checking auth state (loading)
+  // false = not signed in with Google
+  // User = signed in with Google but master password not yet verified
+  const [user, setUser] = useState<User | null | false>(null);
+  const [masterVerified, setMasterVerified] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const location = useLocation();
 
+  // Listen for Firebase auth state changes — persists login across page reloads
   useEffect(() => {
-    // Sync theme with global state for the admin view
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser ?? false);
+      // Reset master password verification when user signs out
+      if (!firebaseUser) setMasterVerified(false);
+    });
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
     const isDarkStored = localStorage.getItem('theme') === 'dark';
     setIsDark(isDarkStored);
   }, []);
@@ -353,8 +541,21 @@ export default function Admin() {
     });
   };
 
-  if (!isLoggedIn) {
-    return <AdminLogin onLogin={() => setIsLoggedIn(true)} />;
+  // Still checking Firebase auth state
+  if (user === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-brand-dark">
+        <Loader2 className="w-8 h-8 animate-spin text-brand-accent" />
+      </div>
+    );
+  }
+
+  // Not signed in → Google sign-in screen
+  if (user === false) return <AdminLogin />;
+
+  // Signed in with Google but master password not verified yet
+  if (!masterVerified) {
+    return <MasterPasswordChallenge user={user} onVerified={() => setMasterVerified(true)} />;
   }
 
   const NAV_ITEMS = [
@@ -406,11 +607,21 @@ export default function Admin() {
           {/* Profile & Actions */}
           <div className="p-6 flex items-center justify-between border-b border-brand-text/5">
             <div className="flex items-center cursor-pointer group">
-              <div className="w-8 h-8 bg-brand-accent text-brand-dark flex items-center justify-center font-black text-xs mr-3 shrink-0">
-                SA
-              </div>
+              {(user as User).photoURL ? (
+                <img
+                  src={(user as User).photoURL!}
+                  alt={(user as User).displayName ?? 'Admin'}
+                  className="w-8 h-8 rounded-full mr-3 shrink-0 border border-brand-accent/30 object-cover"
+                />
+              ) : (
+                <div className="w-8 h-8 bg-brand-accent text-brand-dark flex items-center justify-center font-black text-xs mr-3 shrink-0">
+                  {(user as User).email?.charAt(0).toUpperCase() ?? 'A'}
+                </div>
+              )}
               <div className="text-left">
-                <div className="text-[10px] font-black uppercase tracking-widest group-hover:text-brand-accent transition-colors">Super Admin</div>
+                <div className="text-[10px] font-black uppercase tracking-widest group-hover:text-brand-accent transition-colors truncate max-w-[100px]">
+                  {(user as User).displayName ?? (user as User).email}
+                </div>
               </div>
             </div>
             <div className="flex space-x-3">
@@ -426,7 +637,7 @@ export default function Admin() {
           
           <div className="p-6">
             <button 
-              onClick={() => setIsLoggedIn(false)}
+              onClick={() => signOut(auth)}
               className="flex items-center w-full px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-red-500 hover:bg-red-500/10 transition-all"
             >
               <LogOut className="w-4 h-4 mr-4" /> Logout
@@ -454,7 +665,7 @@ export default function Admin() {
                 <Route path="/members" element={<div className="p-8 border border-brand-text/10 border-dashed text-center text-brand-muted font-black uppercase tracking-[0.3em] text-xs">Member Directory Module (Placeholder)</div>} />
                 <Route path="/content/*" element={<ContentManager />} />
                 <Route path="/media" element={<MediaLibrary />} />
-                <Route path="/settings" element={<div className="p-8 border border-brand-text/10 border-dashed text-center text-brand-muted font-black uppercase tracking-[0.3em] text-xs">System Settings (Placeholder)</div>} />
+                <Route path="/settings" element={<AdminSettings />} />
               </Routes>
             </motion.div>
           </AnimatePresence>

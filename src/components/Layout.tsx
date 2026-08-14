@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown, Globe, LogIn, Sun, Moon, Home, Info, Users, Calendar, Briefcase, Folder, Handshake, ChevronRight } from 'lucide-react';
-import logo from '../assests/itsmf-logo-zm.png';
+import logo from '../assests/itsmf-zm.png';
 import logoDark from '../assests/itsmf-logo-zm_1.png';
 
 const NAV_LINKS = [

@@ -12,6 +12,9 @@ interface EditableSectionProps {
 
 export default function EditableSection({ pageId, sectionId, children, className = '' }: EditableSectionProps) {
   const { isAdminMode, pageId: adminPageId, activeSectionId, setActiveSectionId } = useAdminMode();
+  // Safe to call — usePageContent now uses a shared Firestore subscription cache,
+  // so calling it here for the same (pageId, sectionId) that the parent page already
+  // subscribed to does NOT create a second network listener.
   const { content } = usePageContent(pageId, sectionId);
   const isHidden = content._hidden === 'true';
 
