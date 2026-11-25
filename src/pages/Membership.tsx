@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
 import { PageSkeleton } from '@/src/components/PageSkeleton';
@@ -113,13 +114,13 @@ function GravityCanvas() {
       mouse.x = -1000;
       mouse.y = -1000;
     };
-    
+
     if (parent) {
       parent.addEventListener('mousemove', handleMouseMove);
       parent.addEventListener('mouseleave', handleMouseLeave);
       resize();
     }
-    
+
     animate();
 
     return () => {
@@ -133,8 +134,8 @@ function GravityCanvas() {
   }, []);
 
   return (
-    <canvas 
-      ref={canvasRef} 
+    <canvas
+      ref={canvasRef}
       className="absolute inset-0 pointer-events-none z-0 mix-blend-screen"
     />
   );
@@ -189,36 +190,21 @@ const HERO_DEFAULTS = {
 const BENEFITS_DEFAULTS = {
   headline: 'MEMBER BENEFITS.',
   benefits: [
-    { title: 'INTERNATIONAL ALIGNMENT', desc: 'Direct participation in the global itSMF International community and ITIL working groups.' },
-    { title: 'LOCAL CERTIFICATION', desc: 'Subsidized paths to ITIL Master and ISO/IEC 20000 Auditor certification within Lusaka.' },
-    { title: 'GOVERNMENT NETWORKING', desc: 'Direct access to CIO roundtables involving the Ministry of Technology and Science.' }
+    { title: 'KNOWLEDGE SHARING', desc: 'Exchange practical service management experience with peers in Zambia.' },
+    { title: 'PROFESSIONAL DEVELOPMENT', desc: 'Explore learning opportunities and guidance on service management qualifications.' },
+    { title: 'COMMUNITY CONNECTIONS', desc: 'Connect with professionals interested in improving IT services.' }
   ],
-  quote: '"Membership was the catalyst for our bank\'s 30% reduction in service downtime last year."',
-  cite: 'Senior ITIL Lead // National Bank'
+  quote: '',
+  cite: ''
 };
 
 const TIERS_DEFAULTS = {
   headline: 'CATEGORIES.',
-  subtitle: 'Transparent Pricing Schedules',
+  subtitle: 'Contact us for founding membership rates and current benefits',
   tiers: [
-    {
-      tier: 'Individual',
-      price: 'ZMW 800',
-      desc: 'For single practitioners and ITIL practitioners looking for professional recognition.',
-      features: 'Chapter voting rights\nAccess to gated resources\nMonthly webinar access'
-    },
-    {
-      tier: 'Corporate',
-      price: 'ZMW 6,000',
-      desc: 'For organizations seeking to align full IT staff with itSMF international benchmarks.',
-      features: '5 staff memberships\nRecruitment access\nBenchmarking Model priority'
-    },
-    {
-      tier: 'Student',
-      price: 'ZMW 300',
-      desc: 'For undergraduate IT students building a foundation in service management.',
-      features: 'Digital resources only\nMentorship matching\nStudent exam vouchers'
-    }
+    { tier: 'Individual', price: 'Contact us', desc: 'For practitioners developing their service management skills and professional network.', features: 'Knowledge sharing\nCommunity participation' },
+    { tier: 'Corporate', price: 'Contact us', desc: 'For organisations supporting service management development across their teams.', features: 'Team learning opportunities\nProfessional connections' },
+    { tier: 'Student', price: 'Contact us', desc: 'For students building a foundation in service management.', features: 'Peer learning\nProfessional development guidance' }
   ]
 };
 
@@ -226,22 +212,22 @@ const CORPORATE_DEFAULTS = {
   headline_line1: 'CORPORATE',
   headline_line2: 'VALUE',
   value_props: [
-    { title: 'Global Recognition', desc: 'Direct mapping to itSMF International credentials.' },
-    { title: 'Market Influence', desc: 'Shape the standards of the Zambian digital economy.' },
-    { title: 'Member Portal', desc: 'Access to exclusive whitepapers and board archives.' }
+    { title: 'Shared Learning', desc: 'Exchange practical ideas with other organisations.' },
+    { title: 'Professional Community', desc: 'Build connections with service management practitioners in Zambia.' },
+    { title: 'Team Development', desc: 'Discuss membership opportunities that support your team.' }
   ],
-  box_headline: 'ONBOARDING REQUEST',
-  box_desc: 'Ready to professionalize your workforce? Connect with our Membership Registrar for executive-level onboarding.',
-  email: 'registrar@itsmf.zm'
+  box_headline: 'MEMBERSHIP ENQUIRY',
+  box_desc: 'Contact us to discuss corporate membership, current benefits and founding membership rates.',
+  email: 'hello@itsmf.org.zm'
 };
 
 const FAQ_DEFAULTS = {
   headline: 'MEMBERSHIP FAQ.',
   faqs: [
-    { q: 'How do I renew?', a: 'Log in to the Member Portal using your chapter ID and click "Instant Renewal" in the Billing section.' },
-    { q: 'Can I change tiers?', a: 'Yes, members can upgrade tiers at any time by paying the pro-rated difference in fees.' },
-    { q: 'Are certification exams included?', a: 'Exam vouchers are included in Corporate and Student tiers. Individual members receive a 30% discount.' },
-    { q: 'Who is eligible for Student Tier?', a: 'Full-time students in any ICT or Business relate degree program with a valid student ID.' }
+    { q: 'How do I renew?', a: 'Contact us for current membership renewal details and rates.' },
+    { q: 'Can I change tiers?', a: 'Contact us to discuss the membership category that best suits your needs.' },
+    { q: 'Are certification exams included?', a: 'Certification exams and vouchers are not included in membership. Contact us for information about learning opportunities; training providers confirm their own fees and terms.' },
+    { q: 'Who is eligible for Student membership?', a: 'Students in an ICT or business-related programme can contact us to confirm eligibility and the required documentation.' }
   ]
 };
 
@@ -271,16 +257,15 @@ export default function Membership() {
           >
             {(hero['_hide_headline_line1'] !== 'true' || hero['_hide_headline_line2'] !== 'true') && (
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] mb-10 uppercase tracking-tighter italic">
-                <TypewriterText 
-                  line1={hero['_hide_headline_line1'] !== 'true' ? hero.headline_line1 : ''} 
-                  line2={hero['_hide_headline_line2'] !== 'true' ? hero.headline_line2 + '.' : ''} 
+                <TypewriterText
+                  line1={hero['_hide_headline_line1'] !== 'true' ? String(hero.headline_line1) : ''}
+                  line2={hero['_hide_headline_line2'] !== 'true' ? hero.headline_line2 + '.' : ''}
                 />
               </h1>
             )}
+            {hero['_hide_body'] !== 'true' && <p className="text-lg text-brand-muted max-w-2xl leading-relaxed">{String(hero.body)}</p>}
+            <Link to="/enquire?type=membership" className="inline-flex items-center gap-2 mt-8 px-6 py-4 bg-brand-accent text-brand-dark font-bold">Enquire about membership <ArrowUpRight className="w-4 h-4" /></Link>
           </motion.div>
-        </div>
-        <div className="absolute right-0 top-0 text-[10vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mt-10 mr-10 leading-none">
-          NETWORK
         </div>
       </section>
       </EditableSection>
@@ -293,7 +278,7 @@ export default function Membership() {
             <div>
               {benefits['_hide_headline'] !== 'true' && (
                 <h2 className="text-4xl font-black mb-12 uppercase tracking-tighter italic font-serif leading-none">
-                  {benefits.headline.split(' ').reduce<any[]>((acc, word, idx, arr) => {
+                  {String(benefits.headline).split(' ').reduce<any[]>((acc, word, idx, arr) => {
                      return [...acc, word, idx === arr.length - 2 ? <br key={idx}/> : ' '];
                   }, [])}
                 </h2>
@@ -310,7 +295,7 @@ export default function Membership() {
                 </div>
               )}
             </div>
-            {(benefits['_hide_quote'] !== 'true' || benefits['_hide_cite'] !== 'true') && (
+            {((benefits.quote && benefits['_hide_quote'] !== 'true') || (benefits.cite && benefits['_hide_cite'] !== 'true')) && (
               <div className="relative">
                 <div className="aspect-[4/3] bg-brand-dark border border-brand-text/5 p-12 lg:p-20 flex flex-col justify-center">
                   {benefits['_hide_quote'] !== 'true' && (
@@ -344,7 +329,7 @@ export default function Membership() {
                   <div key={i} className={`bg-brand-dark p-12 lg:p-16 flex flex-col ${highlight ? 'border-t-4 lg:border-t-0 lg:border-l-4 border-brand-accent' : ''}`}>
                     <div className="mb-12">
                        <h3 className="text-xs font-black uppercase tracking-[0.4em] text-brand-accent mb-6 font-mono">{tier.tier} Tier</h3>
-                       <div className="text-5xl font-black italic font-serif mb-8 leading-none tracking-tighter">{tier.price}<span className="text-xs font-black not-italic tracking-widest opacity-40 ml-2">/YR</span></div>
+                       <div className="text-3xl font-bold mb-8 leading-tight">{tier.price}{/^\s*(?:ZMW\s*|K\s*)?\d[\d,]*(?:\.\d{1,2})?\s*$/i.test(tier.price || '') && <span className="text-xs font-black not-italic tracking-widest opacity-60 ml-2">/YR</span>}</div>
                        <p className="text-xs text-brand-muted uppercase tracking-widest font-bold leading-loose mb-12 min-h-[60px]">{tier.desc}</p>
                     </div>
                     <ul className="space-y-6 mb-16 text-[10px] font-black uppercase tracking-widest leading-relaxed flex-grow">
@@ -355,11 +340,11 @@ export default function Membership() {
                         </li>
                       ))}
                     </ul>
-                    <button className={`w-full py-5 font-black text-xs uppercase tracking-[0.4em] transition-all shadow-xl ${
+                    <Link to="/enquire?type=membership" className={`block text-center w-full py-5 font-black text-xs uppercase tracking-[0.4em] transition-all shadow-xl ${
                       highlight ? 'bg-brand-accent text-brand-dark hover:bg-brand-text' : 'border border-brand-text/10 text-brand-text hover:border-brand-accent hover:text-brand-accent'
                     }`}>
                       JOIN NOW
-                    </button>
+                    </Link>
                   </div>
                 );
               })}
@@ -404,9 +389,7 @@ export default function Membership() {
                   </p>
                 )}
                 {corporate['_hide_email'] !== 'true' && (
-                  <div className="text-xl font-black text-brand-accent border-b-2 border-brand-accent inline-block pb-1 cursor-pointer hover:text-brand-text hover:border-brand-text transition-all">
-                    {corporate.email}
-                  </div>
+                  <a href={`mailto:${corporate.email}`} className="text-xl font-bold text-brand-accent border-b-2 border-brand-accent inline-block pb-1 break-all hover:text-brand-text transition-all">{String(corporate.email)}</a>
                 )}
               </div>
             )}

@@ -23,14 +23,14 @@ export default function Benchmarking() {
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <div>
-              <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-4 block font-mono">DASHED SUB-TREE // LEVEL 4 DEPTH</span>
+              <span className="text-brand-accent font-black tracking-[0.4em] uppercase text-[10px] mb-4 block font-mono">Flagship service</span>
               <h1 className="text-3xl md:text-5xl font-black leading-none uppercase tracking-tighter italic font-serif">ITIL PERFORMANCE <br/>BENCHMARKING MODEL.</h1>
             </div>
             <div className="flex space-x-4">
               <div className="w-px h-12 bg-brand-text/10 hidden md:block"></div>
               <div className="text-right">
                 <div className="text-[10px] font-black uppercase text-brand-muted mb-1 opacity-60">Cycle Status</div>
-                <div className="text-brand-accent font-black uppercase text-sm">2026 OPEN FOR ENROLLMENT</div>
+                <div className="text-brand-accent font-black uppercase text-sm">Expressions of interest</div>
               </div>
             </div>
           </div>
@@ -88,7 +88,7 @@ function BenchmarkingOverview() {
         <div className="bg-brand-bg p-12 lg:p-16">
           <h2 className="text-3xl font-black mb-8 uppercase tracking-tighter italic font-serif">A DATA-DRIVEN <br />MATURITY ROADMAP.</h2>
           <p className="text-xs text-brand-muted uppercase tracking-[0.2em] font-bold leading-loose mb-12">
-            The Performance Benchmarking Model (PBM) is itSMF Zambia's proprietary assessment framework. It allows organizations to evaluate their ITIL 4 implementation success against national averages and global best practices.
+            The Performance Benchmarking Model (PBM) is a framework for assessing service management performance. It allows organizations to evaluate their ITIL 5 implementation success against national averages and global best practices.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="p-8 border border-brand-text/5 bg-brand-dark">
@@ -97,7 +97,7 @@ function BenchmarkingOverview() {
             </div>
             <div className="p-8 border border-brand-text/5 bg-brand-dark">
               <h4 className="text-brand-accent font-black text-xs uppercase tracking-widest mb-4 italic">2026 Focus</h4>
-              <p className="text-[11px] font-bold text-brand-text/60 leading-relaxed uppercase pr-4">Alignment between ITIL 4 service value chains and the National ICT Policy (2023-2030).</p>
+              <p className="text-[11px] font-bold text-brand-text/60 leading-relaxed uppercase pr-4">Alignment between ITIL 5 service value chains and the National ICT Policy (2023-2030).</p>
             </div>
           </div>
         </div>
@@ -180,11 +180,11 @@ function BenchmarkingSignUp() {
       <div className="bg-brand-bg p-8 lg:p-12 border border-brand-text/5 relative">
         <div className="absolute top-0 right-0 w-2 h-full bg-brand-accent"></div>
         <p className="text-xs text-brand-muted uppercase font-bold tracking-widest mb-10 leading-loose">
-          Organizations must be current Corporate Members of itSMF Zambia to apply. Individual members may register as part of a Corporate team.
+          Express your organisation’s interest. The chapter will confirm availability, participation requirements and scope before any assessment. Please do not submit confidential benchmarking data through this form.
         </p>
-        <button className="w-full py-6 bg-brand-accent text-brand-dark font-black text-xs uppercase tracking-[0.4em] hover:bg-brand-text transition-all shadow-2xl">
-          INITIATE APPLICATION
-        </button>
+        <Link to="/enquire?type=benchmarking" className="block text-center w-full py-6 bg-brand-accent text-brand-dark font-black text-xs uppercase tracking-[0.4em] hover:bg-brand-text transition-all shadow-2xl">
+          EXPRESS INTEREST
+        </Link>
       </div>
     </motion.div>
   );

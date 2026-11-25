@@ -1,0 +1,778 @@
+[
+  {
+    "page": "home",
+    "section": "hero",
+    "content": {
+      "headline_line1": "Shaping",
+      "headline_line2": "Zambia's",
+      "headline_line3": "Digital Future",
+      "mission_label": "Our Mission",
+      "mission_text": "\"To professionalize IT Service Management in Zambia through alignment with international standards and national digital transformation goals.\"",
+      "cta_primary_label": "Join Chapter",
+      "cta_primary_url": "/membership",
+      "cta_secondary_label": "About itSMF Zambia",
+      "cta_secondary_url": "/about",
+      "cta_tertiary_label": "Explore events",
+      "cta_tertiary_url": "/events",
+      "stats": [],
+      "_hidden": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_headline_line3": "false",
+      "_hide_mission_label": "false",
+      "_hide_mission_text": "false",
+      "_hide_cta_primary_label": "false",
+      "_hide_cta_primary_url": "false",
+      "_hide_cta_secondary_label": "false",
+      "_hide_cta_secondary_url": "false",
+      "_hide_cta_tertiary_label": "false",
+      "_hide_cta_tertiary_url": "false",
+      "_hide_stats": "false"
+    }
+  },
+  {
+    "page": "home",
+    "section": "overview",
+    "content": {
+      "headline": "Global Standards. Zambian Practice. One Community.",
+      "accordion_items": [
+        {
+          "title": "Governance",
+          "content": "We support transparent governance and professional accountability. Confirmed chapter appointments and approved governance documents will be published when available.",
+          "image": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80"
+        },
+        {
+          "title": "Growth",
+          "content": "Increasing the density of certified professionals across the Republic through mentorship and accredited certification pathways.",
+          "image": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=80"
+        },
+        {
+          "title": "Advocacy",
+          "content": "Zambia’s community voice for ITSM, connecting international best practice with Zambian practice.",
+          "image": "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800&q=80"
+        },
+        {
+          "title": "Network",
+          "content": "Connecting the minds that power our systems through networking events, summits, and local chapters.",
+          "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80"
+        }
+      ],
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_accordion_items": "false"
+    }
+  },
+  {
+    "page": "home",
+    "section": "events",
+    "content": {
+      "event_list": [
+        {
+          "eyebrow": "Past webinar",
+          "title": "ITIL 5 inaugural webinar",
+          "desc": "Contact the chapter for the 4 June 2026 webinar recap and available materials.",
+          "date": "4 June 2026",
+          "format": "Online",
+          "time": "",
+          "price": "",
+          "image": "",
+          "link": "/events"
+        },
+        {
+          "eyebrow": "Expressions of interest",
+          "title": "Annual conference",
+          "desc": "Dates to be announced. Register your interest for updates.",
+          "date": "Dates to be announced",
+          "format": "",
+          "time": "",
+          "price": "",
+          "image": "",
+          "link": "/about#contact"
+        }
+      ],
+      "_hidden": "false",
+      "_hide_event_list": "false"
+    }
+  },
+  {
+    "page": "about",
+    "section": "top",
+    "content": {
+      "headline_line1": "OUR",
+      "headline_line2": "GENESIS",
+      "body": "itSMF Zambia brings together people interested in IT Service Management to share knowledge, develop skills and strengthen professional practice in Zambia.",
+      "_hidden": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_body": "false"
+    }
+  },
+  {
+    "page": "about",
+    "section": "vision",
+    "content": {
+      "headline": "VISION & CORE VALUES.",
+      "vision_label": "The Vision",
+      "vision_text": "To be the primary catalyst for IT Service Management maturity in Zambia, driving sustainable digital growth.",
+      "mission_label": "The Mission",
+      "mission_text": "\"Empowering IT professionals through certification pathways, structured mentorship, and international alignment to global ITSM standards.\"",
+      "values": [
+        {
+          "value": "Integrity",
+          "desc": "Act with honesty, accountability and respect."
+        },
+        {
+          "value": "Excellence",
+          "desc": "Continually improve the quality of service management practice."
+        },
+        {
+          "value": "Collaboration and inclusivity",
+          "desc": "Welcome diverse perspectives and learn together across organisations."
+        }
+      ],
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_vision_label": "false",
+      "_hide_vision_text": "false",
+      "_hide_mission_label": "false",
+      "_hide_mission_text": "false",
+      "_hide_values": "false"
+    }
+  },
+  {
+    "page": "about",
+    "section": "board",
+    "content": {
+      "headline": "THE BOARD.",
+      "members": [],
+      "_hidden": "true",
+      "_hide_headline": "false",
+      "_hide_members": "false"
+    }
+  },
+  {
+    "page": "about",
+    "section": "advisory",
+    "content": {
+      "advisory_headline": "ADVISORY COMMITTEE.",
+      "advisory_intro": "Confirmed advisory appointments and governance information will be published here.",
+      "advisors": [],
+      "gov_headline": "GOVERNANCE.",
+      "gov_articles": [],
+      "_hidden": "true",
+      "_hide_advisory_headline": "false",
+      "_hide_advisory_intro": "false",
+      "_hide_advisors": "false",
+      "_hide_gov_headline": "false",
+      "_hide_gov_articles": "false"
+    }
+  },
+  {
+    "page": "about",
+    "section": "intl",
+    "content": {
+      "eyebrow": "Global Network",
+      "headline_line1": "itSMF",
+      "headline_line2": "INTERNATIONAL",
+      "body": "Learn about the wider itSMF community and service management practice around the world. Contact us for current information about our international relationships.",
+      "chapters": [],
+      "_hidden": "false",
+      "_hide_eyebrow": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_body": "false",
+      "_hide_chapters": "false"
+    }
+  },
+  {
+    "page": "about",
+    "section": "reports",
+    "content": {
+      "headline": "ANNUAL REPORTS.",
+      "intro": "Approved annual reports will be published when available.",
+      "reports": [],
+      "_hidden": "true",
+      "_hide_headline": "false",
+      "_hide_intro": "false",
+      "_hide_reports": "false"
+    }
+  },
+  {
+    "page": "about",
+    "section": "contact",
+    "content": {
+      "headline": "CONTACT US.",
+      "intro": "For secretariat inquiries, sponsorship proposals, or governance clarifications.",
+      "email": "hello@itsmf.org.zm",
+      "phone": "+260974874981",
+      "base_label": "PHYSICAL BASE",
+      "address": "Lusaka, Zambia",
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_intro": "false",
+      "_hide_email": "false",
+      "_hide_phone": "false",
+      "_hide_base_label": "false",
+      "_hide_address": "false"
+    }
+  },
+  {
+    "page": "membership",
+    "section": "hero",
+    "content": {
+      "headline_line1": "JOIN THE",
+      "headline_line2": "PRACTICE",
+      "body": "itSMF Zambia offers three membership tiers designed for individual career growth, corporate service maturity, and student foundational learning.",
+      "_hidden": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_body": "false"
+    }
+  },
+  {
+    "page": "membership",
+    "section": "benefits",
+    "content": {
+      "headline": "MEMBER BENEFITS.",
+      "benefits": [
+        {
+          "title": "KNOWLEDGE SHARING",
+          "desc": "Exchange practical service management experience with peers in Zambia."
+        },
+        {
+          "title": "PROFESSIONAL DEVELOPMENT",
+          "desc": "Explore learning opportunities and guidance on service management qualifications."
+        },
+        {
+          "title": "COMMUNITY CONNECTIONS",
+          "desc": "Connect with professionals interested in improving IT services."
+        }
+      ],
+      "quote": "",
+      "cite": "",
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_benefits": "false",
+      "_hide_quote": "false",
+      "_hide_cite": "false"
+    }
+  },
+  {
+    "page": "membership",
+    "section": "tiers",
+    "content": {
+      "headline": "CATEGORIES.",
+      "subtitle": "Contact us for founding membership rates and current benefits",
+      "tiers": [
+        {
+          "tier": "Individual",
+          "price": "Contact us",
+          "desc": "For practitioners developing their service management skills and professional network.",
+          "features": "Knowledge sharing\nCommunity participation"
+        },
+        {
+          "tier": "Corporate",
+          "price": "Contact us",
+          "desc": "For organisations supporting service management development across their teams.",
+          "features": "Team learning opportunities\nProfessional connections"
+        },
+        {
+          "tier": "Student",
+          "price": "Contact us",
+          "desc": "For students building a foundation in service management.",
+          "features": "Peer learning\nProfessional development guidance"
+        }
+      ],
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_subtitle": "false",
+      "_hide_tiers": "false"
+    }
+  },
+  {
+    "page": "membership",
+    "section": "corporate",
+    "content": {
+      "headline_line1": "CORPORATE",
+      "headline_line2": "VALUE",
+      "value_props": [
+        {
+          "title": "Shared Learning",
+          "desc": "Exchange practical ideas with other organisations."
+        },
+        {
+          "title": "Professional Community",
+          "desc": "Build connections with service management practitioners in Zambia."
+        },
+        {
+          "title": "Team Development",
+          "desc": "Discuss membership opportunities that support your team."
+        }
+      ],
+      "box_headline": "MEMBERSHIP ENQUIRY",
+      "box_desc": "Contact us to discuss corporate membership, current benefits and founding membership rates.",
+      "email": "hello@itsmf.org.zm",
+      "_hidden": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_value_props": "false",
+      "_hide_box_headline": "false",
+      "_hide_box_desc": "false",
+      "_hide_email": "false"
+    }
+  },
+  {
+    "page": "membership",
+    "section": "faq",
+    "content": {
+      "headline": "MEMBERSHIP FAQ.",
+      "faqs": [
+        {
+          "q": "How do I renew?",
+          "a": "Contact us for current membership renewal details and rates."
+        },
+        {
+          "q": "Can I change tiers?",
+          "a": "Contact us to discuss the membership category that best suits your needs."
+        },
+        {
+          "q": "Are certification exams included?",
+          "a": "Certification exams and vouchers are not included in membership. Contact us for information about learning opportunities; training providers confirm their own fees and terms."
+        },
+        {
+          "q": "Who is eligible for Student membership?",
+          "a": "Students in an ICT or business-related programme can contact us to confirm eligibility and the required documentation."
+        }
+      ],
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_faqs": "false"
+    }
+  },
+  {
+    "page": "events",
+    "section": "flagship",
+    "content": {
+      "eyebrow": "itSMF Zambia Events",
+      "headline_line1": "CONNECT.",
+      "headline_line2": "LEARN.",
+      "headline_line3": "SHARE.",
+      "duration_label": "Next event",
+      "duration_value": "Details to be announced",
+      "venue_label": "Venue",
+      "venue_value": "To be confirmed",
+      "date_iso": "",
+      "btn_label": "View event details",
+      "btn_url": "",
+      "recap_url": "",
+      "img": "",
+      "_hidden": "false",
+      "_hide_eyebrow": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_headline_line3": "false",
+      "_hide_duration_label": "false",
+      "_hide_duration_value": "false",
+      "_hide_venue_label": "false",
+      "_hide_venue_value": "false",
+      "_hide_date_iso": "false",
+      "_hide_btn_label": "false",
+      "_hide_btn_url": "false",
+      "_hide_recap_url": "false",
+      "_hide_img": "false"
+    }
+  },
+  {
+    "page": "events",
+    "section": "calendar",
+    "content": {
+      "headline": "CALENDAR.",
+      "events": [
+        {
+          "title": "ITIL 5 inaugural webinar",
+          "date": "4 June 2026",
+          "date_iso": "2026-06-04",
+          "location": "Online",
+          "format": "Online",
+          "type": "Webinar",
+          "desc": "Contact the chapter for the inaugural webinar recap and available materials.",
+          "time": "",
+          "price": "",
+          "img": "",
+          "action_label": "",
+          "action_url": "",
+          "recap_url": "",
+          "recording_url": "",
+          "slides_url": ""
+        }
+      ],
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_events": "false"
+    }
+  },
+  {
+    "page": "events",
+    "section": "sponsor",
+    "content": {
+      "headline": "SPONSOR AN EVENT.",
+      "desc": "Contact us to discuss event sponsorship opportunities and available packages.",
+      "tiers": [],
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_desc": "false",
+      "_hide_tiers": "false"
+    }
+  },
+  {
+    "page": "events",
+    "section": "speakers",
+    "content": {
+      "headline_line1": "CALL FOR",
+      "headline_line2": "SPEAKERS.",
+      "desc": "Share your expertise with the Zambian ITSM community. We welcome proposals on ITIL 5, COBIT, ISO/IEC 20000 and practical service management.",
+      "form_text": "Submit a speaker proposal",
+      "policy_text": "Speaker policy",
+      "policy_url": "",
+      "box_headline_line1": "Share Your Experience",
+      "box_headline_line2": "With Our Community.",
+      "box_desc": "Tell us about your proposed topic and experience. We will contact you about suitable speaking opportunities.",
+      "btn_label": "Enquire as a Speaker",
+      "_hidden": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_desc": "false",
+      "_hide_form_text": "false",
+      "_hide_policy_text": "false",
+      "_hide_policy_url": "false",
+      "_hide_box_headline_line1": "false",
+      "_hide_box_headline_line2": "false",
+      "_hide_box_desc": "false",
+      "_hide_btn_label": "false"
+    }
+  },
+  {
+    "page": "resources",
+    "section": "hero",
+    "content": {
+      "eyebrow": "Knowledge & Resources",
+      "headline_line1": "KNOWLEDGE",
+      "headline_line2": "FOR PRACTICE",
+      "body": "Explore service management frameworks, learning resources and opportunities to share knowledge.",
+      "watermark": "",
+      "_hidden": "false",
+      "_hide_eyebrow": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_body": "false",
+      "_hide_watermark": "false"
+    }
+  },
+  {
+    "page": "resources",
+    "section": "pathways",
+    "content": {
+      "headline": "LEARNING PATHWAYS.",
+      "guide_url": "",
+      "paths": [
+        {
+          "name": "ITIL (Version 5)",
+          "levels": "Service management",
+          "time": "",
+          "url": "https://www.peoplecert.org/"
+        },
+        {
+          "name": "COBIT",
+          "levels": "Governance of enterprise IT",
+          "time": "",
+          "url": "https://www.isaca.org/resources/cobit"
+        },
+        {
+          "name": "ISO/IEC 20000",
+          "levels": "Service management systems",
+          "time": "",
+          "url": "https://www.iso.org/standard/70636.html"
+        }
+      ],
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_guide_url": "false",
+      "_hide_paths": "false"
+    }
+  },
+  {
+    "page": "resources",
+    "section": "blog",
+    "content": {
+      "headline": "BLOG & ARTICLES",
+      "posts": [],
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_posts": "false"
+    }
+  },
+  {
+    "page": "resources",
+    "section": "thought-leadership",
+    "content": {
+      "headline": "THOUGHT LEADERSHIP",
+      "posts": [],
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_posts": "false"
+    }
+  },
+  {
+    "page": "resources",
+    "section": "resources_list",
+    "content": {
+      "case_studies_headline": "Featured Case Studies",
+      "whitepapers_headline": "Guides & Whitepapers",
+      "resources": [],
+      "_hidden": "false",
+      "_hide_case_studies_headline": "false",
+      "_hide_whitepapers_headline": "false",
+      "_hide_resources": "false"
+    }
+  },
+  {
+    "page": "resources",
+    "section": "fellowship",
+    "content": {
+      "headline": "MENTORSHIP",
+      "desc": "Interested in mentoring or learning from other service management professionals? Get in touch to explore opportunities.",
+      "btn_label": "Enquire about mentorship",
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_desc": "false",
+      "_hide_btn_label": "false"
+    }
+  },
+  {
+    "page": "resources",
+    "section": "vault",
+    "content": {
+      "glossary_headline": "ITSM GLOSSARY.",
+      "glossary_desc": "Explore the terminology of service management.",
+      "glossary_btn": "Open glossary",
+      "glossary_url": "",
+      "videos_headline": "VIDEO LIBRARY.",
+      "videos_desc": "Explore available service management recordings and webinars.",
+      "videos_btn": "Browse videos",
+      "videos_url": "",
+      "newsletters_headline": "NEWSLETTERS.",
+      "newsletters_desc": "Register your interest in chapter news and updates.",
+      "newsletters_btn": "Newsletter enquiry",
+      "newsletters_url": "",
+      "_hidden": "false",
+      "_hide_glossary_headline": "false",
+      "_hide_glossary_desc": "false",
+      "_hide_glossary_btn": "false",
+      "_hide_glossary_url": "false",
+      "_hide_videos_headline": "false",
+      "_hide_videos_desc": "false",
+      "_hide_videos_btn": "false",
+      "_hide_videos_url": "false",
+      "_hide_newsletters_headline": "false",
+      "_hide_newsletters_desc": "false",
+      "_hide_newsletters_btn": "false",
+      "_hide_newsletters_url": "false"
+    }
+  },
+  {
+    "page": "resources",
+    "section": "governance",
+    "content": {
+      "reports_headline": "ANNUAL REPORTS.",
+      "reports_years": [],
+      "bylaws_headline": "CHAPTER GOVERNANCE.",
+      "bylaws_desc": "Published chapter governance documents are available below.",
+      "bylaws_docs": [],
+      "_hidden": "false",
+      "_hide_reports_headline": "false",
+      "_hide_reports_years": "false",
+      "_hide_bylaws_headline": "false",
+      "_hide_bylaws_desc": "false",
+      "_hide_bylaws_docs": "false"
+    }
+  },
+  {
+    "page": "partners",
+    "section": "hero",
+    "content": {
+      "headline_line1": "ALLIED",
+      "headline_line2": "ECOSYSTEMS.",
+      "body": "Explore opportunities to support service management through knowledge sharing, collaboration and professional development.",
+      "watermark": "SYSTEM",
+      "_hidden": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_body": "false",
+      "_hide_watermark": "false"
+    }
+  },
+  {
+    "page": "partners",
+    "section": "categories",
+    "content": {
+      "categories_list": [],
+      "_hidden": "false",
+      "_hide_categories_list": "false"
+    }
+  },
+  {
+    "page": "partners",
+    "section": "international",
+    "content": {
+      "headline_line1": "A GLOBAL",
+      "headline_line2": "COMMUNITY.",
+      "body": "itSMF International connects service management communities around the world. Explore its website to learn about the international network.",
+      "points": [],
+      "btn_label": "Visit itSMF International",
+      "btn_url": "https://www.itsmfi.org/",
+      "_hidden": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_body": "false",
+      "_hide_points": "false",
+      "_hide_btn_label": "false",
+      "_hide_btn_url": "false"
+    }
+  },
+  {
+    "page": "partners",
+    "section": "become",
+    "content": {
+      "headline_line1": "BECOME A",
+      "headline_line2": "PARTNER.",
+      "desc": "Connect with us about training referrals, knowledge sharing and opportunities to support the service management community.",
+      "contact_email": "",
+      "_hidden": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_desc": "false",
+      "_hide_contact_email": "false"
+    }
+  },
+  {
+    "page": "services",
+    "section": "hero",
+    "content": {
+      "headline_line1": "ELEVATING",
+      "headline_line2": "STANDARDS.",
+      "body": "Professional services designed to professionalize the Zambian ICT workforce and align local industry with global benchmarks.",
+      "watermark": "OFFERING",
+      "_hidden": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_body": "false",
+      "_hide_watermark": "false"
+    }
+  },
+  {
+    "page": "services",
+    "section": "benchmarking",
+    "content": {
+      "eyebrow": "Flagship Service",
+      "headline_line1": "ITIL PERFORMANCE",
+      "headline_line2": "BENCHMARKING.",
+      "body": "Express interest in organisational service management benchmarking. The chapter will confirm scope, availability and participation requirements.",
+      "btn_label": "Enquire about benchmarking",
+      "year_watermark": "",
+      "_hidden": "false",
+      "_hide_eyebrow": "false",
+      "_hide_headline_line1": "false",
+      "_hide_headline_line2": "false",
+      "_hide_body": "false",
+      "_hide_btn_label": "false",
+      "_hide_year_watermark": "false"
+    }
+  },
+  {
+    "page": "services",
+    "section": "directory",
+    "content": {
+      "services_list": [
+        {
+          "title": "Certification Pathways",
+          "desc": "Guidance on accredited ITIL 5, COBIT and ISO/IEC 20000 certification pathways.",
+          "category": "Education"
+        },
+        {
+          "title": "Community Education",
+          "desc": "Webinars and technical workshops for local practitioners. See the events calendar for confirmed sessions.",
+          "category": "Education"
+        },
+        {
+          "title": "Consultancy Referral Directory",
+          "desc": "Connect with independent consultancy providers. Referrals are subject to transparent disclosure of commercial interests.",
+          "category": "Consultancy"
+        },
+        {
+          "title": "Mentorship Programme",
+          "desc": "Connecting early-career professionals with industry veterans for structured career guidance.",
+          "category": "Development"
+        },
+        {
+          "title": "ATO Partner Directory",
+          "desc": "Enquire about accredited training providers for ITIL, COBIT and ISO/IEC 20000. Listings require a confirmed partner agreement.",
+          "category": "Network"
+        },
+        {
+          "title": "ITIL Performance Benchmarking",
+          "desc": "Express interest in organisational service management benchmarking. Scope and availability will be confirmed by the chapter.",
+          "category": "Benchmarking"
+        }
+      ],
+      "_hidden": "false",
+      "_hide_services_list": "false"
+    }
+  },
+  {
+    "page": "services",
+    "section": "become",
+    "content": {
+      "headline": "BECOME A PROVIDER.",
+      "desc": "Are you an ATO or consultancy looking to be listed in our official services directory?",
+      "contact_email": "hello@itsmf.org.zm",
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_desc": "false",
+      "_hide_contact_email": "false"
+    }
+  },
+  {
+    "page": "site",
+    "section": "footer",
+    "content": {
+      "tagline": "Global Standards. Zambian Practice. One Community.",
+      "email": "hello@itsmf.org.zm",
+      "phone": "+260 974 874 981",
+      "linkedin_url": "",
+      "twitter_url": "",
+      "ethics_url": "",
+      "bylaws_url": "",
+      "partners": [],
+      "_hidden": "false",
+      "_hide_tagline": "false",
+      "_hide_email": "false",
+      "_hide_phone": "false",
+      "_hide_linkedin_url": "false",
+      "_hide_twitter_url": "false",
+      "_hide_ethics_url": "false",
+      "_hide_bylaws_url": "false",
+      "_hide_partners": "false"
+    }
+  },
+  {
+    "page": "site",
+    "section": "privacy",
+    "content": {
+      "headline": "Website privacy notice",
+      "body": "When you submit an enquiry, this website stores the details you provide, your consent and the submission time in the chapter’s Firebase database so the chapter can handle your request. Newsletter enquiries include a request to receive the monthly briefing.\n\nContact hello@itsmf.org.zm about your information, to request a correction or deletion, or to withdraw your newsletter consent.\n\nThis site loads content from Firebase and media from external services, including Cloudinary and image providers. Your browser connects to those services to display that content. The theme preference and a local cache of site content may be stored in your browser. For site analytics, the website creates a browser identifier and records visit time, page path, browser user-agent and whether the browser has visited before in Firebase.\n\nPlease do not send confidential organisational data through public forms.",
+      "_hidden": "false",
+      "_hide_headline": "false",
+      "_hide_body": "false"
+    }
+  }
+]

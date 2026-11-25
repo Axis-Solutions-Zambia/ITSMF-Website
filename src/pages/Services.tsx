@@ -19,29 +19,29 @@ const HERO_DEFAULTS = {
 };
 
 const BENCHMARKING_DEFAULTS = {
-  eyebrow: 'Strategic Initiative',
+  eyebrow: 'Flagship Service',
   headline_line1: 'ITIL PERFORMANCE',
   headline_line2: 'BENCHMARKING.',
-  body: 'The primary tool for measuring your organizational IT maturity against national and international peers.',
-  btn_label: 'ENTER THE MODEL',
-  year_watermark: '2026'
+  body: 'Express interest in organisational service management benchmarking. The chapter will confirm scope, availability and participation requirements.',
+  btn_label: 'Enquire about benchmarking',
+  year_watermark: ''
 };
 
 const DIRECTORY_DEFAULTS = {
   services_list: [
     {
       title: 'Certification Pathways',
-      desc: 'Official itSMF-recognized pathways for ITIL 4, ISO/IEC 20000, and VeriSM certifications in Zambia.',
+      desc: 'Guidance on accredited ITIL 5, COBIT and ISO/IEC 20000 certification pathways.',
       category: 'Education'
     },
     {
       title: 'Community Education',
-      desc: 'Free and subsidized monthly webinars and technical workshops for local practitioners.',
-      category: 'Advocacy'
+      desc: 'Webinars and technical workshops for local practitioners. See the events calendar for confirmed sessions.',
+      category: 'Education'
     },
     {
-      title: 'ITSM Consultancy',
-      desc: 'Strategic advisory for organizations looking to implement or refine their service management frameworks.',
+      title: 'Consultancy Referral Directory',
+      desc: 'Connect with independent consultancy providers. Referrals are subject to transparent disclosure of commercial interests.',
       category: 'Consultancy'
     },
     {
@@ -51,16 +51,17 @@ const DIRECTORY_DEFAULTS = {
     },
     {
       title: 'ATO Partner Directory',
-      desc: 'Find Accredited Training Organizations authorized to deliver itSMF courses in Zambia.',
+      desc: 'Enquire about accredited training providers for ITIL, COBIT and ISO/IEC 20000. Listings require a confirmed partner agreement.',
       category: 'Network'
-    }
+    },
+    { title: 'ITIL Performance Benchmarking', desc: 'Express interest in organisational service management benchmarking. Scope and availability will be confirmed by the chapter.', category: 'Benchmarking' }
   ]
 };
 
 const BECOME_DEFAULTS = {
   headline: 'BECOME A PROVIDER.',
   desc: 'Are you an ATO or consultancy looking to be listed in our official services directory?',
-  contact_email: 'strategic.partnerships@itsmf.zm'
+  contact_email: 'hello@itsmf.org.zm'
 };
 
 // Fallback icons array matching original defaults in case names don't match or are missing
@@ -103,6 +104,7 @@ export default function Services() {
                 {hero['_hide_headline_line2'] !== 'true' && <span className="text-brand-text">{hero.headline_line2}</span>}
               </h1>
             )}
+            {hero['_hide_body'] !== 'true' && <p className="max-w-2xl text-brand-muted">{hero.body}</p>}
           </motion.div>
         </div>
         <div className="absolute right-0 top-0 text-[20vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mt-10 mr-10 leading-none">
@@ -132,7 +134,7 @@ export default function Services() {
                 )}
                 {benchmarking['_hide_btn_label'] !== 'true' && (
                   <Link 
-                    to="/services/benchmarking"
+                    to="/enquire?type=benchmarking"
                     className="inline-flex items-center bg-brand-dark text-brand-text px-10 py-5 font-black text-[10px] uppercase tracking-[0.4em] hover:bg-brand-text hover:text-brand-bg shadow-2xl transition-all"
                   >
                     {benchmarking.btn_label} <ArrowUpRight className="ml-3 w-5 h-5" />
@@ -143,7 +145,7 @@ export default function Services() {
                 <div className="aspect-square bg-brand-dark/10 border border-brand-dark/20 flex items-center justify-center">
                   <BarChart3 className="w-48 h-48 opacity-20" />
                 </div>
-                {benchmarking['_hide_year_watermark'] !== 'true' && (
+                {benchmarking['_hide_year_watermark'] !== 'true' && Boolean(benchmarking.year_watermark) && (
                   <div className="absolute -bottom-8 -right-8 p-8 bg-brand-dark text-brand-accent font-black text-4xl italic font-serif">
                     {benchmarking.year_watermark}
                   </div>
@@ -200,9 +202,9 @@ export default function Services() {
                         <p className="text-xs text-brand-muted uppercase tracking-widest font-bold leading-loose">{service.desc}</p>
                       </div>
                       <div className="mt-auto pt-8 border-t border-brand-text/5">
-                        <button className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-text hover:text-brand-accent transition-colors flex items-center">
+                        <Link to={`/enquire?type=${service.category === 'Benchmarking' ? 'benchmarking' : 'services'}`} className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-text hover:text-brand-accent transition-colors flex items-center">
                           LEARN MORE <ArrowUpRight className="ml-2 w-4 h-4" />
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   );
@@ -225,9 +227,9 @@ export default function Services() {
             </p>
           )}
           {become['_hide_contact_email'] !== 'true' && (
-            <Link to="/partners" className="text-brand-accent font-black text-2xl uppercase tracking-tighter border-b-2 border-brand-accent pb-2 hover:text-brand-text hover:border-brand-text transition-all">
+            <a href={`mailto:${become.contact_email}`} className="text-brand-accent font-black text-2xl uppercase tracking-tighter border-b-2 border-brand-accent pb-2 hover:text-brand-text hover:border-brand-text transition-all">
               {become.contact_email}
-            </Link>
+            </a>
           )}
         </div>
       </section>

@@ -10,6 +10,9 @@ interface ContactMessage {
   email: string;
   phone: string;
   message: string;
+  enquiryType?: string;
+  organization?: string;
+  consentGiven?: boolean;
   read: boolean;
   createdAt: any;
 }
@@ -183,7 +186,7 @@ export default function Messages() {
                   </div>
 
                   <div className="text-sm text-brand-text/80 leading-relaxed whitespace-pre-wrap">
-                    {selectedMessage.message}
+                    {selectedMessage.enquiryType && <p className="mb-3 font-bold">Enquiry: {selectedMessage.enquiryType}</p>}{selectedMessage.organization && <p className="mb-3">Organisation: {selectedMessage.organization}</p>}{selectedMessage.message}
                   </div>
 
                   <div className="mt-10 pt-6 border-t border-brand-text/10">

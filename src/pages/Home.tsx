@@ -16,32 +16,29 @@ const HERO_DEFAULTS = {
   mission_text: '"To professionalize IT Service Management in Zambia through alignment with international standards and national digital transformation goals."',
   cta_primary_label: 'Join Chapter',
   cta_primary_url: '/membership',
-  cta_secondary_label: 'View 2026 Summit',
-  cta_secondary_url: '/events',
-  stats: [
-    { label: 'ITIL Certification Gap in National Workforce', value: '82%' },
-    { label: 'Estimated Digital Economy Opportunity', value: 'ZMW 12B' },
-    { label: 'Corporate Partners Aligning with ISO 20000', value: '45+' },
-    { label: 'National Strategy Target Year', value: '2026' }
-  ]
+  cta_secondary_label: 'About itSMF Zambia',
+  cta_secondary_url: '/about',
+  cta_tertiary_label: 'Explore events',
+  cta_tertiary_url: '/events',
+  stats: []
 };
 
 const OVERVIEW_DEFAULTS = {
-  headline: 'Chapter Overview.',
+  headline: 'Global Standards. Zambian Practice. One Community.',
   accordion_items: [
     {
       title: 'Governance',
-      content: 'Standardizing frameworks for Zambian enterprise. Governance is provided by a board elected directly by our corporate and individual members.',
+      content: 'We support transparent governance and professional accountability. Confirmed chapter appointments and approved governance documents will be published when available.',
       image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80'
     },
     {
       title: 'Growth',
-      content: 'Increasing the density of certified professionals across the Republic through structured mentorship and exams.',
+      content: 'Increasing the density of certified professionals across the Republic through mentorship and accredited certification pathways.',
       image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=80'
     },
     {
       title: 'Advocacy',
-      content: 'Bridging the policy gap with MICT and ZNB. As the authorized voice of ITSM in the Republic, we work at the intersection of international best practice and Zambian economic reality.',
+      content: 'Zambia’s community voice for ITSM, connecting international best practice with Zambian practice.',
       image: 'https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800&q=80'
     },
     {
@@ -52,31 +49,10 @@ const OVERVIEW_DEFAULTS = {
   ]
 };
 
-const EVENTS_DEFAULTS = {
-  event_list: [
-    {
-      eyebrow: 'Summit',
-      title: 'National Conference Livingstone',
-      desc: 'Join industry leaders to discuss the future of ITSM and upcoming frameworks for 2026.',
-      image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
-      link: '/events'
-    },
-    {
-      eyebrow: 'Workshop',
-      title: 'ITIL 4 Masterclass Lusaka',
-      desc: 'A comprehensive deep-dive into ITIL 4 Foundation and advanced practices.',
-      image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80',
-      link: '/events'
-    },
-    {
-      eyebrow: 'Webinar',
-      title: 'Future of ZNB Infrastructure',
-      desc: 'Online session exploring the digital transformation journey of the national bank.',
-      image: 'https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800&q=80',
-      link: '/events'
-    }
-  ]
-};
+const EVENTS_DEFAULTS = { event_list: [
+  { eyebrow: 'Past webinar', title: 'ITIL 5 inaugural webinar', desc: 'Contact the chapter for the 4 June 2026 webinar recap and available materials.', date: '4 June 2026', format: 'Online', time: '', price: '', image: '', link: '/events' },
+  { eyebrow: 'Expressions of interest', title: 'Annual conference', desc: 'Dates to be announced. Register your interest for updates.', date: 'Dates to be announced', format: '', time: '', price: '', image: '', link: '/about#contact' }
+] };
 
 // ─── Home Page ───────────────────────────────────────────────────────────────
 
@@ -101,19 +77,18 @@ const BOTTOM_ROW_IMAGES = [
 ];
 
 export default function Home() {
-  const [activeEventIndex, setActiveEventIndex] = useState(0);
   const { content: hero, loading: heroLoading } = usePageContent('home', 'hero', HERO_DEFAULTS as any);
-  const { content: heroMedia, loading: heroMediaLoading } = usePageContent('home', 'hero_media');
+  const { content: heroMedia } = usePageContent('home', 'hero_media');
   const { content: overview, loading: overviewLoading } = usePageContent('home', 'overview', OVERVIEW_DEFAULTS as any);
   const { content: eventsContent, loading: eventsLoading } = usePageContent('home', 'events', EVENTS_DEFAULTS as any);
 
-  const isLoading = heroLoading || heroMediaLoading || overviewLoading || eventsLoading;
+  const isLoading = heroLoading || overviewLoading || eventsLoading;
 
   const topImages = Array.isArray(heroMedia.top_images) && heroMedia.top_images.length ? (heroMedia.top_images as unknown as any[]).map(img => img.image) : TOP_ROW_IMAGES;
   const bottomImages = Array.isArray(heroMedia.bottom_images) && heroMedia.bottom_images.length ? (heroMedia.bottom_images as unknown as any[]).map(img => img.image) : BOTTOM_ROW_IMAGES;
 
-  const eventsList = Array.isArray(eventsContent.event_list) && eventsContent.event_list.length > 0 
-    ? eventsContent.event_list 
+  const eventsList = Array.isArray(eventsContent.event_list)
+    ? eventsContent.event_list
     : EVENTS_DEFAULTS.event_list;
 
   const headerRef = useRef<HTMLHeadingElement>(null);
@@ -127,26 +102,26 @@ export default function Home() {
         setCarouselPadding(headerRef.current.getBoundingClientRect().left);
       }
     };
-    
+
     // Initial calculation
     updatePadding();
-    
+
     // Small timeout to ensure fonts/layouts are fully rendered
     const timeoutId = setTimeout(updatePadding, 100);
-    
+
     window.addEventListener('resize', updatePadding);
     return () => {
       window.removeEventListener('resize', updatePadding);
       clearTimeout(timeoutId);
     };
   }, []);
-  
+
   const scrollEvents = (direction: 'left' | 'right') => {
     if (eventsScrollRef.current) {
       const scrollAmount = window.innerWidth > 768 ? 400 : 320;
-      eventsScrollRef.current.scrollBy({ 
-        left: direction === 'left' ? -scrollAmount : scrollAmount, 
-        behavior: 'smooth' 
+      eventsScrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
       });
     }
   };
@@ -243,6 +218,8 @@ export default function Home() {
             )}
           </div>
 
+          {hero.cta_tertiary_label && <Link to={hero.cta_tertiary_url || '/events'} className="inline-block mb-10 underline underline-offset-4">{hero.cta_tertiary_label}</Link>}
+
           {/* Statistics Grid */}
           {hero['_hide_stats'] !== 'true' && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 sm:gap-8">
@@ -272,10 +249,10 @@ export default function Home() {
       <EditableSection pageId="home" sectionId="overview">
       <section className="py-24 lg:py-32 bg-white relative">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
-          
+
           {/* Main Section Headline */}
           {overview['_hide_headline'] !== 'true' && (
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-tight mb-12">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-brand-text tracking-tight leading-tight mb-12">
               {overview.headline}
             </h2>
           )}
@@ -285,7 +262,7 @@ export default function Home() {
             <div className="flex flex-col gap-0 divide-y divide-gray-300/60">
               {((overview as any).accordion_items || OVERVIEW_DEFAULTS.accordion_items).map((item: any, i: number) => {
                 const isActive = activeAccordion === i;
-                
+
                 return (
                   <div key={i} className="py-6 first:pt-0 last:pb-0">
                     {/* Header Button */}
@@ -293,10 +270,10 @@ export default function Home() {
                       onClick={() => setActiveAccordion(isActive ? -1 : i)}
                       className="w-full flex items-center justify-between text-left group"
                     >
-                      <h3 className="text-2xl md:text-3xl font-bold text-gray-900 transition-colors">
+                      <h3 className="text-2xl md:text-3xl font-bold text-brand-text transition-colors">
                         {item.title}
                       </h3>
-                      <div className="ml-4 shrink-0 text-gray-500 group-hover:text-gray-900 transition-colors">
+                      <div className="ml-4 shrink-0 text-brand-muted group-hover:text-brand-text transition-colors">
                         {isActive ? (
                           <ChevronUp className="w-8 h-8" strokeWidth={2.5} />
                         ) : (
@@ -316,15 +293,15 @@ export default function Home() {
                           className="overflow-hidden"
                         >
                           <div className="pt-6">
-                            <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-2xl">
+                            <p className="text-lg md:text-xl text-brand-muted leading-relaxed max-w-2xl">
                               {item.content}
                             </p>
-                            
+
                             {item.image && (
-                              <div className="mt-8 md:mt-12 w-full rounded-2xl md:rounded-[2rem] overflow-hidden bg-gray-200">
-                                <img 
-                                  src={item.image} 
-                                  alt={item.title} 
+                              <div className="mt-8 md:mt-12 w-full rounded-xl md:rounded-[2rem] overflow-hidden bg-gray-200">
+                                <img
+                                  src={item.image}
+                                  alt={item.title}
                                   className="w-full h-auto object-cover object-center max-h-[500px]"
                                 />
                               </div>
@@ -346,20 +323,20 @@ export default function Home() {
       <EditableSection pageId="home" sectionId="events">
       <section className="py-16 md:py-20 bg-[#F5F5F7] relative overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-10 text-left mb-8 md:mb-10">
-          <h2 
+          <h2
             ref={headerRef}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight leading-tight max-w-3xl mb-4"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-brand-text tracking-tight leading-tight max-w-3xl mb-4"
           >
             What's happening?
           </h2>
-          <p className="text-lg md:text-xl text-gray-500 font-medium max-w-2xl">
-            Join us at our upcoming chapter events and summits.
+          <p className="text-lg md:text-xl text-brand-muted font-medium max-w-2xl">
+            Explore chapter events, past sessions and opportunities to take part.
           </p>
         </div>
-        
+
         <div className="relative">
           {/* Scrollable Container */}
-          <div 
+          <div
             ref={eventsScrollRef}
             className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-12 pt-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] transition-[padding] duration-300"
             style={{
@@ -369,25 +346,26 @@ export default function Home() {
             }}
           >
             {(eventsList as any[]).map((ev, i) => (
-              <Link 
-                to={ev.link || '/events'} 
-                key={i} 
-                className="snap-start shrink-0 w-[85vw] sm:w-[360px] md:w-[400px] aspect-[4/5] bg-white rounded-[2rem] p-8 flex flex-col relative group cursor-pointer shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+              <Link
+                to={ev.link || '/events'}
+                key={i}
+                className="snap-start shrink-0 w-[85vw] sm:w-[360px] md:w-[400px] aspect-[4/5] bg-brand-dark rounded-xl p-8 flex flex-col relative group cursor-pointer shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden"
               >
                 {/* Content Top */}
                 <div className="relative z-10 flex flex-col items-start mb-6">
-                  {ev.eyebrow && <span className="text-[10px] md:text-xs font-semibold text-gray-500 tracking-wide uppercase mb-2">{ev.eyebrow}</span>}
-                  {ev.title && <h3 className="text-xl md:text-2xl font-bold text-gray-900 leading-tight mb-3">{ev.title}</h3>}
-                  {ev.desc && <p className="text-xs md:text-sm text-gray-600 leading-relaxed max-w-[90%]">{ev.desc}</p>}
+                  {ev.eyebrow && <span className="text-[10px] md:text-xs font-semibold text-brand-muted tracking-wide uppercase mb-2">{ev.eyebrow}</span>}
+                  {ev.title && <h3 className="text-xl md:text-2xl font-bold text-brand-text leading-tight mb-3">{ev.title}</h3>}
+                  {(ev.date || ev.time || ev.format || ev.price) && <p className="text-sm text-brand-text mb-3">{[ev.date, ev.time && `${ev.time} CAT`, ev.format, ev.price].filter(Boolean).join(' · ')}</p>}
+                  {ev.desc && <p className="text-xs md:text-sm text-brand-muted leading-relaxed max-w-[90%]">{ev.desc}</p>}
                 </div>
 
                 {/* Image Bottom */}
                 {ev.image && (
-                  <div className="flex-1 w-full relative mt-auto flex items-end justify-center rounded-2xl overflow-hidden">
-                    <img 
-                      src={ev.image} 
-                      alt={ev.title} 
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" 
+                  <div className="flex-1 w-full relative mt-auto flex items-end justify-center rounded-xl overflow-hidden">
+                    <img
+                      src={ev.image}
+                      alt={ev.title}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
                 )}
@@ -404,16 +382,16 @@ export default function Home() {
 
           {/* Navigation Controls (Right Aligned under carousel) */}
           <div className="max-w-[1400px] mx-auto px-6 lg:px-10 flex justify-end gap-4 mt-2">
-            <button 
+            <button
               onClick={() => scrollEvents('left')}
-              className="w-12 h-12 rounded-full bg-gray-200/60 hover:bg-gray-300 text-gray-600 flex items-center justify-center transition-colors backdrop-blur-sm"
+              className="w-12 h-12 rounded-full bg-gray-200/60 hover:bg-gray-300 text-brand-muted flex items-center justify-center transition-colors backdrop-blur-sm"
               aria-label="Scroll left"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
-            <button 
+            <button
               onClick={() => scrollEvents('right')}
-              className="w-12 h-12 rounded-full bg-gray-200/60 hover:bg-gray-300 text-gray-600 flex items-center justify-center transition-colors backdrop-blur-sm"
+              className="w-12 h-12 rounded-full bg-gray-200/60 hover:bg-gray-300 text-brand-muted flex items-center justify-center transition-colors backdrop-blur-sm"
               aria-label="Scroll right"
             >
               <ChevronRight className="w-6 h-6" />

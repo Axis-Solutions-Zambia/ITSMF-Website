@@ -298,7 +298,7 @@ export default function SectionEditor({ pageId: propPageId, sectionId: propSecti
         <div className="flex space-x-3">
           {!isPanel && (
             <a
-              href={`/${pageId === 'home' ? '' : pageId}`}
+              href={pageId === 'site' ? (sectionId === 'privacy' ? '/privacy' : '/') : `/${pageId === 'home' ? '' : pageId}`}
               target="_blank"
               rel="noreferrer"
               className="flex items-center px-5 py-3 border border-brand-text/10 text-[10px] font-black uppercase tracking-[0.3em] hover:border-brand-accent transition-all"

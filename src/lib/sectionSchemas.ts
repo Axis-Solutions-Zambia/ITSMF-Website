@@ -559,3 +559,33 @@ export const SECTION_SCHEMAS: Record<string, Record<string, SectionSchema>> = {
     }
   }
 };
+
+// Audit additions are kept alongside the original schemas so existing content remains editable.
+function addFields(page: string, section: string, fields: FieldDef[]) {
+  SECTION_SCHEMAS[page][section].fields.push(...fields);
+}
+function addItemFields(page: string, section: string, list: string, fields: FieldDef[]) {
+  SECTION_SCHEMAS[page][section].fields.find(field => field.key === list)!.itemFields!.push(...fields);
+}
+const textField = (key: string, label: string): FieldDef => ({ key, label, type: 'text' });
+const linkField = (key: string, label: string): FieldDef => ({ key, label, type: 'text', hint: 'Use a relative path or an https:// URL. Leave blank until confirmed.' });
+addFields('home', 'hero', [textField('cta_tertiary_label', 'Third button label'), linkField('cta_tertiary_url', 'Third button URL')]);
+addItemFields('home', 'events', 'event_list', ['date', 'time', 'format', 'price'].map(key => textField(key, key === 'time' ? 'Time (CAT)' : key)));
+addItemFields('about', 'vision', 'values', [{ key: 'desc', label: 'Description', type: 'textarea' }]);
+addItemFields('about', 'board', 'members', [{ key: 'photo', label: 'Confirmed member photo', type: 'image' }]);
+addItemFields('about', 'intl', 'chapters', [linkField('url', 'Chapter website')]);
+addFields('events', 'flagship', [textField('date_iso', 'Event end date (YYYY-MM-DD)'), linkField('btn_url', 'Registration URL'), linkField('recap_url', 'Past event recap URL'), { key: 'img', label: 'Event image', type: 'image' }]);
+addItemFields('events', 'calendar', 'events', [textField('date_iso', 'Event end date (YYYY-MM-DD)'), textField('time', 'Time (CAT)'), textField('format', 'Format'), textField('price', 'Price'), textField('action_label', 'Upcoming action label'), ...['action_url', 'recap_url', 'recording_url', 'slides_url'].map(key => linkField(key, key.replaceAll('_', ' ')))]);
+addFields('events', 'speakers', [linkField('policy_url', 'Speaker guidelines URL')]);
+addFields('resources', 'pathways', [linkField('guide_url', 'Global guide URL')]);
+addItemFields('resources', 'pathways', 'paths', [linkField('url', 'Accredited pathway guide URL')]);
+for (const section of ['blog', 'thought-leadership']) addItemFields('resources', section, 'posts', [linkField('url', 'Article URL')]);
+addItemFields('resources', 'resources_list', 'resources', [linkField('url', 'Resource URL')]);
+addItemFields('resources', 'governance', 'reports_years', [linkField('url', 'Approved report URL')]);
+addItemFields('resources', 'governance', 'bylaws_docs', [linkField('url', 'Approved document URL')]);
+addFields('resources', 'vault', ['glossary_url', 'videos_url', 'newsletters_url'].map(key => linkField(key, key.replaceAll('_', ' '))));
+addFields('partners', 'international', [linkField('btn_url', 'International website URL')]);
+SECTION_SCHEMAS.site = {
+  footer: { name: 'Footer and contact details', description: 'List partners only with confirmed written permission. Leave unavailable links blank.', fields: [textField('tagline', 'Tagline'), { key: 'email', label: 'Email', type: 'email' }, { key: 'phone', label: 'Phone', type: 'tel' }, ...['linkedin_url', 'twitter_url', 'ethics_url', 'bylaws_url'].map(key => linkField(key, key.replaceAll('_', ' '))), { key: 'partners', label: 'Confirmed partners', type: 'list', itemFields: [textField('name', 'Name')] }] },
+  privacy: { name: 'Privacy notice', description: 'Have the chapter approve this notice and confirm retention and data handling arrangements before publication.', fields: [textField('headline', 'Heading'), { key: 'body', label: 'Notice text (blank lines separate paragraphs)', type: 'textarea' }] }
+};

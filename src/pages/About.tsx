@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowUpRight, ChevronLeft, ChevronRight, Send, CheckCircle, Loader2 } from 'lucide-react';
 import React, { useRef, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
 import { PageSkeleton } from '@/src/components/PageSkeleton';
@@ -11,7 +12,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 const TOP_DEFAULTS = {
   headline_line1: 'OUR',
   headline_line2: 'GENESIS',
-  body: 'itSMF Zambia is the leading professional body for Service Management, fostering excellence across the Republic since 2018.'
+  body: 'itSMF Zambia brings together people interested in IT Service Management to share knowledge, develop skills and strengthen professional practice in Zambia.'
 };
 
 const VISION_DEFAULTS = {
@@ -21,69 +22,47 @@ const VISION_DEFAULTS = {
   mission_label: 'The Mission',
   mission_text: '"Empowering IT professionals through certification pathways, structured mentorship, and international alignment to global ITSM standards."',
   values: [
-    { value: 'Integrity' },
-    { value: 'Excellence' },
-    { value: 'Collaboration' },
-    { value: 'Innovation' }
+    { value: 'Integrity', desc: 'Act with honesty, accountability and respect.' },
+    { value: 'Excellence', desc: 'Continually improve the quality of service management practice.' },
+    { value: 'Collaboration and inclusivity', desc: 'Welcome diverse perspectives and learn together across organisations.' },
+
   ]
 };
 
 const BOARD_DEFAULTS = {
   headline: 'THE BOARD.',
-  members: [
-    { name: 'Dr. Chisenga', role: 'Chairperson', org: 'ICT Authority' },
-    { name: 'Sarah Phiri', role: 'Vice-Chair', org: 'FinTech Solutions' },
-    { name: 'Michael Banda', role: 'Secretary', org: 'National Bank' },
-    { name: 'Kelvin Mwansa', role: 'Treasurer', org: 'Global Audit' }
-  ]
+  members: []
 };
 
 const ADVISORY_DEFAULTS = {
   advisory_headline: 'ADVISORY COMMITTEE.',
-  advisory_intro: 'A non-voting body comprising industry veterans providing strategic oversight and mentorship to the board.',
-  advisors: [
-    { title: 'Permanent Secretary (Ministry of Technology)' },
-    { title: 'CEO (National Digital Agency)' },
-    { title: 'Regional Director (UNDP ICT)' },
-    { title: 'Dean of IT (University of Zambia)' }
-  ],
+  advisory_intro: 'Confirmed advisory appointments and governance information will be published here.',
+  advisors: [],
   gov_headline: 'GOVERNANCE.',
-  gov_articles: [
-    { title: 'Article 12: Elections', body: 'Elections are conducted biennially during the Annual General Meeting (AGM) to ensure continuity and fresh leadership perspectives.' },
-    { title: 'Article 15: AGM Details', body: 'AGMs are held held in Q1 of each fiscal year. All voting members (Individual & Corporate) are required to attend.' }
-  ]
+  gov_articles: []
 };
 
 const INTL_DEFAULTS = {
   eyebrow: 'Global Network',
   headline_line1: 'itSMF',
   headline_line2: 'INTERNATIONAL',
-  body: 'itSMF Zambia is a proud member of the itSMF International federation, providing our members with direct access to global thought leadership and cross-chapter collaboration.',
-  chapters: [
-    { name: 'UK' },
-    { name: 'USA' },
-    { name: 'Germany' },
-    { name: 'Australia' }
-  ]
+  body: 'Learn about the wider itSMF community and service management practice around the world. Contact us for current information about our international relationships.',
+  chapters: []
 };
 
 const REPORTS_DEFAULTS = {
   headline: 'ANNUAL REPORTS.',
-  intro: 'Explore our commitment to transparency through yearly financial and impact audits.',
-  reports: [
-    { year: '2025', title: 'Annual Impact Report', details: 'PDF // 12.4 MB' },
-    { year: '2024', title: 'Annual Impact Report', details: 'PDF // 12.4 MB' },
-    { year: '2023', title: 'Annual Impact Report', details: 'PDF // 12.4 MB' }
-  ]
+  intro: 'Approved annual reports will be published when available.',
+  reports: []
 };
 
 const CONTACT_DEFAULTS = {
   headline: 'CONTACT US.',
   intro: 'For secretariat inquiries, sponsorship proposals, or governance clarifications.',
-  email: 'secretariat@itsmf.zm',
-  phone: '+260 970 000 000',
+  email: 'hello@itsmf.org.zm',
+  phone: '+260974874981',
   base_label: 'PHYSICAL BASE',
-  address: 'Innovation Hub,\nIndependence Avenue,\nLusaka, Zambia'
+  address: 'Lusaka, Zambia'
 };
 
 export default function About() {
@@ -95,7 +74,12 @@ export default function About() {
   const { content: reports, loading: reportsLoading } = usePageContent('about', 'reports', REPORTS_DEFAULTS as any);
   const { content: contact, loading: contactLoading } = usePageContent('about', 'contact', CONTACT_DEFAULTS);
 
+  const missionItems = String(vision.mission_text || '').split(/\s*•\s*|\n+/).map(item => item.trim()).filter(Boolean);
   const isLoading = topLoading || visionLoading || boardLoading || advisoryLoading || intlLoading || reportsLoading || contactLoading;
+
+  const [searchParams] = useSearchParams();
+  const [enquiryType, setEnquiryType] = useState(searchParams.get('type') === 'sponsorship' ? 'sponsorship' : 'general');
+  const [consentGiven, setConsentGiven] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const scroll = (direction: 'left' | 'right') => {
@@ -114,6 +98,7 @@ export default function About() {
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!consentGiven || formSending) return;
     setFormSending(true);
     setFormError('');
     try {
@@ -122,6 +107,8 @@ export default function About() {
         email: formData.email,
         phone: formData.phone || '',
         message: formData.message,
+        enquiryType,
+        consentGiven,
         read: false,
         createdAt: serverTimestamp(),
       });
@@ -155,14 +142,12 @@ export default function About() {
               </h1>
             )}
             {top['_hide_body'] !== 'true' && (
-              <p className="text-xl text-brand-muted max-w-2xl leading-relaxed uppercase tracking-wider font-bold opacity-80 decoration-brand-accent underline underline-offset-8">
+              <p className="text-lg text-brand-muted max-w-2xl leading-relaxed">
                 {top.body}
               </p>
             )}
+            <Link to="/enquire?type=membership" className="inline-flex items-center gap-2 mt-8 px-6 py-4 bg-brand-accent text-brand-dark font-bold">Join itSMF Zambia <ArrowUpRight className="w-4 h-4" /></Link>
           </motion.div>
-        </div>
-        <div className="absolute right-0 top-0 text-[20vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mt-10 mr-10 leading-none">
-          STORY
         </div>
       </section>
       </EditableSection>
@@ -174,18 +159,22 @@ export default function About() {
           <div>
             {vision['_hide_headline'] !== 'true' && (
               <h2 className="text-4xl font-black mb-12 uppercase tracking-tighter italic font-serif leading-none">
-                {vision.headline.split(' ').reduce<any[]>((acc, word, idx, arr) => {
+                {String(vision.headline).split(' ').reduce<any[]>((acc, word, idx, arr) => {
                    return [...acc, word, idx === arr.length - 2 ? <br key={idx}/> : ' '];
                 }, [])}
               </h2>
             )}
-            
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {vision['_hide_vision_text'] !== 'true' && <div><h3 className="text-xl font-bold mb-3">{String(vision.vision_label || 'Vision')}</h3><p className="text-brand-muted leading-relaxed">{String(vision.vision_text || '')}</p></div>}
+              {vision['_hide_mission_text'] !== 'true' && <div><h3 className="text-xl font-bold mb-3">{String(vision.mission_label || 'Mission')}</h3>{missionItems.length > 1 ? <ul className="list-disc pl-5 space-y-3 text-brand-muted">{missionItems.map((item, index) => <li key={index}>{item}</li>)}</ul> : <p className="text-brand-muted leading-relaxed">{missionItems[0]}</p>}</div>}
+            </div>
             {vision['_hide_values'] !== 'true' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
                 {(vision.values as unknown as any[]).map((val, idx) => (
                   <div key={idx} className="p-8 border border-brand-text/10 bg-brand-dark flex items-center space-x-6 hover:border-brand-accent transition-colors group">
                     <div className="w-2 h-2 bg-brand-accent shadow-[0_0_10px_var(--color-brand-accent)] group-hover:scale-150 transition-transform"></div>
-                    <span className="text-sm font-black uppercase tracking-[0.3em]">{val.value}</span>
+                    <div><h3 className="text-sm font-bold mb-3">{val.value}</h3>{val.desc && <p className="text-sm text-brand-muted leading-relaxed">{val.desc}</p>}</div>
                   </div>
                 ))}
               </div>
@@ -204,31 +193,31 @@ export default function About() {
               <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic font-serif leading-none">{board.headline}</h2>
             </div>
           )}
-          {board['_hide_members'] !== 'true' && (
+          {board['_hide_members'] !== 'true' && (board.members as any[]).length > 0 && (
             <div className="relative group/carousel -mx-6 px-6 sm:-mx-10 sm:px-10 md:mx-0 md:px-0">
               {/* Mobile Arrows */}
-              <button 
-                onClick={() => scroll('left')} 
+              <button
+                aria-label="Previous board members" onClick={() => scroll('left')}
                 className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-10 p-3 md:hidden bg-brand-bg border border-brand-text/10 rounded-full shadow-xl hover:text-brand-accent transition-colors flex items-center justify-center"
               >
                 <ChevronLeft className="w-6 h-6 text-brand-text" />
               </button>
-              <button 
-                onClick={() => scroll('right')} 
+              <button
+                aria-label="Next board members" onClick={() => scroll('right')}
                 className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-10 p-3 md:hidden bg-brand-bg border border-brand-text/10 rounded-full shadow-xl hover:text-brand-accent transition-colors flex items-center justify-center"
               >
                 <ChevronRight className="w-6 h-6 text-brand-text" />
               </button>
 
-              <div 
+              <div
                 ref={scrollRef}
                 className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-px bg-transparent md:bg-brand-text/5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
               >
                 {(board.members as unknown as any[]).map((member, i) => (
                   <div key={i} className="w-[85vw] sm:w-[50vw] md:w-auto shrink-0 snap-center bg-brand-dark p-8 group relative overflow-hidden">
-                    <div className="aspect-[4/5] bg-brand-bg rounded-none mb-6 relative overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
-                      <div className="absolute inset-0 border border-brand-text/5"></div>
-                    </div>
+                    {member.photo && <div className="aspect-[4/5] bg-brand-bg rounded-none mb-6 relative overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
+                      <img src={member.photo} alt={member.name} className="w-full h-full object-cover" loading="lazy" />
+                    </div>}
                     <h4 className="text-xl font-black uppercase tracking-tighter italic font-serif leading-none mb-2">{member.name}</h4>
                     <p className="text-brand-accent font-black text-[10px] uppercase tracking-[0.2em] mb-4">{member.role}</p>
                     <p className="text-[9px] text-brand-muted font-bold uppercase tracking-widest leading-none">{member.org}</p>
@@ -303,9 +292,7 @@ export default function About() {
           {intl['_hide_chapters'] !== 'true' && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-brand-text/5 border border-brand-text/5">
               {(intl.chapters as unknown as any[]).map((ch, idx) => (
-                <div key={idx} className="p-8 bg-brand-dark text-xs font-black uppercase tracking-tighter opacity-40 hover:opacity-100 transition-opacity">
-                  Chapter: {ch.name}
-                </div>
+                /^https?:\/\//i.test(ch.url || '') ? <a key={idx} href={ch.url} target="_blank" rel="noopener noreferrer" className="p-8 bg-brand-dark text-sm font-bold hover:text-brand-accent transition-colors">Chapter: {ch.name} <ArrowUpRight className="inline w-4 h-4" /></a> : <div key={idx} className="p-8 bg-brand-dark text-sm font-bold">Chapter: {ch.name}</div>
               ))}
             </div>
           )}
@@ -324,19 +311,19 @@ export default function About() {
             <div>
                {contact['_hide_headline'] !== 'true' && <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic font-serif mb-8 md:mb-0">{contact.headline}</h2>}
             </div>
-            
+
             <div className="w-full flex-1 md:max-w-3xl bg-brand-accent p-8 md:p-12 text-brand-dark">
                <div className="flex flex-col sm:flex-row gap-10 justify-between items-start sm:items-center">
                  {contact['_hide_email'] !== 'true' && (
                    <div>
                      <h4 className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-70">Email Address</h4>
-                     <div className="text-lg md:text-2xl font-black uppercase tracking-tighter border-b-2 border-brand-dark/20 pb-1 inline-block">{contact.email}</div>
+                     <a href={`mailto:${contact.email}`} className="text-lg md:text-2xl font-bold break-all border-b-2 border-brand-dark/20 pb-1 inline-block">{String(contact.email)}</a>
                    </div>
                  )}
                  {contact['_hide_phone'] !== 'true' && (
                    <div>
                      <h4 className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-70">Phone Number</h4>
-                     <div className="text-lg md:text-2xl font-black uppercase tracking-tighter border-b-2 border-brand-dark/20 pb-1 inline-block">{contact.phone}</div>
+                     <a href={`tel:${contact.phone}`} className="text-lg md:text-2xl font-bold border-b-2 border-brand-dark/20 pb-1 inline-block">{String(contact.phone)}</a>
                    </div>
                  )}
                </div>
@@ -361,7 +348,7 @@ export default function About() {
                     <h4 className="text-xl font-black uppercase tracking-tighter mb-2">Message Sent</h4>
                     <p className="text-xs text-brand-muted uppercase tracking-widest font-bold mb-8">We'll get back to you as soon as possible.</p>
                     <button
-                      onClick={() => { setFormSubmitted(false); setFormData({ name: '', email: '', phone: '', message: '' }); }}
+                      onClick={() => { setFormSubmitted(false); setConsentGiven(false); setFormData({ name: '', email: '', phone: '', message: '' }); }}
                       className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-accent hover:text-brand-text transition-colors"
                     >
                       Send Another Message
@@ -371,10 +358,11 @@ export default function About() {
                   <form onSubmit={handleContactSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Full Name *</label>
+                        <label htmlFor="contact-name" className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Full Name *</label>
                         <input
                           type="text"
-                          value={formData.name}
+                          id="contact-name"
+                        value={formData.name}
                           onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                           required
                           placeholder="John Doe"
@@ -382,10 +370,11 @@ export default function About() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Email Address *</label>
+                        <label htmlFor="contact-email" className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Email Address *</label>
                         <input
                           type="email"
-                          value={formData.email}
+                          id="contact-email"
+                        value={formData.email}
                           onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                           required
                           placeholder="john@example.com"
@@ -394,9 +383,10 @@ export default function About() {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Phone Number</label>
+                      <label htmlFor="contact-phone" className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Phone Number</label>
                       <input
                         type="tel"
+                        id="contact-phone"
                         value={formData.phone}
                         onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                         placeholder="+260 97X XXX XXX"
@@ -404,8 +394,9 @@ export default function About() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Message *</label>
+                      <label htmlFor="contact-message" className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-muted">Message *</label>
                       <textarea
+                        id="contact-message"
                         value={formData.message}
                         onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
                         required
@@ -414,6 +405,15 @@ export default function About() {
                         className="w-full px-4 py-4 bg-brand-bg border border-brand-text/10 text-sm font-bold focus:border-brand-accent outline-none transition-all resize-none text-brand-text placeholder:text-brand-muted/40"
                       />
                     </div>
+                    <label className="block text-sm font-bold">Enquiry type
+                      <select value={enquiryType} onChange={e => setEnquiryType(e.target.value)} className="block mt-2 w-full p-4 bg-brand-bg border border-brand-text/10">
+                        <option value="general">General enquiry</option><option value="sponsorship">Sponsorship</option><option value="governance">Governance</option>
+                      </select>
+                    </label>
+                    <label className="flex items-start gap-3 text-sm text-brand-muted leading-relaxed">
+                      <input type="checkbox" required checked={consentGiven} onChange={e => setConsentGiven(e.target.checked)} className="mt-1" />
+                      <span>I consent to itSMF Zambia using these details to respond to my enquiry. Read the <Link to="/privacy" className="underline text-brand-accent">Privacy Policy</Link>.</span>
+                    </label>
                     {formError && (
                       <p className="text-[10px] font-black uppercase tracking-widest text-red-500">{formError}</p>
                     )}
@@ -433,9 +433,6 @@ export default function About() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="absolute left-0 bottom-0 text-[15vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mb-10 ml-4">
-          CONTACT
         </div>
       </section>
       </EditableSection>

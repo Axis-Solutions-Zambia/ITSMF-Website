@@ -18,8 +18,8 @@
   :root {
     --brand-bg: #F8FAFC;
     --brand-text: #0F172A;
-    --brand-accent: #97102F;
-    --brand-muted: #64748B;
+    --brand-accent: #a7133c;
+    --brand-muted: #475569;
     --brand-dark: #FFFFFF;
   }
   
@@ -88,3 +88,10 @@
 .animate-marquee-rl {
   animation: marquee-rl 40s linear infinite;
 }
+
+/* Public pages share upright headings and readable sentence-case body copy. */
+.public-site :is(h1, h2, h3, h4, h5, h6) { font-style: normal; font-family: var(--font-display); }
+.public-site main p { text-transform: none; letter-spacing: normal; font-weight: 400; font-size: 1rem; line-height: 1.7; }
+.public-site main :is(input, select, textarea) { text-transform: none; letter-spacing: normal; font-size: 1rem; }
+.public-site :is(a, button, input, select, textarea):focus-visible { outline: 3px solid var(--brand-text); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .public-site * { animation: none !important; scroll-behavior: auto !important; transition: none !important; } }

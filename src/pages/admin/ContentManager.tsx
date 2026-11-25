@@ -1,3 +1,4 @@
+import AuditUpdates from './AuditUpdates';
 import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -135,6 +136,9 @@ function PagesGrid() {
               sections: getSectionsFromSchema(d.id),
             };
           });
+          for (const [id, sections] of Object.entries(SECTION_SCHEMAS)) {
+            if (!result.some(page => page.id === id)) result.push({ id, name: id === 'site' ? 'Site settings and privacy' : id, path: id === 'site' ? '/' : `/${id}`, lastEdited: 'Never', status: 'Published', sections: getSectionsFromSchema(id) });
+          }
           // Sort by a known order
           const ORDER = ['home', 'about', 'membership', 'events', 'resources', 'partners', 'services', 'portal'];
           result.sort((a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
@@ -158,6 +162,7 @@ function PagesGrid() {
 
   return (
     <div className="space-y-8">
+      <AuditUpdates />
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8 border-b border-brand-text/5 pb-8">
         <div>
           <h2 className="text-4xl font-black uppercase tracking-tighter italic font-serif leading-none mb-2">CONTENT MANAGEMENT.</h2>
@@ -247,7 +252,7 @@ function PageDetails() {
   // Infer path from schema id
   const pathMap: Record<string, string> = {
     home: '/', about: '/about', membership: '/membership', events: '/events',
-    resources: '/resources', partners: '/partners', services: '/services', portal: '/portal'
+    resources: '/resources', partners: '/partners', services: '/services', portal: '/portal', site: '/'
   };
   const pagePath = pathMap[pageId] ?? `/${pageId}`;
 

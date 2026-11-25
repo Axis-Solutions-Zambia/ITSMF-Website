@@ -1,3 +1,4 @@
+import { usePageContent } from '@/src/hooks/usePageContent';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -7,9 +8,9 @@ import logoDark from '../assests/itsmf-logo-zm_1.png';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/', category: 'teal' },
-  { 
-    name: 'About', 
-    href: '/about', 
+  {
+    name: 'About',
+    href: '/about',
     category: 'purple',
     children: [
       { name: 'About itSMF Zambia', href: '/about#top' },
@@ -23,9 +24,9 @@ const NAV_LINKS = [
       { name: 'Contact us', href: '/about#contact' },
     ]
   },
-  { 
-    name: 'Membership', 
-    href: '/membership', 
+  {
+    name: 'Membership',
+    href: '/membership',
     category: 'purple',
     children: [
       { name: 'Why join', href: '/membership#why-join' },
@@ -33,13 +34,13 @@ const NAV_LINKS = [
       { name: 'Member benefits', href: '/membership#benefits' },
       { name: 'Join / Apply online', href: '/membership#apply' },
       { name: 'Corporate enquiry', href: '/membership#corporate' },
-      { name: 'Member portal login', href: '/portal' },
+
       { name: 'FAQ', href: '/membership#faq' },
     ]
   },
-  { 
-    name: 'Events', 
-    href: '/events', 
+  {
+    name: 'Events',
+    href: '/events',
     category: 'purple',
     children: [
       { name: 'Upcoming events', href: '/events#calendar' },
@@ -47,22 +48,22 @@ const NAV_LINKS = [
       { name: 'Call for speakers', href: '/events#speakers' },
     ]
   },
-  { 
-    name: 'Services', 
-    href: '/services', 
+  {
+    name: 'Services',
+    href: '/services',
     category: 'purple',
     children: [
       { name: 'Certification pathways', href: '/services#certification-pathways' },
       { name: 'Community education', href: '/services#community-education' },
-      { name: 'ITSM consultancy', href: '/services#itsm-consultancy' },
+      { name: 'Consultancy referrals', href: '/services#consultancy-referral-directory' },
       { name: 'Mentorship programme', href: '/services#mentorship-programme' },
       { name: 'ITIL Benchmarking Model', href: '/services/benchmarking' },
       { name: 'ATO partner directory', href: '/services#ato-partner-directory' },
     ]
   },
-  { 
-    name: 'Resources', 
-    href: '/resources', 
+  {
+    name: 'Resources',
+    href: '/resources',
     category: 'purple',
     children: [
       { name: 'Blog & articles', href: '/resources#blog' },
@@ -75,9 +76,9 @@ const NAV_LINKS = [
       { name: 'Newsletter archive', href: '/resources#newsletters' },
     ]
   },
-  { 
-    name: 'Partners', 
-    href: '/partners', 
+  {
+    name: 'Partners',
+    href: '/partners',
     category: 'purple',
     children: [
       { name: 'Partners overview', href: '/partners#overview' },
@@ -148,7 +149,7 @@ export function Navbar() {
 
   return (
     <>
-    <nav 
+    <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled || hoveredLink ? 'bg-brand-dark/95 backdrop-blur-xl border-b border-brand-text/10 py-4' : 'bg-transparent py-8'
       }`}
@@ -156,16 +157,16 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="flex justify-between items-center">
-          <Link to="/" className="flex items-center active:scale-95 transition-transform">
+          <Link to="/" className="flex items-center shrink-0 active:scale-95 transition-transform">
             <img src={logo} alt="itSMF Zambia Logo" className="h-12 w-auto logo-light" />
             <img src={logoDark} alt="itSMF Zambia Logo" className="h-12 w-auto logo-dark" />
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden xl:flex items-center space-x-8">
             {NAV_LINKS.map((link) => (
-              <div 
-                key={link.name} 
+              <div
+                key={link.name}
                 className="relative flex items-center h-full"
                 onMouseEnter={() => setHoveredLink(link.name)}
               >
@@ -188,20 +189,20 @@ export function Navbar() {
                 {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
               <Link
-                to="/portal"
+                to="/membership"
                 className={`px-6 py-2 border transition-all text-[10px] font-black uppercase tracking-tighter ${
-                  location.pathname.startsWith('/portal') 
-                    ? 'bg-brand-accent border-brand-accent text-brand-dark' 
+                  location.pathname.startsWith('/portal')
+                    ? 'bg-brand-accent border-brand-accent text-brand-dark'
                     : 'border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg'
                 }`}
               >
-                Member Portal
+                Join the community
               </Link>
             </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
+          <div className="xl:hidden flex items-center space-x-2">
             <button
               onClick={toggleTheme}
               className="text-brand-text hover:text-brand-accent p-2"
@@ -260,7 +261,7 @@ export function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="md:hidden fixed inset-0 z-[60] bg-brand-dark/40 backdrop-blur-sm"
+              className="xl:hidden fixed inset-0 z-[60] bg-brand-dark/40 backdrop-blur-sm"
             />
             {/* Drawer */}
             <motion.div
@@ -268,16 +269,16 @@ export function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="md:hidden fixed top-0 left-0 bottom-0 z-[70] w-[80vw] max-w-sm bg-brand-bg shadow-2xl flex flex-col"
+              className="xl:hidden fixed top-0 left-0 bottom-0 z-[70] w-[80vw] max-w-sm bg-brand-bg shadow-2xl flex flex-col"
             >
               <div className="flex items-center p-4 pl-6 border-b border-brand-text/5 shrink-0">
                 <span className="text-xl font-display font-black tracking-tight text-brand-text">itSMF Zambia</span>
               </div>
-              
+
               <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
                 {NAV_LINKS.map((link) => {
                   const isActive = location.pathname === link.href || (link.href !== '/' && location.pathname.startsWith(link.href));
-                  
+
                   const getIcon = (name: string) => {
                     switch (name) {
                       case 'Home': return <Home className="w-5 h-5 mr-4" />;
@@ -297,15 +298,15 @@ export function Navbar() {
                         to={link.href}
                         onClick={() => setIsOpen(false)}
                         className={`flex items-center px-4 py-3 rounded-full transition-colors ${
-                          isActive 
-                            ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100 font-bold' 
+                          isActive
+                            ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100 font-bold'
                             : 'text-brand-text hover:bg-brand-text/5 font-medium'
                         }`}
                       >
                         {getIcon(link.name)}
                         <span className="text-base">{link.name}</span>
                       </Link>
-                      
+
                       {link.children && isActive && (
                         <div className="flex flex-col space-y-1 mt-1 pl-[3.25rem] pr-4 pb-2">
                           {link.children.map(child => (
@@ -327,11 +328,11 @@ export function Navbar() {
 
               <div className="p-4 shrink-0">
                 <Link
-                  to="/portal"
+                  to="/membership"
                   onClick={() => setIsOpen(false)}
                   className="flex items-center justify-center w-full py-3 bg-brand-accent text-brand-dark rounded-full text-sm font-bold shadow-sm hover:opacity-90 transition-opacity"
                 >
-                  Member Portal Login
+                  Join the community
                 </Link>
               </div>
             </motion.div>
@@ -343,6 +344,12 @@ export function Navbar() {
 }
 
 export function Footer() {
+  const { content } = usePageContent('site', 'footer', {
+    tagline: 'Global Standards. Zambian Practice. One Community.',
+    email: 'hello@itsmf.org.zm', phone: '+260 974 874 981',
+    linkedin_url: '', twitter_url: '', ethics_url: '', bylaws_url: '',
+    partners: []
+  });
   return (
     <footer className="bg-brand-dark border-t border-brand-text/10 pt-20 pb-12 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -355,23 +362,16 @@ export function Footer() {
             <p className="text-brand-muted max-w-sm text-sm uppercase tracking-wider font-bold leading-relaxed mb-8 opacity-80">
               Advancing IT Service Management and Digital Transformation across the Republic of Zambia.
             </p>
-            <div className="flex space-x-6">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-accent/60">Strategic Partners</span>
-              <div className="flex flex-wrap gap-4 opacity-50 font-black text-[10px] uppercase tracking-tighter">
-                <span>Min of Tech</span>
-                <span>UNDP</span>
-                <span>itSMF-I</span>
-                <span>GIZ</span>
-              </div>
-            </div>
+            <p className="text-sm mb-4">{String(content.tagline)}</p>
+            {Array.isArray(content.partners) && content.partners.length > 0 && <div className="flex flex-wrap gap-4">{content.partners.map((partner: any, i: number) => <span key={i}>{partner.name}</span>)}</div>}
           </div>
-          
+
           <div>
             <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-8 text-brand-accent">Information</h4>
             <ul className="space-y-4 text-[11px] font-bold uppercase tracking-widest text-brand-muted">
               <li><Link to="/about" className="hover:text-brand-text transition-colors">Vision & Mission</Link></li>
               <li><Link to="/membership" className="hover:text-brand-text transition-colors">Membership Fees</Link></li>
-              <li><Link to="/events" className="hover:text-brand-text transition-colors">Conference 2026</Link></li>
+              <li><Link to="/events" className="hover:text-brand-text transition-colors">Annual conference updates</Link></li>
               <li><Link to="/resources" className="hover:text-brand-text transition-colors">Certification Roadmap</Link></li>
             </ul>
           </div>
@@ -379,24 +379,25 @@ export function Footer() {
           <div>
             <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-8 text-brand-accent">Connect</h4>
             <ul className="space-y-4 text-[11px] font-bold uppercase tracking-widest text-brand-muted">
-              <li><a href="#" className="hover:text-brand-text transition-colors">LinkedIn</a></li>
-              <li><a href="#" className="hover:text-brand-text transition-colors">Twitter @itSMFZambia</a></li>
-              <li><a href="#" className="hover:text-brand-text transition-colors">Secretariat Portal</a></li>
-              <li><a href="#" className="hover:text-brand-text transition-colors">Contact Chapter</a></li>
+              {content.linkedin_url && <li><a href={String(content.linkedin_url)}>LinkedIn</a></li>}
+              {content.twitter_url && <li><a href={String(content.twitter_url)}>Twitter / X</a></li>}
+              <li><Link to="/about#contact">Contact chapter</Link></li>
+              <li><a href={`mailto:${content.email}`}>{String(content.email)}</a></li>
+              <li><a href={`tel:${String(content.phone).replace(/\s/g, '')}`}>{String(content.phone)}</a></li>
             </ul>
           </div>
         </div>
-        
-        <div className="pt-12 border-t border-brand-text/5 flex flex-col md:flex-row justify-between items-center text-[9px] font-black uppercase tracking-[0.3em] text-brand-muted/40">
-          <p>© {new Date().getFullYear()} itSMF Zambia. Standardizing Service.</p>
+
+        <div className="pt-12 border-t border-brand-text/5 flex flex-col md:flex-row justify-between items-center text-[9px] font-black uppercase tracking-[0.3em] text-brand-muted">
+          <p>© {new Date().getFullYear()} itSMF Zambia. {String(content.tagline)}</p>
           <div className="flex space-x-8 mt-4 md:mt-0">
-            <a href="#" className="hover:text-brand-text transition-colors">Ethics Code</a>
-            <a href="#" className="hover:text-brand-text transition-colors">Privacy</a>
-            <a href="#" className="hover:text-brand-text transition-colors">Bylaws</a>
+            {content.ethics_url && <a href={String(content.ethics_url)}>Ethics Code</a>}
+            <Link to="/privacy">Privacy</Link>
+            {content.bylaws_url && <a href={String(content.bylaws_url)}>Bylaws</a>}
           </div>
         </div>
       </div>
-      
+
       {/* Background decoration */}
       <div className="absolute right-0 bottom-0 text-[10vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mb-4 mr-4">
         Zambia

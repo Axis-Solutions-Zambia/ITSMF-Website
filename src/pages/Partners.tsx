@@ -1,5 +1,6 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ShieldCheck, Globe, Building2, Briefcase, ExternalLink, HelpCircle } from 'lucide-react';
+import { Globe, ExternalLink, HelpCircle } from 'lucide-react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
 import { PageSkeleton } from '@/src/components/PageSkeleton';
@@ -8,52 +9,20 @@ import { PageSkeleton } from '@/src/components/PageSkeleton';
 const HERO_DEFAULTS = {
   headline_line1: 'ALLIED',
   headline_line2: 'ECOSYSTEMS.',
-  body: 'Strategic alignment with governance bodies, international standards, and private sector innovators.',
+  body: 'Explore opportunities to support service management through knowledge sharing, collaboration and professional development.',
   watermark: 'SYSTEM'
 };
 
-const CATEGORIES_DEFAULTS = {
-  categories_list: [
-    {
-      title: 'Training Partners (ATOs)',
-      desc: 'Accredited organizations authorized to deliver official itSMF training and certifications.',
-      partners: 'Exemplar Global\nPeopleCert\nAPMG International\nITSM Academy'
-    },
-    {
-      title: 'Strategic Government & NGOs',
-      desc: 'Institutional allies driving national policy and cross-sector digital transformation.',
-      partners: 'Ministry of Technology\nZNBC\nUNDP Zambia\nGIZ Office Lusaka\nSMART Zambia'
-    },
-    {
-      title: 'Corporate Sponsors',
-      desc: 'Forward-thinking enterprises supporting the chapter through sustained investment.',
-      partners: 'ZRA\nLiquid Intelligent\nAirtel Business\nStandard Chartered'
-    }
-  ]
-};
-
+const CATEGORIES_DEFAULTS = { categories_list: [] };
 const INTERNATIONAL_DEFAULTS = {
-  headline_line1: 'SHARED',
-  headline_line2: 'GLOBAL VISION.',
-  body: 'As a chartered member of itSMF International, we benchmark against Global 500 standards, ensuring our local ecosystem operates at the highest technical maturity level.',
-  points: [
-    {
-      title: 'Accredited Standing',
-      desc: 'Formally audited and chartered by the International Secretariat.'
-    },
-    {
-      title: 'Global Portability',
-      desc: 'Membership recognized across all major itSMF Global Nodes.'
-    }
-  ],
-  btn_label: 'Visit Global Site'
+  headline_line1: 'A GLOBAL', headline_line2: 'COMMUNITY.',
+  body: 'itSMF International connects service management communities around the world. Explore its website to learn about the international network.',
+  points: [], btn_label: 'Visit itSMF International', btn_url: 'https://www.itsmfi.org/'
 };
-
 const BECOME_DEFAULTS = {
-  headline_line1: 'READY TO',
-  headline_line2: 'INFLUENCE?',
-  desc: 'Whether you are an ATO looking to certify or a corporation seeking strategic placement.',
-  contact_email: 'partners@itsmf.zm'
+  headline_line1: 'BECOME A', headline_line2: 'PARTNER.',
+  desc: 'Connect with us about training referrals, knowledge sharing and opportunities to support the service management community.',
+  contact_email: ''
 };
 
 export default function Partners() {
@@ -71,7 +40,7 @@ export default function Partners() {
   return (
     <div className="pt-20">
       <EditableSection pageId="partners" sectionId="hero">
-<section className="bg-brand-dark py-16 md:py-32 relative overflow-hidden border-b border-brand-text/5">
+<section id="overview" className="bg-brand-dark py-16 md:py-32 relative overflow-hidden border-b border-brand-text/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -84,14 +53,11 @@ export default function Partners() {
               </h1>
             )}
             {hero['_hide_body'] !== 'true' && (
-              <p className="text-xl text-brand-muted max-w-2xl leading-relaxed uppercase tracking-wider font-bold opacity-80 decoration-brand-accent underline underline-offset-8">
+              <p className="text-xl text-brand-muted max-w-2xl leading-relaxed font-normal">
                 {hero.body}
               </p>
             )}
           </motion.div>
-        </div>
-        <div className="absolute top-0 right-0 text-[18vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mt-10 mr-10 leading-none">
-          {hero.watermark}
         </div>
       </section>
       </EditableSection>
@@ -101,9 +67,6 @@ export default function Partners() {
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-wrap gap-8">
              <a href="#overview" className="hover:text-brand-accent transition-colors underline decoration-brand-accent">Partner Overview</a>
-             <a href="#atos" className="hover:text-brand-accent transition-colors">ATO Directory</a>
-             <a href="#sponsors" className="hover:text-brand-accent transition-colors">Corporate Sponsors</a>
-             <a href="#ngo" className="hover:text-brand-accent transition-colors">Gov & NGO</a>
              <a href="#become" className="hover:text-brand-accent transition-colors text-brand-accent">Become a Partner</a>
           </div>
         </div>
@@ -111,9 +74,9 @@ export default function Partners() {
 
       {/* Partners Grid */}
       <EditableSection pageId="partners" sectionId="categories">
-<section id="overview" className="py-16 md:py-32 bg-brand-bg">
+{categories['_hide_categories_list'] !== 'true' && (categories.categories_list as any[]).some(cat => typeof cat.partners === 'string' && cat.partners.trim()) && <section className="py-16 md:py-32 bg-brand-bg">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 space-y-32">
-          {categories['_hide_categories_list'] !== 'true' && (categories.categories_list as unknown as any[]).map((cat, i) => {
+          {categories['_hide_categories_list'] !== 'true' && (categories.categories_list as unknown as any[]).filter(cat => typeof cat.partners === 'string' && cat.partners.trim()).map((cat, i) => {
             const partnerList = (cat.partners || '').split('\n').filter((p: string) => p.trim().length > 0);
             return (
               <div 
@@ -127,9 +90,9 @@ export default function Partners() {
                     <h2 className="text-4xl font-black mb-6 uppercase tracking-tighter italic font-serif leading-none">{cat.title}</h2>
                     <p className="text-xs text-brand-muted uppercase tracking-widest font-bold leading-loose">{cat.desc}</p>
                   </div>
-                  <button className="flex items-center text-[10px] font-black uppercase tracking-[0.3em] text-brand-accent hover:text-brand-text transition-all whitespace-nowrap">
-                    PARTNERSHIP BORDER <ExternalLink className="ml-3 w-4 h-4" />
-                  </button>
+                  <Link to="/enquire?type=partnership" className="flex items-center text-[10px] font-black uppercase tracking-[0.3em] text-brand-accent hover:text-brand-text transition-all whitespace-nowrap">
+                    PARTNERSHIP ENQUIRY <ExternalLink className="ml-3 w-4 h-4" />
+                  </Link>
                 </div>
                 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-brand-text/10 border border-brand-text/10">
@@ -143,15 +106,15 @@ export default function Partners() {
                       </span>
                     </motion.div>
                   ))}
-                  <div className="aspect-[4/3] bg-brand-accent/5 flex flex-col items-center justify-center p-8 text-center group/add cursor-pointer border-2 border-dashed border-brand-accent/20 hover:border-brand-accent hover:bg-brand-accent/10 transition-all">
-                    <span className="text-[10px] font-black text-brand-accent uppercase tracking-[0.3em]">Join Network</span>
-                  </div>
+                  <Link to="/enquire?type=partnership" className="aspect-[4/3] bg-brand-accent/5 flex flex-col items-center justify-center p-8 text-center group/add cursor-pointer border-2 border-dashed border-brand-accent/20 hover:border-brand-accent hover:bg-brand-accent/10 transition-all">
+                    <span className="text-[10px] font-black text-brand-accent uppercase tracking-[0.3em]">Become a partner</span>
+                  </Link>
                 </div>
               </div>
             );
           })}
         </div>
-      </section>
+      </section>}
       </EditableSection>
 
       {/* International Relationship */}
@@ -192,10 +155,10 @@ export default function Partners() {
                   ))}
                 </div>
               )}
-              {international['_hide_btn_label'] !== 'true' && (
-                <button className="bg-brand-accent text-brand-dark px-12 py-5 font-black text-[10px] uppercase tracking-[0.2em] hover:bg-brand-text transition-all">
+              {international['_hide_btn_label'] !== 'true' && typeof international.btn_url === 'string' && /^https?:\/\//.test(international.btn_url) && (
+                <a href={international.btn_url as string} className="inline-block bg-brand-accent text-brand-dark px-12 py-5 font-black text-[10px] uppercase tracking-[0.2em] hover:bg-brand-text transition-all">
                   {international.btn_label}
-                </button>
+                </a>
               )}
             </div>
           </div>
@@ -219,7 +182,8 @@ export default function Partners() {
               {become.desc}
             </p>
           )}
-          {become['_hide_contact_email'] !== 'true' && (
+          <Link to="/enquire?type=partnership" className="inline-block bg-brand-accent text-brand-dark px-8 py-4 font-bold mb-8">Enquire about partnership</Link>
+          {become['_hide_contact_email'] !== 'true' && typeof become.contact_email === 'string' && become.contact_email.trim() && (
             <a href={`mailto:${become.contact_email}`} className="text-brand-accent font-black text-2xl uppercase tracking-tighter border-b-2 border-brand-accent pb-2 hover:text-brand-text hover:border-brand-text transition-all">
               {become.contact_email}
             </a>

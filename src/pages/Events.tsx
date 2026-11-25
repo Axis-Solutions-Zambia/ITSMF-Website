@@ -1,95 +1,85 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowRight, ChevronRight, Download, Calendar as CalendarIcon, MapPin, Users, Globe, Ticket, Award, Filter } from 'lucide-react';
+import { ChevronRight, MapPin, Award } from 'lucide-react';
 import { usePageContent } from '@/src/hooks/usePageContent';
 import EditableSection from '@/src/components/EditableSection';
 import { PageSkeleton } from '@/src/components/PageSkeleton';
 
 // ─── Default content (Firestore fallback) ────────────────────────────────────
 const FLAGSHIP_DEFAULTS = {
-  eyebrow: 'November 2026',
-  headline_line1: 'ANNUAL',
-  headline_line2: 'SUMMIT',
-  headline_line3: 'LIVINGSTONE',
-  duration_label: 'Duration',
-  duration_value: '24 — 26 Nov 2026',
+  eyebrow: 'itSMF Zambia Events',
+  headline_line1: 'CONNECT.',
+  headline_line2: 'LEARN.',
+  headline_line3: 'SHARE.',
+  duration_label: 'Next event',
+  duration_value: 'Details to be announced',
   venue_label: 'Venue',
-  venue_value: 'Avani Victoria Falls Resort',
-  btn_label: 'Secure Delegate Pass'
+  venue_value: 'To be confirmed',
+  date_iso: '',
+  btn_label: 'View event details',
+  btn_url: '',
+  recap_url: '',
+  img: ''
 };
 
-const CALENDAR_DEFAULTS = {
-  headline: 'CALENDAR.',
-  events: [
-    {
-      title: 'ITSM Strategy Roundtable: Lusaka 2026',
-      date: 'May 12, 2026',
-      location: 'Taj Pamodzi, Lusaka',
-      type: 'Roundtable',
-      desc: 'An exclusive gathering for CIOs to discuss the impact of national AI policy on service delivery.',
-      img: 'https://picsum.photos/seed/event1/600/400'
-    },
-    {
-      title: 'ITIL 4 Foundation Fast-Track',
-      date: 'June 4-6, 2026',
-      location: 'Online Workshop',
-      type: 'Workshop',
-      desc: 'Intensive 3-day certification preparation led by accredited international trainers.',
-      img: 'https://picsum.photos/seed/event2/600/400'
-    },
-    {
-      title: 'Quarterly Member Webinar: ZNB Digital Core',
-      date: 'July 15, 2026',
-      location: 'Zoom Video Conference',
-      type: 'Webinar',
-      desc: 'Deep dive into the new ZNB digital architecture and ITSM integration points.',
-      img: 'https://picsum.photos/seed/event3/600/400'
-    }
-  ]
-};
+const CALENDAR_DEFAULTS = { headline: 'CALENDAR.', events: [{ title: 'ITIL 5 inaugural webinar', date: '4 June 2026', date_iso: '2026-06-04', location: 'Online', format: 'Online', type: 'Webinar', desc: 'Contact the chapter for the inaugural webinar recap and available materials.', time: '', price: '', img: '', action_label: '', action_url: '', recap_url: '', recording_url: '', slides_url: '' }] };
 
 const SPONSOR_DEFAULTS = {
   headline: 'SPONSOR AN EVENT.',
-  desc: "Strategic brand placement for organizations leading Zambia's tech agenda.",
-  tiers: [
-    {
-      name: 'Bronze',
-      price: 'ZMW 5,000',
-      benefits: 'Logo on banners\nSocial media mention\n1 Delegate pass',
-      color: 'bg-orange-400'
-    },
-    {
-      name: 'Silver',
-      price: 'ZMW 15,000',
-      benefits: 'Exhibition space\n2 Delegate passes\nPresentation slot (10m)\nLogo on lanyards',
-      color: 'bg-slate-400'
-    },
-    {
-      name: 'Gold',
-      price: 'ZMW 35,000',
-      benefits: 'Prime exhibition spot\n5 Delegate passes\nKeynote slot (30m)\nFull-page program ad\nVIP Dinner access',
-      color: 'bg-yellow-500'
-    }
-  ]
+  desc: 'Contact us to discuss event sponsorship opportunities and available packages.',
+  tiers: []
 };
 
 const SPEAKERS_DEFAULTS = {
   headline_line1: 'CALL FOR',
   headline_line2: 'SPEAKERS.',
-  desc: 'Share your expertise with the Zambian ITSM community. We are looking for practitioners to present on ITIL 4, ISO 20000, and AI Governance.',
-  form_text: 'Submission Form 2026',
-  policy_text: 'Speaker Compensation Policy',
-  box_headline_line1: 'Elevate Your Practice',
-  box_headline_line2: 'On The National Stage.',
-  box_desc: 'itSMF Zambia speakers are globally recognized and receive full delegate access to our premium Livingstone summits.',
-  btn_label: 'Register as Speaker'
+  desc: 'Share your expertise with the Zambian ITSM community. We welcome proposals on ITIL 5, COBIT, ISO/IEC 20000 and practical service management.',
+  form_text: 'Submit a speaker proposal',
+  policy_text: 'Speaker policy',
+  policy_url: '',
+  box_headline_line1: 'Share Your Experience',
+  box_headline_line2: 'With Our Community.',
+  box_desc: 'Tell us about your proposed topic and experience. We will contact you about suitable speaking opportunities.',
+  btn_label: 'Enquire as a Speaker'
 };
 
+// Only accept local paths or web links in editable actions.
+function safeEventUrl(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const url = value.trim();
+  if (/^\/(?![/\\])/.test(url)) return url;
+  try {
+    const parsed = new URL(url);
+    return ['https:', 'http:'].includes(parsed.protocol) ? url : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function eventDate(value: unknown): string | undefined {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return undefined;
+  const parsed = new Date(`${value}T00:00:00Z`);
+  return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value ? value : undefined;
+}
+
 export default function Events() {
+  const [category, setCategory] = useState('All');
+  const [period, setPeriod] = useState<'upcoming' | 'past'>('upcoming');
   const { content: flagship, loading: flagshipLoading } = usePageContent('events', 'flagship', FLAGSHIP_DEFAULTS);
-  const { content: calendar, loading: calendarLoading } = usePageContent('events', 'calendar', CALENDAR_DEFAULTS as any);
-  const { content: sponsor, loading: sponsorLoading } = usePageContent('events', 'sponsor', SPONSOR_DEFAULTS as any);
+  const { content: calendar, loading: calendarLoading } = usePageContent('events', 'calendar', CALENDAR_DEFAULTS);
+  const { content: sponsor, loading: sponsorLoading } = usePageContent('events', 'sponsor', SPONSOR_DEFAULTS);
   const { content: speakers, loading: speakersLoading } = usePageContent('events', 'speakers', SPEAKERS_DEFAULTS);
 
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Lusaka', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  const events = calendar['_hide_events'] !== 'true' && Array.isArray(calendar.events) ? calendar.events : [];
+  const visibleEvents = events.filter((event) => {
+    const date = eventDate(event.date_iso);
+    const matchesPeriod = period === 'past' ? date && date < today : !date || date >= today;
+    return matchesPeriod && (category === 'All' || event.type === category);
+  });
+  const flagshipDate = eventDate(flagship.date_iso);
+  const flagshipUrl = safeEventUrl(flagshipDate && flagshipDate < today ? flagship.recap_url : flagship.btn_url);
   const isLoading = flagshipLoading || calendarLoading || sponsorLoading || speakersLoading;
 
   if (isLoading) {
@@ -125,17 +115,17 @@ export default function Events() {
                 {flagship['_hide_venue_value'] !== 'true' && <span className="text-brand-text">{flagship.venue_value}</span>}
               </div>
             </div>
-            {flagship['_hide_btn_label'] !== 'true' && (
-              <button className="bg-brand-accent text-brand-dark px-12 py-5 font-black text-xs uppercase tracking-[0.2em] hover:bg-brand-text shadow-2xl transition-all">
-                {flagship.btn_label}
-              </button>
+            {flagship['_hide_btn_label'] !== 'true' && flagshipDate && flagshipUrl && (
+              <a href={flagshipUrl} className="inline-block bg-brand-accent text-brand-dark px-12 py-5 font-black text-xs uppercase tracking-[0.2em] hover:bg-brand-text shadow-2xl transition-all">
+                {flagshipDate < today ? 'View recap' : flagship.btn_label}
+              </a>
             )}
           </motion.div>
         </div>
-        <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-30 grayscale pointer-events-none">
-          <img src="https://picsum.photos/seed/falls/800/1200" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+        {safeEventUrl(flagship.img) && <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-30 grayscale pointer-events-none">
+          <img src={safeEventUrl(flagship.img)} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
           <div className="absolute inset-0 bg-gradient-to-l from-transparent via-brand-dark/20 to-brand-dark" />
-        </div>
+        </div>}
       </section>
       </EditableSection>
 
@@ -148,14 +138,27 @@ export default function Events() {
           <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
             {calendar['_hide_headline'] !== 'true' && <h2 className="text-5xl font-black uppercase tracking-tighter italic font-serif">{calendar.headline}</h2>}
             <div className="flex flex-wrap gap-4 font-black text-[10px] uppercase tracking-widest">
-              <button className="px-6 py-3 bg-brand-accent text-brand-dark">All Events</button>
-              <button className="px-6 py-3 border border-brand-text/10 text-brand-muted hover:border-brand-accent transition-all">Workshops</button>
-              <button className="px-6 py-3 border border-brand-text/10 text-brand-muted hover:border-brand-accent transition-all">Roundtables</button>
+              {(['upcoming', 'past'] as const).map((value) => (
+                <button key={value} onClick={() => setPeriod(value)} aria-pressed={period === value}
+                  className={`px-6 py-3 border transition-all ${period === value ? 'bg-brand-accent text-brand-dark border-brand-accent' : 'border-brand-text/20 text-brand-muted hover:border-brand-accent'}`}>
+                  {value === 'upcoming' ? 'Upcoming events' : 'Past events'}
+                </button>
+              ))}
             </div>
           </div>
 
+          <div className="flex flex-wrap gap-3 mb-8" aria-label="Event categories">
+            {['All', ...new Set(events.map(event => event.type).filter(Boolean))].map(value => <button key={value} onClick={() => setCategory(value)} aria-pressed={category === value} className={`px-4 py-2 rounded-xl border ${category === value ? 'border-brand-accent text-brand-accent' : 'border-brand-text/20'}`}>{value}</button>)}
+          </div>
           <div className="grid grid-cols-1 gap-px bg-brand-text/5 border border-brand-text/5">
-            {(calendar.events as unknown as any[]).map((event, i) => (
+            {visibleEvents.length === 0 && <p className="p-8 bg-brand-bg text-brand-muted">{period === 'upcoming' ? 'Upcoming events will be announced here. Please check back for dates and registration details.' : 'Event recaps will be published here when available.'}</p>}
+            {visibleEvents.map((event, i) => {
+              const date = eventDate(event.date_iso);
+              const isPast = Boolean(date && date < today);
+              const actionUrl = safeEventUrl(isPast ? event.recap_url : event.action_url);
+              const recordingUrl = safeEventUrl(event.recording_url);
+              const slidesUrl = safeEventUrl(event.slides_url);
+              return (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -163,13 +166,13 @@ export default function Events() {
                 viewport={{ once: true }}
                 className="group flex flex-col md:flex-row bg-brand-bg hover:bg-brand-text/5 transition-all duration-500"
               >
-                <div className="md:w-1/4 aspect-video md:aspect-square h-64 md:h-auto overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
-                  <img src={event.img} className="w-full h-full object-cover opacity-60" referrerPolicy="no-referrer" />
-                </div>
-                <div className="md:w-3/4 p-12 lg:p-16 flex flex-col justify-center">
+                {safeEventUrl(event.img) && <div className="md:w-1/4 aspect-video md:aspect-square h-64 md:h-auto overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
+                  <img src={safeEventUrl(event.img)} alt={event.title || "Event"} className="w-full h-full object-cover opacity-60" referrerPolicy="no-referrer" />
+                </div>}
+                <div className="flex-1 p-6 md:p-12 lg:p-16 flex flex-col justify-center">
                   <div className="flex items-center gap-6 mb-6">
                     <span className="text-brand-accent text-[10px] font-black uppercase tracking-[0.3em] font-mono">
-                      {event.date}
+                      {date ? event.date || date : 'Date to be confirmed'}
                     </span>
                     <span className="text-brand-muted text-[10px] font-black uppercase tracking-[0.3em] bg-brand-text/5 px-3 py-1 rounded-sm">
                       {event.type}
@@ -178,21 +181,30 @@ export default function Events() {
                   <h3 className="text-3xl lg:text-4xl font-black mb-6 uppercase tracking-tighter italic font-serif leading-none group-hover:text-brand-accent transition-colors">
                     {event.title}
                   </h3>
-                  <p className="text-xs text-brand-muted font-bold uppercase tracking-widest leading-loose max-w-2xl mb-8">
+                  <p className="text-base text-brand-muted leading-relaxed max-w-2xl mb-8">
                     {event.desc}
                   </p>
-                  <div className="flex items-center gap-12">
+                  <div className="flex flex-wrap gap-4 text-sm text-brand-muted mb-6">
+                    {event.time && <span>{event.time} (CAT, UTC+2)</span>}
+                    {event.format && <span>{event.format}</span>}
+                    {event.price && <span>{event.price}</span>}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-6">
                     <div className="flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-brand-text">
                       <MapPin className="w-4 h-4 mr-2 text-brand-accent" />
                       {event.location}
                     </div>
-                    <button className="flex items-center text-[10px] font-black uppercase tracking-[0.3em] text-brand-accent group/btn">
-                      REGISTER <ChevronRight className="ml-1 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                    </button>
+                    {date && actionUrl && (
+                      <a href={actionUrl} className="flex items-center text-xs font-bold text-brand-accent">
+                        {isPast ? 'View recap' : event.action_label || 'Event details'} <ChevronRight className="ml-1 w-4 h-4" />
+                      </a>
+                    )}
+                    {isPast && recordingUrl && <a href={recordingUrl} className="text-xs font-bold text-brand-accent">Watch recording</a>}
+                    {isPast && slidesUrl && <a href={slidesUrl} className="text-xs font-bold text-brand-accent">View slides</a>}
                   </div>
                 </div>
               </motion.div>
-            ))}
+            );})}
           </div>
         </div>
       </section>
@@ -205,7 +217,7 @@ export default function Events() {
           <div className="mb-24 flex flex-col md:flex-row items-end justify-between gap-8">
             {sponsor['_hide_headline'] !== 'true' && (
               <h2 className="text-3xl md:text-6xl font-black uppercase tracking-tighter italic font-serif leading-none">
-                {sponsor.headline.split(' ').reduce<any[]>((acc, word, idx, arr) => {
+                {String(sponsor.headline).split(' ').reduce<any[]>((acc, word, idx, arr) => {
                    return [...acc, word, idx === arr.length - 3 ? <br key={idx}/> : idx === arr.length - 2 ? <span key={`span-${idx}`} className="text-brand-text font-sans font-black"> </span> : ' '];
                 }, [])}
               </h2>
@@ -217,6 +229,7 @@ export default function Events() {
             )}
           </div>
           
+          <Link to="/enquire?type=sponsorship" className="inline-block mb-10 bg-brand-accent text-brand-dark px-8 py-4 font-bold">Discuss sponsorship</Link>
           {sponsor['_hide_tiers'] !== 'true' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-brand-text/5 border border-brand-text/5">
               {(sponsor.tiers as unknown as any[]).map((tier, i) => {
@@ -233,9 +246,9 @@ export default function Events() {
                       </li>
                     ))}
                   </ul>
-                  <button className="w-full border border-brand-text/20 py-5 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-brand-accent hover:text-brand-bg hover:border-brand-accent transition-all">
-                    Inquire Now
-                  </button>
+                  <Link to="/enquire?type=sponsorship" className="block text-center w-full border border-brand-text/20 py-5 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-brand-accent hover:text-brand-bg hover:border-brand-accent transition-all">
+                    Enquire Now
+                  </Link>
                 </div>
               );
             })}
@@ -258,22 +271,22 @@ export default function Events() {
                     </h2>
                   )}
                   {speakers['_hide_desc'] !== 'true' && (
-                    <p className="text-xs text-brand-muted uppercase tracking-widest font-bold leading-loose mb-12">
+                    <p className="text-base text-brand-muted leading-relaxed mb-12">
                       {speakers.desc}
                     </p>
                   )}
                   <div className="space-y-6">
                      {speakers['_hide_form_text'] !== 'true' && (
-                       <div className="p-6 bg-brand-dark border-l-4 border-brand-accent flex items-center justify-between">
+                       <Link to="/enquire?type=speakers" className="p-6 bg-brand-dark border-l-4 border-brand-accent flex items-center justify-between">
                           <span className="text-[10px] font-black uppercase tracking-[0.2em]">{speakers.form_text}</span>
                           <ChevronRight className="w-4 h-4 text-brand-accent" />
-                       </div>
+                       </Link>
                      )}
-                     {speakers['_hide_policy_text'] !== 'true' && (
-                       <div className="p-6 bg-brand-dark border border-brand-text/5 flex items-center justify-between opacity-50">
+                     {speakers['_hide_policy_text'] !== 'true' && safeEventUrl(speakers.policy_url) && (
+                       <a href={safeEventUrl(speakers.policy_url)} className="p-6 bg-brand-dark border border-brand-text/20 flex items-center justify-between">
                           <span className="text-[10px] font-black uppercase tracking-[0.2em]">{speakers.policy_text}</span>
                           <ChevronRight className="w-4 h-4" />
-                       </div>
+                       </a>
                      )}
                   </div>
                </div>
@@ -287,21 +300,18 @@ export default function Events() {
                       </h4>
                     )}
                     {speakers['_hide_box_desc'] !== 'true' && (
-                      <p className="text-xs font-bold uppercase tracking-widest leading-loose mb-10 opacity-80">
+                      <p className="text-base leading-relaxed mb-10">
                         {speakers.box_desc}
                       </p>
                     )}
                     {speakers['_hide_btn_label'] !== 'true' && (
-                      <button className="w-full bg-brand-dark text-brand-text py-5 font-black uppercase tracking-widest hover:bg-brand-text hover:text-brand-bg transition-all">
+                      <Link to="/enquire?type=speakers" className="block text-center w-full bg-brand-dark text-brand-text py-5 font-black uppercase tracking-widest hover:bg-brand-text hover:text-brand-bg transition-all">
                         {speakers.btn_label}
-                      </button>
+                      </Link>
                     )}
                  </div>
                )}
            </div>
-        </div>
-        <div className="absolute left-0 bottom-0 text-[18vw] font-black text-brand-text/5 uppercase select-none pointer-events-none -mb-12 ml-4">
-          SPEAKER
         </div>
       </section>
       </EditableSection>

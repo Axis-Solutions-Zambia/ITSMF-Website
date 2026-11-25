@@ -1,3 +1,8 @@
+import { db } from '@/src/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import SearchMetadata from '@/src/components/SearchMetadata';
+import Enquiry from '@/src/pages/Enquiry';
+import Privacy from '@/src/pages/Privacy';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -5,8 +10,6 @@
 
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { db } from '@/src/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { Navbar, Footer } from '@/src/components/Layout';
 import Home from '@/src/pages/Home';
 import About from '@/src/pages/About';
@@ -48,11 +51,13 @@ function LayoutWrapper() {
   const isAdmin = location.pathname.startsWith('/admin');
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className={`min-h-screen flex flex-col ${isAdmin ? '' : 'public-site'}`}>
       {!isAdmin && <Navbar />}
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/enquire" element={<Enquiry />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/about" element={<About />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/events" element={<Events />} />
@@ -109,6 +114,7 @@ export default function App() {
   return (
     <Router>
       <VisitTracker />
+      <SearchMetadata />
       <ScrollToTop />
       <LayoutWrapper />
     </Router>
